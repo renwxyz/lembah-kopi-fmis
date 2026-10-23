@@ -43,7 +43,7 @@ func Recoverer(next http.Handler) http.Handler {
 			if recovered == http.ErrAbortHandler {
 				panic(recovered)
 			}
-			log.Printf("HTTP handler panic: %v\n%s", recovered, debug.Stack())
+			slog.Error("HTTP handler panic", "panic", recovered, "stack", string(debug.Stack()), "path", r.URL.Path)
 			if wrapped.Status() == 0 {
 				Write(wrapped, r, http.StatusInternalServerError, "https://api.lembahkopi.id/problems/internal-error", "Internal server error", "An unexpected error occurred.")
 			}
