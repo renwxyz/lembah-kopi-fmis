@@ -1,0 +1,56 @@
+@import "leaflet/dist/leaflet.css";
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: #F9F8F6;
+    --foreground: #2A1810;
+    --card: #FFFFFF;
+    --card-foreground: #2A1810;
+    --border: #E8E2DC;
+    --input: #E8E2DC;
+    --primary: #2A1810;
+    --primary-foreground: #FFFFFF;
+    --secondary: #F4F0EC;
+    --secondary-foreground: #2A1810;
+    --muted: #F4F0EC;
+    --muted-foreground: #6E5D53;
+    --destructive: #DC2626;
+    --destructive-foreground: #FFFFFF;
+    --radius: 0.75rem;
+  }
+
+  html, body {
+    background-color: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+  }
+}
+
+/* =========================================
+   FIX UNTUK BENTROK TAILWIND & LEAFLET
+========================================= */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 10 !important;
+  border-radius: 1rem;
+}
+
+/* Mematikan Tailwind Preflight pada gambar Leaflet */
+.leaflet-container img,
+.leaflet-tile-container img,
+.leaflet-marker-pane img,
+.leaflet-shadow-pane img {
+  max-width: none !important;
+  max-height: none !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.75rem !important;
+  box-shadow: 0 4px 6px -1px rgb(42 24 16 / 0.1) !important;
+}

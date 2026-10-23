@@ -1,0 +1,3144 @@
+openapi: 3.0.3
+info:
+  title: Lembah Kopi API
+  version: 1.0.0
+  description: |
+    Kontrak HTTP untuk pengelolaan petani, lahan, inventaris, monitoring agronomi,
+    panen, dan proses pascapanen.
+servers:
+  - url: /
+    description: Server yang sedang membuka dokumentasi ini
+tags:
+  - name: Auth
+    description: Autentikasi dan profil pengguna aktif
+  - name: Admin Management
+    description: Pengelolaan akun admin
+  - name: Petani
+    description: Data identitas petani
+  - name: Lahan
+    description: Data lahan dan pemiliknya
+  - name: Pemetaan Polygon (GIS)
+    description: Geometri spasial lahan
+  - name: Inventaris Tanaman
+    description: Blok inventaris tanaman pada lahan
+  - name: Populasi Pohon
+    description: Jumlah pohon per blok inventaris dan lahan
+  - name: Kondisi Tanah
+    description: Sampling parameter tanah dan histori pengukuran
+  - name: Pemupukan
+    description: Riwayat aplikasi pemupukan yang sudah dilaksanakan
+  - name: Hama & Penyakit
+    description: Insiden tanaman dan histori tindakan penanganan
+  - name: Panen
+    description: Pencatatan hasil panen kopi per lahan dan inventaris tanaman
+  - name: Pascapanen
+    description: Katalog metode, batch pengolahan, histori tahap, dan traceability
+  - name: Dashboard
+    description: Ringkasan operasional dan data spasial dasbor
+security:
+  - BearerAuth: []
+paths:
+  /api/v1/dashboard/overview:
+    get:
+      tags: [Dashboard]
+      operationId: getDashboardOverview
+      summary: Ringkasan operasional dasbor
+      description: Mengambil agregasi KPI, data poligon lahan untuk peta GIS, batch aktif, insiden kebun, dan panen terbaru.
+      responses:
+        "200":
+          description: Ringkasan dasbor berhasil diambil.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/DashboardOverview"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      operationId: login
+      summary: Autentikasi pengguna
+      description: Memverifikasi kredensial dan memberikan access token JWT.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+            example:
+              username_or_email: admin_kelompok
+              password: "<password>"
+      responses:
+        "200":
+          description: Autentikasi berhasil.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/LoginData"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/auth/me:
+    get:
+      tags: [Auth]
+      operationId: getCurrentUser
+      summary: Ambil profil pengguna aktif
+      responses:
+        "200":
+          description: Profil pengguna.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Admin"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/auth/password:
+    put:
+      tags: [Auth]
+      operationId: changeCurrentUserPassword
+      summary: Ubah password pengguna aktif
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+      responses:
+        "200":
+          description: Password berhasil diperbarui.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessMetadata"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/admin:
+    post:
+      tags: [Admin Management]
+      operationId: createAdmin
+      summary: Buat akun admin
+      description: Hanya dapat dilakukan oleh Super Admin.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAdminRequest"
+      responses:
+        "201":
+          description: Akun admin berhasil dibuat.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Admin"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/petani:
+    get:
+      tags: [Petani]
+      operationId: listFarmers
+      summary: Daftar petani
+      parameters:
+        - $ref: "#/components/parameters/Search"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Daftar petani dengan metadata pagination.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/PetaniPage"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Petani]
+      operationId: createFarmer
+      summary: Tambah petani
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PetaniRequest"
+      responses:
+        "201":
+          description: Petani berhasil ditambahkan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Petani"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/petani/{id}:
+    parameters:
+      - $ref: "#/components/parameters/PetaniID"
+    get:
+      tags: [Petani]
+      operationId: getFarmer
+      summary: Ambil detail petani
+      responses:
+        "200":
+          description: Detail petani.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Petani"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    put:
+      tags: [Petani]
+      operationId: updateFarmer
+      summary: Perbarui data petani
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PetaniRequest"
+      responses:
+        "200":
+          description: Petani berhasil diperbarui.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Petani"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Petani]
+      operationId: deleteFarmer
+      summary: Hapus petani
+      responses:
+        "204":
+          description: Petani berhasil dihapus.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/lahan:
+    get:
+      tags: [Lahan]
+      operationId: listLand
+      summary: Daftar lahan
+      parameters:
+        - name: id_petani
+          in: query
+          description: Filter berdasarkan ID petani.
+          schema:
+            type: string
+        - name: farmer_id
+          in: query
+          deprecated: true
+          description: Alias dari id_petani (dipertahankan untuk kompatibilitas).
+          schema:
+            type: string
+        - $ref: "#/components/parameters/Search"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Daftar lahan dengan metadata pagination.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/LahanPage"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Lahan]
+      operationId: createLand
+      summary: Daftarkan lahan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LahanRequest"
+      responses:
+        "201":
+          description: Lahan berhasil didaftarkan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Lahan"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/lahan/{id}:
+    parameters:
+      - $ref: "#/components/parameters/LahanID"
+    get:
+      tags: [Lahan]
+      operationId: getLand
+      summary: Ambil detail lahan
+      responses:
+        "200":
+          description: Detail lahan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Lahan"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    put:
+      tags: [Lahan]
+      operationId: updateLand
+      summary: Perbarui data lahan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LahanRequest"
+      responses:
+        "200":
+          description: Lahan berhasil diperbarui.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Lahan"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Lahan]
+      operationId: deleteLand
+      summary: Hapus lahan
+      description: Inventaris tanaman yang dimiliki lahan ikut terhapus.
+      responses:
+        "204":
+          description: Lahan berhasil dihapus.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/lahan/{id}/polygon:
+    parameters:
+      - $ref: "#/components/parameters/LahanID"
+    put:
+      tags: [Pemetaan Polygon (GIS)]
+      operationId: setLandPolygon
+      summary: Simpan polygon lahan
+      description: Polygon harus valid dan tidak tumpang tindih dengan polygon lahan lain.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PolygonRequest"
+      responses:
+        "200":
+          description: Polygon berhasil disimpan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Lahan"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Pemetaan Polygon (GIS)]
+      operationId: deleteLandPolygon
+      summary: Hapus polygon lahan
+      responses:
+        "204":
+          description: Polygon berhasil dihapus.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/lahan/{id}/inventaris:
+    parameters:
+      - $ref: "#/components/parameters/LahanID"
+    get:
+      tags: [Inventaris Tanaman]
+      operationId: listLandInventory
+      summary: Daftar inventaris tanaman pada lahan
+      responses:
+        "200":
+          description: Daftar blok inventaris lahan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Inventaris"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Inventaris Tanaman]
+      operationId: createLandInventory
+      summary: Tambah inventaris tanaman pada lahan
+      description: ID lahan hanya ditentukan oleh parameter path dan tidak dikirimkan dalam body.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventarisRequest"
+      responses:
+        "201":
+          description: Inventaris berhasil ditambahkan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Inventaris"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/inventaris/{id}:
+    parameters:
+      - $ref: "#/components/parameters/InventarisID"
+    get:
+      tags: [Inventaris Tanaman]
+      operationId: getInventory
+      summary: Ambil detail inventaris tanaman
+      responses:
+        "200":
+          description: Detail inventaris tanaman.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Inventaris"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    put:
+      tags: [Inventaris Tanaman]
+      operationId: updateInventory
+      summary: Perbarui inventaris tanaman
+      description: Lahan relasi inventaris tidak dapat diubah melalui operasi ini.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventarisRequest"
+      responses:
+        "200":
+          description: Inventaris berhasil diperbarui.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Inventaris"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Inventaris Tanaman]
+      operationId: deleteInventory
+      summary: Hapus inventaris tanaman
+      responses:
+        "204":
+          description: Inventaris berhasil dihapus.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/lahan/{id}/populasi-pohon:
+    parameters:
+      - $ref: "#/components/parameters/LahanID"
+    get:
+      tags: [Populasi Pohon]
+      operationId: getLandTreePopulation
+      summary: Ambil populasi pohon pada lahan
+      responses:
+        "200":
+          description: Populasi pohon per blok serta total lahan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/PopulasiPohon"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/inventaris/{id}/populasi-pohon:
+    parameters:
+      - $ref: "#/components/parameters/InventarisID"
+    put:
+      tags: [Populasi Pohon]
+      operationId: setInventoryTreePopulation
+      summary: Perbarui populasi pohon pada blok
+      description: Perubahan jumlah pohon dan total populasi lahan dilakukan secara transaksional.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PopulasiPohonRequest"
+      responses:
+        "200":
+          description: Populasi pohon blok berhasil diperbarui.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/PopulasiPohonItem"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/lahan/{id}/kondisi-tanah:
+    parameters:
+      - $ref: "#/components/parameters/LahanID"
+    get:
+      tags: [Kondisi Tanah]
+      operationId: listSoilConditionLogs
+      summary: Ambil histori pengukuran tanah
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - name: id_pemupukan
+          in: query
+          description: Filter log yang dikaitkan dengan aplikasi pemupukan.
+          schema:
+            type: string
+        - name: tahap_pemantauan
+          in: query
+          description: Wajib disertai id_pemupukan bila digunakan.
+          schema:
+            type: string
+            enum: [SEBELUM, SESUDAH]
+        - name: dari
+          in: query
+          description: Batas waktu awal RFC 3339, inklusif.
+          schema:
+            type: string
+            format: date-time
+        - name: sampai
+          in: query
+          description: Batas waktu akhir RFC 3339, inklusif.
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: Histori berurutan terbaru lebih dahulu.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/SoilConditionPage"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Kondisi Tanah]
+      operationId: createSoilConditionLog
+      summary: Catat hasil sampling tanah
+      description: Parameter yang tidak tersedia dari alat dapat dikirim null atau tidak disertakan.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SoilConditionRequest"
+      responses:
+        "201":
+          description: Sampling tanah berhasil dicatat.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/SoilConditionLog"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/kondisi-tanah/{id}:
+    get:
+      tags: [Kondisi Tanah]
+      operationId: getSoilConditionLog
+      summary: Ambil detail hasil sampling tanah
+      parameters:
+        - $ref: "#/components/parameters/SoilLogID"
+      responses:
+        "200":
+          description: Detail pengukuran tanah.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/SoilConditionLog"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/lahan/{id}/pemupukan:
+    parameters:
+      - $ref: "#/components/parameters/LahanID"
+    get:
+      tags: [Pemupukan]
+      operationId: listFertilizationApplications
+      summary: Ambil riwayat aplikasi pemupukan
+      description: Hanya mencatat aplikasi aktual, bukan jadwal pemupukan yang direncanakan.
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Riwayat aplikasi terbaru lebih dahulu.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/FertilizationPage"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Pemupukan]
+      operationId: recordFertilizationApplication
+      summary: Catat aplikasi pemupukan aktual
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FertilizationRequest"
+      responses:
+        "201":
+          description: Aplikasi pemupukan berhasil dicatat.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Fertilization"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/pemupukan/{id}:
+    parameters:
+      - $ref: "#/components/parameters/FertilizationID"
+    get:
+      tags: [Pemupukan]
+      operationId: getFertilizationApplication
+      summary: Ambil detail aplikasi pemupukan
+      responses:
+        "200":
+          description: Detail aplikasi aktual.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Fertilization"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    put:
+      tags: [Pemupukan]
+      operationId: updateFertilizationApplication
+      summary: Koreksi data aplikasi pemupukan
+      description: Lahan aplikasi tidak dapat diubah. Penghapusan ditolak bila sudah ada log sampling yang merujuk.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FertilizationRequest"
+      responses:
+        "200":
+          description: Aplikasi berhasil diperbarui.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Fertilization"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Pemupukan]
+      operationId: deleteFertilizationApplication
+      summary: Hapus catatan aplikasi pemupukan
+      responses:
+        "204":
+          description: Catatan berhasil dihapus.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/lahan/{id}/hama-penyakit:
+    parameters:
+      - $ref: "#/components/parameters/LahanID"
+    get:
+      tags: [Hama & Penyakit]
+      operationId: listPestDiseaseIncidents
+      summary: Ambil daftar insiden hama dan penyakit
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - name: status_penanganan
+          in: query
+          schema:
+            type: string
+            enum: [TERDETEKSI, DALAM_PENANGANAN, TERKENDALI]
+        - name: tingkat_serangan
+          in: query
+          schema:
+            type: string
+            enum: [RINGAN, SEDANG, BERAT]
+        - name: dari
+          in: query
+          description: Tanggal ditemukan awal, inklusif.
+          schema:
+            type: string
+            format: date
+        - name: sampai
+          in: query
+          description: Tanggal ditemukan akhir, inklusif.
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Daftar insiden terbaru lebih dahulu dengan status penanganan terkini.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/IncidentPage"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Hama & Penyakit]
+      operationId: reportPestDiseaseIncident
+      summary: Catat insiden hama atau penyakit
+      description: Insiden baru otomatis memiliki histori status awal TERDETEKSI.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IncidentRequest"
+      responses:
+        "201":
+          description: Insiden berhasil dicatat.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Incident"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/hama-penyakit/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IncidentID"
+    get:
+      tags: [Hama & Penyakit]
+      operationId: getPestDiseaseIncident
+      summary: Ambil detail insiden
+      responses:
+        "200":
+          description: Detail insiden beserta status dan penanganan terkini.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Incident"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    put:
+      tags: [Hama & Penyakit]
+      operationId: updatePestDiseaseIncident
+      summary: Koreksi data insiden
+      description: Perubahan status atau tindakan harus dicatat melalui endpoint penanganan agar histori terjaga.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IncidentRequest"
+      responses:
+        "200":
+          description: Data insiden berhasil diperbarui.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Incident"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Hama & Penyakit]
+      operationId: deletePestDiseaseIncident
+      summary: Hapus insiden dan histori penanganannya
+      responses:
+        "204":
+          description: Insiden berhasil dihapus.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/hama-penyakit/{id}/penanganan:
+    parameters:
+      - $ref: "#/components/parameters/IncidentID"
+    get:
+      tags: [Hama & Penyakit]
+      operationId: listPestDiseaseTreatmentHistory
+      summary: Ambil histori penanganan insiden
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Histori penanganan terbaru lebih dahulu.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/TreatmentPage"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Hama & Penyakit]
+      operationId: recordPestDiseaseTreatment
+      summary: Catat tindakan atau perubahan status insiden
+      description: Menambahkan peristiwa baru tanpa menimpa catatan penanganan sebelumnya.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreatmentRequest"
+      responses:
+        "201":
+          description: Catatan penanganan berhasil ditambahkan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Treatment"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/lahan/{id}/panen:
+    parameters:
+      - $ref: "#/components/parameters/LahanID"
+    get:
+      tags: [Panen]
+      operationId: listHarvests
+      summary: Daftar panen pada lahan
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - name: dari
+          in: query
+          schema: {type: string, format: date}
+        - name: sampai
+          in: query
+          schema: {type: string, format: date}
+        - name: varietas
+          in: query
+          schema: {type: string, enum: [ROBUSTA, ARABIKA]}
+        - name: status_alokasi
+          in: query
+          schema: {type: string, enum: [UNPROCESSED, PARTIAL, FULLY_BATCHED]}
+      responses:
+        "200":
+          description: Daftar panen terurut dari tanggal terbaru.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/HarvestPage"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Panen]
+      operationId: recordHarvest
+      summary: Catat hasil panen
+      description: Varietas ditentukan dari inventaris yang dipilih; lahan dan inventaris harus cocok.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HarvestCreateRequest"
+      responses:
+        "201":
+          description: Panen berhasil dicatat.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Harvest"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/panen/{id}:
+    parameters:
+      - $ref: "#/components/parameters/HarvestID"
+    get:
+      tags: [Panen]
+      operationId: getHarvest
+      summary: Ambil detail panen
+      responses:
+        "200":
+          description: Data panen.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Harvest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    put:
+      tags: [Panen]
+      operationId: updateHarvest
+      summary: Koreksi tanggal, berat, atau metode petik
+      description: Lahan, inventaris, dan varietas sumber tidak dapat diubah setelah pencatatan.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HarvestUpdateRequest"
+      responses:
+        "200":
+          description: Panen berhasil diperbarui.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Harvest"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Panen]
+      operationId: deleteHarvest
+      summary: Hapus catatan panen yang belum dialokasikan
+      responses:
+        "204":
+          description: Catatan panen berhasil dihapus.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/metode-pascaproses:
+    get:
+      tags: [Pascapanen]
+      operationId: listProcessingMethods
+      summary: Daftar metode pascaproses
+      parameters:
+        - name: semua
+          in: query
+          description: Set true untuk menyertakan metode nonaktif.
+          schema: {type: boolean, default: false}
+      responses:
+        "200":
+          description: Katalog metode.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ProcessingMethod"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Pascapanen]
+      operationId: createProcessingMethod
+      summary: Tambah metode pascaproses
+      description: Hanya SUPER_ADMIN. Kode metode immutable dan harus unik.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProcessingMethodCreateRequest"
+      responses:
+        "201":
+          description: Metode berhasil ditambahkan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ProcessingMethod"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/metode-pascaproses/{kode}:
+    parameters:
+      - name: kode
+        in: path
+        required: true
+        schema: {type: string, minLength: 1}
+    put:
+      tags: [Pascapanen]
+      operationId: updateProcessingMethod
+      summary: Ubah nama, deskripsi, atau status metode
+      description: Hanya SUPER_ADMIN. Metode yang sudah digunakan batch tidak dapat dinonaktifkan.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProcessingMethodUpdateRequest"
+      responses:
+        "200":
+          description: Metode berhasil diperbarui.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ProcessingMethod"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Pascapanen]
+      operationId: deactivateProcessingMethod
+      summary: Nonaktifkan metode
+      description: Hanya SUPER_ADMIN. Metode dinonaktifkan secara lunak, bukan dihapus.
+      responses:
+        "204":
+          description: Metode berhasil dinonaktifkan.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/batch:
+    get:
+      tags: [Pascapanen]
+      operationId: listProcessingBatches
+      summary: Daftar batch pascaproses
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - name: status_proses
+          in: query
+          schema: {type: string, enum: [FERMENTASI, PENGERINGAN, HULLING_RESTING, SELESAI]}
+        - name: metode_proses
+          in: query
+          schema: {type: string}
+      responses:
+        "200":
+          description: Batch pascaproses.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ProcessingBatchPage"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Pascapanen]
+      operationId: createProcessingBatch
+      summary: Buat batch pascaproses
+      description: Batch dimulai pada tahap FERMENTASI dengan QR trace code yang dibuat server.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProcessingBatchCreateRequest"
+      responses:
+        "201":
+          description: Batch berhasil dibuat.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ProcessingBatch"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/batch/{id}:
+    parameters:
+      - $ref: "#/components/parameters/BatchID"
+    get:
+      tags: [Pascapanen]
+      operationId: getProcessingBatch
+      summary: Ambil detail batch
+      responses:
+        "200":
+          description: Detail batch.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ProcessingBatch"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    put:
+      tags: [Pascapanen]
+      operationId: updateProcessingBatch
+      summary: Perbarui metode, target, atau berat hasil batch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProcessingBatchUpdateRequest"
+      responses:
+        "200":
+          description: Batch berhasil diperbarui.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ProcessingBatch"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Pascapanen]
+      operationId: deleteProcessingBatch
+      summary: Hapus batch dan alokasi terkait
+      responses:
+        "204":
+          description: Batch berhasil dihapus. Status alokasi panen dihitung ulang.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/batch/{id}/tahap:
+    parameters:
+      - $ref: "#/components/parameters/BatchID"
+    get:
+      tags: [Pascapanen]
+      operationId: listProcessingBatchStages
+      summary: Histori tahap dan kadar air batch
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Histori terbaru lebih dahulu.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ProcessingStagePage"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Pascapanen]
+      operationId: recordProcessingBatchStage
+      summary: Catat perubahan tahap atau pengukuran kadar air
+      description: Untuk status SELESAI, berat green bean harus sudah dicatat pada batch.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProcessingStageRequest"
+      responses:
+        "201":
+          description: Histori tahap berhasil dicatat.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ProcessingStage"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/batch/{id}/panen:
+    parameters:
+      - $ref: "#/components/parameters/BatchID"
+    get:
+      tags: [Pascapanen]
+      operationId: listBatchHarvestAllocations
+      summary: Daftar alokasi panen batch
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Alokasi panen batch.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/BatchHarvestMappingPage"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Pascapanen]
+      operationId: allocateHarvestToBatch
+      summary: Alokasikan berat panen ke batch
+      description: Total alokasi lintas batch tidak boleh melampaui berat panen.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchHarvestCreateRequest"
+      responses:
+        "201":
+          description: Alokasi berhasil dicatat.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/BatchHarvestMapping"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/batch/{id}/panen/{mapping_id}:
+    parameters:
+      - $ref: "#/components/parameters/BatchID"
+      - name: mapping_id
+        in: path
+        required: true
+        schema: {type: string, minLength: 1}
+    put:
+      tags: [Pascapanen]
+      operationId: updateBatchHarvestAllocation
+      summary: Koreksi berat alokasi panen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchHarvestUpdateRequest"
+      responses:
+        "200":
+          description: Alokasi berhasil diperbarui.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/BatchHarvestMapping"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Pascapanen]
+      operationId: removeBatchHarvestAllocation
+      summary: Hapus alokasi panen
+      responses:
+        "204":
+          description: Alokasi berhasil dihapus.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/batch/{id}/traceability:
+    parameters:
+      - $ref: "#/components/parameters/BatchID"
+    get:
+      tags: [Pascapanen]
+      operationId: getBatchTraceability
+      summary: Telusuri asal batch hingga lahan dan histori tanah
+      responses:
+        "200":
+          description: Batch dan sumber panen yang dialokasikan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/BatchTraceability"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    PetaniID:
+      name: id
+      in: path
+      required: true
+      description: ID petani.
+      schema:
+        type: string
+        minLength: 1
+    LahanID:
+      name: id
+      in: path
+      required: true
+      description: ID lahan.
+      schema:
+        type: string
+        minLength: 1
+    InventarisID:
+      name: id
+      in: path
+      required: true
+      description: ID inventaris tanaman.
+      schema:
+        type: string
+        minLength: 1
+    SoilLogID:
+      name: id
+      in: path
+      required: true
+      description: ID log kondisi tanah.
+      schema:
+        type: string
+        minLength: 1
+    FertilizationID:
+      name: id
+      in: path
+      required: true
+      description: ID aplikasi pemupukan.
+      schema:
+        type: string
+        minLength: 1
+    IncidentID:
+      name: id
+      in: path
+      required: true
+      description: ID insiden hama atau penyakit.
+      schema:
+        type: string
+        minLength: 1
+    HarvestID:
+      name: id
+      in: path
+      required: true
+      description: ID catatan panen.
+      schema:
+        type: string
+        minLength: 1
+    BatchID:
+      name: id
+      in: path
+      required: true
+      description: ID batch pascaproses.
+      schema:
+        type: string
+        minLength: 1
+    Search:
+      name: search
+      in: query
+      description: Kata kunci pencarian.
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      description: Nomor halaman, dimulai dari 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: page_size
+      in: query
+      description: Jumlah item per halaman.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+  responses:
+    InvalidRequest:
+      description: Request tidak valid.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Unauthorized:
+      description: Autentikasi diperlukan atau token tidak valid.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Forbidden:
+      description: Pengguna tidak memiliki izin untuk operasi ini.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    NotFound:
+      description: Resource tidak ditemukan.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Conflict:
+      description: Operasi bertentangan dengan kondisi resource saat ini.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    InternalError:
+      description: Terjadi kesalahan internal.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+  schemas:
+    Problem:
+      type: object
+      description: Problem Details sesuai RFC 9457.
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          format: uri
+          description: URI yang mengidentifikasi jenis masalah.
+        title:
+          type: string
+          description: Ringkasan singkat jenis masalah.
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+          description: Kode status HTTP.
+        detail:
+          type: string
+          description: Penjelasan masalah untuk kejadian ini.
+        instance:
+          type: string
+          description: URI path request yang mengalami masalah.
+      additionalProperties: true
+      example:
+        type: https://api.lembahkopi.id/problems/invalid-request
+        title: Invalid request
+        status: 400
+        detail: Request body must contain valid JSON.
+        instance: /api/v1/petani
+    SuccessMetadata:
+      type: object
+      required: [success, message]
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+        message:
+          type: string
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required: [username_or_email, password]
+      properties:
+        username_or_email:
+          type: string
+          minLength: 1
+          example: admin_kelompok
+        password:
+          type: string
+          format: password
+          minLength: 1
+          example: replace-with-a-strong-password
+    LoginData:
+      type: object
+      required: [token_type, access_token, expires_at, user]
+      properties:
+        token_type:
+          type: string
+          enum: [Bearer]
+        access_token:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+        user:
+          $ref: "#/components/schemas/Admin"
+    Admin:
+      type: object
+      required: [id_admin, username, email, nama_lengkap, role, status_aktif, last_login_at, created_at, updated_at]
+      properties:
+        id_admin:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        nama_lengkap:
+          type: string
+        role:
+          type: string
+          enum: [SUPER_ADMIN, ADMIN_KELOMPOK_TANI]
+        status_aktif:
+          type: boolean
+        last_login_at:
+          type: string
+          nullable: true
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    ChangePasswordRequest:
+      type: object
+      additionalProperties: false
+      required: [password_lama, password_baru, konfirmasi_password_baru]
+      properties:
+        password_lama:
+          type: string
+          format: password
+          minLength: 1
+        password_baru:
+          type: string
+          format: password
+          description: Minimal 12 karakter; maksimal 72 byte UTF-8 karena menggunakan bcrypt.
+          minLength: 12
+        konfirmasi_password_baru:
+          type: string
+          format: password
+          minLength: 12
+    CreateAdminRequest:
+      type: object
+      additionalProperties: false
+      required: [username, email, password, nama_lengkap, role]
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          maxLength: 100
+        password:
+          type: string
+          format: password
+          minLength: 12
+          description: Maksimal 72 byte UTF-8 karena menggunakan bcrypt.
+          example: replace-with-a-strong-password
+        nama_lengkap:
+          type: string
+          minLength: 1
+          maxLength: 100
+        role:
+          type: string
+          enum: [SUPER_ADMIN, ADMIN_KELOMPOK_TANI]
+    PetaniRequest:
+      type: object
+      additionalProperties: false
+      required: [nama_lengkap, no_hp]
+      properties:
+        nama_lengkap:
+          type: string
+          minLength: 1
+          maxLength: 100
+        no_hp:
+          type: string
+          minLength: 1
+          maxLength: 15
+    Petani:
+      type: object
+      required: [id_petani, nama_lengkap, no_hp, created_at, updated_at]
+      properties:
+        id_petani:
+          type: string
+        nama_lengkap:
+          type: string
+        no_hp:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    PetaniPage:
+      type: object
+      required: [items, total, page, page_size]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Petani"
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+    LahanRequest:
+      type: object
+      additionalProperties: false
+      required: [id_petani, nama_petak, dusun]
+      properties:
+        id_petani:
+          type: string
+          minLength: 1
+        nama_petak:
+          type: string
+          minLength: 1
+          maxLength: 50
+        dusun:
+          type: string
+          minLength: 1
+          maxLength: 50
+        elevasi_mdpl:
+          type: integer
+          minimum: 0
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+    Lahan:
+      type: object
+      required: [id_lahan, id_petani, nama_petak, dusun]
+      properties:
+        id_lahan:
+          type: string
+        id_petani:
+          type: string
+        nama_petak:
+          type: string
+        dusun:
+          type: string
+        elevasi_mdpl:
+          type: integer
+          nullable: true
+        latitude:
+          type: number
+          nullable: true
+        longitude:
+          type: number
+          nullable: true
+        polygon_geom:
+          $ref: "#/components/schemas/Polygon"
+        luas_m2:
+          type: number
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    LahanPage:
+      type: object
+      required: [items, total, page, page_size]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Lahan"
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+    PolygonRequest:
+      type: object
+      additionalProperties: false
+      required: [polygon_geom]
+      properties:
+        polygon_geom:
+          $ref: "#/components/schemas/Polygon"
+    Polygon:
+      type: object
+      additionalProperties: false
+      required: [type, coordinates]
+      properties:
+        type:
+          type: string
+          enum: [Polygon]
+        coordinates:
+          type: array
+          minItems: 1
+          items:
+            type: array
+            minItems: 4
+            items:
+              type: array
+              minItems: 2
+              maxItems: 2
+              items:
+                type: number
+    InventarisRequest:
+      type: object
+      additionalProperties: false
+      required: [varietas, kelompok_usia]
+      properties:
+        varietas:
+          type: string
+          enum: [ROBUSTA, ARABIKA]
+        kelompok_usia:
+          type: string
+          enum: [LIMA_TAHUN_KURANG, LIMA_BELAS_TAHUN_KURANG, LIMA_BELAS_TAHUN_LEBIH]
+    Inventaris:
+      type: object
+      required: [id_inventaris, id_lahan, varietas, kelompok_usia, jumlah_pohon]
+      properties:
+        id_inventaris:
+          type: string
+        id_lahan:
+          type: string
+        varietas:
+          type: string
+          enum: [ROBUSTA, ARABIKA]
+        kelompok_usia:
+          type: string
+          enum: [LIMA_TAHUN_KURANG, LIMA_BELAS_TAHUN_KURANG, LIMA_BELAS_TAHUN_LEBIH]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    PopulasiPohonRequest:
+      type: object
+      additionalProperties: false
+      required: [jumlah_pohon]
+      properties:
+        jumlah_pohon:
+          type: integer
+          minimum: 0
+    PopulasiPohonItem:
+      type: object
+      required: [id_inventaris, varietas, kelompok_usia, jumlah_pohon]
+      properties:
+        id_inventaris:
+          type: string
+        varietas:
+          type: string
+          enum: [ROBUSTA, ARABIKA]
+        kelompok_usia:
+          type: string
+          enum: [LIMA_TAHUN_KURANG, LIMA_BELAS_TAHUN_KURANG, LIMA_BELAS_TAHUN_LEBIH]
+        jumlah_pohon:
+          type: integer
+          minimum: 0
+    PopulasiPohon:
+      type: object
+      required: [id_lahan, total_pohon, blok]
+      properties:
+        id_lahan:
+          type: string
+        total_pohon:
+          type: integer
+          minimum: 0
+        blok:
+          type: array
+          items:
+            $ref: "#/components/schemas/PopulasiPohonItem"
+    SoilConditionRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        id_pemupukan:
+          type: string
+          description: Isi bersama tahap_pemantauan untuk mengaitkan sampling dengan aplikasi.
+        tahap_pemantauan:
+          type: string
+          enum: [SEBELUM, SESUDAH]
+        tanggal_ukur:
+          type: string
+          format: date-time
+          description: Default waktu server saat tidak dikirim.
+        ph_tanah:
+          type: number
+          minimum: 0
+          maximum: 14
+          multipleOf: 0.1
+          nullable: true
+        kelembapan:
+          type: number
+          minimum: 0
+          maximum: 100
+          multipleOf: 0.01
+          nullable: true
+        suhu_celsius:
+          type: number
+          minimum: -999.9
+          maximum: 999.9
+          multipleOf: 0.1
+          nullable: true
+        n_value:
+          type: integer
+          minimum: 0
+          nullable: true
+        p_value:
+          type: integer
+          minimum: 0
+          nullable: true
+        k_value:
+          type: integer
+          minimum: 0
+          nullable: true
+        ec_value:
+          type: integer
+          minimum: 0
+          nullable: true
+    SoilConditionLog:
+      type: object
+      required: [id_log_tanah, id_lahan, tanggal_ukur, ph_tanah, kelembapan, suhu_celsius, n_value, p_value, k_value, ec_value, created_at]
+      properties:
+        id_log_tanah:
+          type: string
+        id_lahan:
+          type: string
+        id_pemupukan:
+          type: string
+          nullable: true
+        tahap_pemantauan:
+          type: string
+          enum: [SEBELUM, SESUDAH]
+          nullable: true
+        tanggal_ukur:
+          type: string
+          format: date-time
+        ph_tanah:
+          type: number
+          nullable: true
+        kelembapan:
+          type: number
+          nullable: true
+        suhu_celsius:
+          type: number
+          nullable: true
+        n_value:
+          type: integer
+          nullable: true
+        p_value:
+          type: integer
+          nullable: true
+        k_value:
+          type: integer
+          nullable: true
+        ec_value:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    SoilConditionPage:
+      type: object
+      required: [items, total, page, page_size]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/SoilConditionLog"
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+    FertilizationRequest:
+      type: object
+      additionalProperties: false
+      required: [tanggal_aplikasi, jenis_pupuk, dosis_kg]
+      properties:
+        tanggal_aplikasi:
+          type: string
+          format: date
+        jenis_pupuk:
+          type: string
+          minLength: 1
+          maxLength: 100
+        dosis_kg:
+          type: number
+          minimum: 0
+          maximum: 999999.99
+          multipleOf: 0.01
+    Fertilization:
+      type: object
+      required: [id_pemupukan, id_lahan, tanggal_aplikasi, jenis_pupuk, dosis_kg, created_at, updated_at]
+      properties:
+        id_pemupukan:
+          type: string
+        id_lahan:
+          type: string
+        tanggal_aplikasi:
+          type: string
+          format: date
+        jenis_pupuk:
+          type: string
+        dosis_kg:
+          type: number
+          minimum: 0
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    FertilizationPage:
+      type: object
+      required: [items, total, page, page_size]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Fertilization"
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+    IncidentRequest:
+      type: object
+      additionalProperties: false
+      required: [tanggal_ditemukan, jenis_hama_penyakit, tingkat_serangan]
+      properties:
+        tanggal_ditemukan:
+          type: string
+          format: date
+        jenis_hama_penyakit:
+          type: string
+          minLength: 1
+          maxLength: 100
+        tingkat_serangan:
+          type: string
+          enum: [RINGAN, SEDANG, BERAT]
+    Incident:
+      type: object
+      required: [id_insiden, id_lahan, tanggal_ditemukan, jenis_hama_penyakit, tingkat_serangan, status_penanganan]
+      properties:
+        id_insiden:
+          type: string
+        id_lahan:
+          type: string
+        tanggal_ditemukan:
+          type: string
+          format: date
+        jenis_hama_penyakit:
+          type: string
+        tingkat_serangan:
+          type: string
+          enum: [RINGAN, SEDANG, BERAT]
+        status_penanganan:
+          type: string
+          enum: [TERDETEKSI, DALAM_PENANGANAN, TERKENDALI]
+        penanganan_terakhir:
+          $ref: "#/components/schemas/Treatment"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    IncidentPage:
+      type: object
+      required: [items, total, page, page_size]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Incident"
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+    TreatmentRequest:
+      type: object
+      additionalProperties: false
+      required: [status_penanganan]
+      properties:
+        tanggal_penanganan:
+          type: string
+          format: date-time
+          description: Default waktu server saat tidak dikirim.
+        tindakan_penanganan:
+          type: string
+          nullable: true
+        status_penanganan:
+          type: string
+          enum: [TERDETEKSI, DALAM_PENANGANAN, TERKENDALI]
+    Treatment:
+      type: object
+      required: [id_riwayat_penanganan, id_insiden, tanggal_penanganan, status_penanganan, created_at]
+      properties:
+        id_riwayat_penanganan:
+          type: string
+        id_insiden:
+          type: string
+        tanggal_penanganan:
+          type: string
+          format: date-time
+        tindakan_penanganan:
+          type: string
+          nullable: true
+        status_penanganan:
+          type: string
+          enum: [TERDETEKSI, DALAM_PENANGANAN, TERKENDALI]
+        id_admin:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    TreatmentPage:
+      type: object
+      required: [items, total, page, page_size]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Treatment"
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+    HarvestCreateRequest:
+      type: object
+      additionalProperties: false
+      required: [id_inventaris, tanggal_panen, berat_ceri_kg, metode_petik]
+      properties:
+        id_inventaris:
+          type: string
+          minLength: 1
+          description: Inventaris harus berada di lahan pada path.
+        tanggal_panen:
+          type: string
+          format: date
+        berat_ceri_kg:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 999999.99
+          multipleOf: 0.01
+        metode_petik:
+          type: string
+          enum: [PETIK_MERAH, PETIK_PELANGI]
+    HarvestUpdateRequest:
+      type: object
+      additionalProperties: false
+      required: [tanggal_panen, berat_ceri_kg, metode_petik]
+      properties:
+        tanggal_panen:
+          type: string
+          format: date
+        berat_ceri_kg:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 999999.99
+          multipleOf: 0.01
+        metode_petik:
+          type: string
+          enum: [PETIK_MERAH, PETIK_PELANGI]
+    Harvest:
+      type: object
+      required: [id_panen, id_lahan, id_inventaris, tanggal_panen, berat_ceri_kg, metode_petik, varietas, status_alokasi]
+      properties:
+        id_panen:
+          type: string
+        id_lahan:
+          type: string
+        id_inventaris:
+          type: string
+          nullable: true
+          description: Null untuk data panen lama yang belum memiliki referensi inventaris.
+        tanggal_panen:
+          type: string
+          format: date
+        berat_ceri_kg:
+          type: number
+        metode_petik:
+          type: string
+          enum: [PETIK_MERAH, PETIK_PELANGI]
+        varietas:
+          type: string
+          enum: [ROBUSTA, ARABIKA]
+        status_alokasi:
+          type: string
+          enum: [UNPROCESSED, PARTIAL, FULLY_BATCHED]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    HarvestPage:
+      type: object
+      required: [items, total, page, page_size]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Harvest"
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+    ProcessingMethodCreateRequest:
+      type: object
+      additionalProperties: false
+      required: [kode_metode, nama_metode]
+      properties:
+        kode_metode:
+          type: string
+          pattern: "^[A-Z][A-Z0-9_]{0,29}$"
+        nama_metode:
+          type: string
+          minLength: 1
+          maxLength: 100
+        deskripsi:
+          type: string
+          nullable: true
+    ProcessingMethodUpdateRequest:
+      type: object
+      additionalProperties: false
+      required: [nama_metode]
+      properties:
+        nama_metode:
+          type: string
+          minLength: 1
+          maxLength: 100
+        deskripsi:
+          type: string
+          nullable: true
+          description: Jika tidak dikirim, deskripsi saat ini dipertahankan; null menghapus deskripsi.
+        aktif:
+          type: boolean
+          description: Jika tidak dikirim, status aktif saat ini dipertahankan.
+    ProcessingMethod:
+      type: object
+      required: [kode_metode, nama_metode, aktif]
+      properties:
+        kode_metode:
+          type: string
+        nama_metode:
+          type: string
+        deskripsi:
+          type: string
+          nullable: true
+        aktif:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    ProcessingBatchCreateRequest:
+      type: object
+      additionalProperties: false
+      required: [metode_proses, tanggal_mulai_olah]
+      properties:
+        metode_proses:
+          type: string
+          description: Harus merujuk metode yang aktif.
+        tanggal_mulai_olah:
+          type: string
+          format: date
+        estimasi_tanggal_selesai:
+          type: string
+          format: date
+          nullable: true
+        target_kadar_air_persen:
+          type: number
+          minimum: 0
+          maximum: 100
+          multipleOf: 0.01
+          nullable: true
+    ProcessingBatchUpdateRequest:
+      type: object
+      additionalProperties: false
+      description: PUT mengganti seluruh field target; kirim null pada field nullable untuk menghapus nilainya.
+      required: [metode_proses, tanggal_mulai_olah, estimasi_tanggal_selesai, target_kadar_air_persen, berat_green_bean_kg]
+      properties:
+        metode_proses:
+          type: string
+          description: Harus merujuk metode yang aktif.
+        tanggal_mulai_olah:
+          type: string
+          format: date
+        estimasi_tanggal_selesai:
+          type: string
+          format: date
+          nullable: true
+        target_kadar_air_persen:
+          type: number
+          minimum: 0
+          maximum: 100
+          multipleOf: 0.01
+          nullable: true
+        berat_green_bean_kg:
+          type: number
+          minimum: 0
+          maximum: 999999.99
+          multipleOf: 0.01
+          nullable: true
+          description: Berat hasil aktual; wajib dicatat sebelum tahap SELESAI.
+    ProcessingBatch:
+      type: object
+      required: [id_batch, kode_qr_trace, metode_proses, tanggal_mulai_olah, total_input_ceri_kg, status_proses]
+      properties:
+        id_batch:
+          type: string
+        kode_qr_trace:
+          type: string
+        metode_proses:
+          type: string
+        tanggal_mulai_olah:
+          type: string
+          format: date
+        estimasi_tanggal_selesai:
+          type: string
+          format: date
+          nullable: true
+        tanggal_selesai_olah:
+          type: string
+          format: date
+          nullable: true
+        target_kadar_air_persen:
+          type: number
+          nullable: true
+        total_input_ceri_kg:
+          type: number
+          minimum: 0
+        berat_green_bean_kg:
+          type: number
+          nullable: true
+        rendemen_persen:
+          type: number
+          nullable: true
+        status_proses:
+          type: string
+          enum: [FERMENTASI, PENGERINGAN, HULLING_RESTING, SELESAI]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    ProcessingBatchPage:
+      type: object
+      required: [items, total, page, page_size]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProcessingBatch"
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+    ProcessingStageRequest:
+      type: object
+      additionalProperties: false
+      required: [status_proses]
+      properties:
+        status_proses:
+          type: string
+          enum: [FERMENTASI, PENGERINGAN, HULLING_RESTING, SELESAI]
+        tanggal_perubahan:
+          type: string
+          format: date-time
+          description: Default waktu server saat tidak dikirim.
+        kadar_air_persen:
+          type: number
+          minimum: 0
+          maximum: 100
+          multipleOf: 0.01
+          nullable: true
+        catatan:
+          type: string
+          nullable: true
+    ProcessingStage:
+      type: object
+      required: [id_riwayat_tahap, id_batch, status_proses, tanggal_perubahan, created_at]
+      properties:
+        id_riwayat_tahap:
+          type: string
+        id_batch:
+          type: string
+        status_proses:
+          type: string
+          enum: [FERMENTASI, PENGERINGAN, HULLING_RESTING, SELESAI]
+        tanggal_perubahan:
+          type: string
+          format: date-time
+        kadar_air_persen:
+          type: number
+          nullable: true
+        catatan:
+          type: string
+          nullable: true
+        id_admin:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    ProcessingStagePage:
+      type: object
+      required: [items, total, page, page_size]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProcessingStage"
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+    BatchHarvestCreateRequest:
+      type: object
+      additionalProperties: false
+      required: [id_panen, berat_digunakan_kg]
+      properties:
+        id_panen:
+          type: string
+          minLength: 1
+        berat_digunakan_kg:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 999999.99
+          multipleOf: 0.01
+    BatchHarvestUpdateRequest:
+      type: object
+      additionalProperties: false
+      required: [berat_digunakan_kg]
+      properties:
+        berat_digunakan_kg:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 999999.99
+          multipleOf: 0.01
+    BatchHarvestMapping:
+      type: object
+      required: [id_mapping, id_batch, id_panen, berat_digunakan_kg]
+      properties:
+        id_mapping:
+          type: string
+        id_batch:
+          type: string
+        id_panen:
+          type: string
+        berat_digunakan_kg:
+          type: number
+          minimum: 0
+        created_at:
+          type: string
+          format: date-time
+    BatchHarvestMappingPage:
+      type: object
+      required: [items, total, page, page_size]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/BatchHarvestMapping"
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+    BatchTraceability:
+      type: object
+      required: [batch, asal_panen]
+      properties:
+        batch:
+          $ref: "#/components/schemas/ProcessingBatch"
+        asal_panen:
+          type: array
+          items:
+            type: object
+            required: [alokasi, panen, lahan, petani, histori_kondisi_tanah]
+            properties:
+              alokasi:
+                $ref: "#/components/schemas/BatchHarvestMapping"
+              panen:
+                $ref: "#/components/schemas/Harvest"
+              lahan:
+                type: object
+                required: [id_lahan, id_petani, nama_petak, dusun]
+                properties:
+                  id_lahan: {type: string}
+                  id_petani: {type: string}
+                  nama_petak: {type: string}
+                  dusun: {type: string}
+                  elevasi_mdpl: {type: integer, nullable: true}
+                  latitude: {type: number, nullable: true}
+                  longitude: {type: number, nullable: true}
+                  luas_m2: {type: number, nullable: true}
+              petani:
+                type: object
+                required: [id_petani, nama_lengkap, no_hp]
+                properties:
+                  id_petani: {type: string}
+                  nama_lengkap: {type: string}
+                  no_hp: {type: string}
+              inventaris:
+                type: object
+                nullable: true
+                required: [id_inventaris, id_lahan, varietas, kelompok_usia]
+                properties:
+                  id_inventaris: {type: string}
+                  id_lahan: {type: string}
+                  varietas: {type: string, enum: [ROBUSTA, ARABIKA]}
+                  kelompok_usia: {type: string}
+                  jumlah_pohon: {type: integer}
+              histori_kondisi_tanah:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SoilConditionLog"
+    DashboardOverview:
+      type: object
+      required: [summary, map_lahan, batch_aktif, peringatan_kebun, panen_terbaru]
+      properties:
+        summary:
+          type: object
+          required: [total_petani, total_luas_m2, panen_bulan_ini_kg, total_batch_aktif]
+          properties:
+            total_petani:
+              type: integer
+            total_luas_m2:
+              type: number
+            panen_bulan_ini_kg:
+              type: number
+            total_batch_aktif:
+              type: integer
+        map_lahan:
+          type: array
+          items:
+            type: object
+            required: [id_lahan, nama_petak, id_petani, nama_petani, dusun, total_pohon]
+            properties:
+              id_lahan: {type: string}
+              nama_petak: {type: string}
+              id_petani: {type: string}
+              nama_petani: {type: string}
+              dusun: {type: string}
+              elevasi_mdpl: {type: integer, nullable: true}
+              luas_m2: {type: number, nullable: true}
+              total_pohon: {type: integer}
+              polygon_geom:
+                type: object
+                nullable: true
+                description: GeoJSON Polygon geometry
+        batch_aktif:
+          type: array
+          items:
+            type: object
+            required: [id_batch, kode_qr_trace, metode_proses, total_input_ceri_kg, status_proses]
+            properties:
+              id_batch: {type: string}
+              kode_qr_trace: {type: string}
+              metode_proses: {type: string}
+              total_input_ceri_kg: {type: number}
+              status_proses: {type: string}
+              estimasi_tanggal_selesai: {type: string, format: date, nullable: true}
+        peringatan_kebun:
+          type: array
+          items:
+            type: object
+            required: [id_insiden, id_lahan, nama_petak, jenis_hama_penyakit, tingkat_serangan, status_penanganan, tanggal_ditemukan]
+            properties:
+              id_insiden: {type: string}
+              id_lahan: {type: string}
+              nama_petak: {type: string}
+              jenis_hama_penyakit: {type: string}
+              tingkat_serangan: {type: string}
+              status_penanganan: {type: string}
+              tanggal_ditemukan: {type: string, format: date-time}
+        panen_terbaru:
+          type: array
+          items:
+            type: object
+            required: [id_panen, tanggal_panen, nama_petani, nama_petak, varietas, berat_ceri_kg, status_alokasi]
+            properties:
+              id_panen: {type: string}
+              tanggal_panen: {type: string, format: date-time}
+              nama_petani: {type: string}
+              nama_petak: {type: string}
+              varietas: {type: string}
+              berat_ceri_kg: {type: number}
+              status_alokasi: {type: string}
