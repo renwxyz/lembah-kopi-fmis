@@ -14,3 +14,7 @@ export async function GET(request: NextRequest) {
   const query = searchParams.size ? `?${searchParams}` : "";
   return proxyToBackend({ request, path: `/petani${query}` });
 }
+
+export async function POST(request: NextRequest) {
+  return proxyToBackend({ request, path: "/petani" });
+}

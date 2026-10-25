@@ -1,15 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { getFarmers } from "../api";
+import { getFarmers, type GetFarmersOptions } from "../api";
 
 export const petaniKeys = {
   all: ["petani"] as const,
-  list: () => [...petaniKeys.all, "list"] as const,
+  lists: () => [...petaniKeys.all, "list"] as const,
+  list: (options?: GetFarmersOptions) => [...petaniKeys.lists(), options ?? {}] as const,
+  details: () => [...petaniKeys.all, "detail"] as const,
+  detail: (id: string) => [...petaniKeys.details(), id] as const,
 };
 
-export function usePetaniList() {
+export function usePetaniList(options?: GetFarmersOptions) {
   return useQuery({
-    queryKey: petaniKeys.list(),
-    queryFn: getFarmers,
+    queryKey: petaniKeys.list(options),
+    queryFn: () => getFarmers(options),
   });
 }
 

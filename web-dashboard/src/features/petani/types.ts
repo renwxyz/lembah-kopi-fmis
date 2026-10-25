@@ -6,6 +6,8 @@ export interface Farmer {
   updated_at?: string;
 }
 
+export type Petani = Farmer;
+
 export interface FarmerPage {
   items: Farmer[];
   total: number;
@@ -13,3 +15,14 @@ export interface FarmerPage {
   page_size: number;
 }
 
+export type PetaniPage = FarmerPage;
+
+export interface CreateFarmerInput {
+  nama_lengkap: string;
+  no_hp: string;
+}
+
+export interface UpdateFarmerInput {
+  nama_lengkap: string;
+  no_hp: string;
+}

@@ -27,7 +27,8 @@ db-seed:
 		-f /docker-migrations/000001_init_lembah_kopi_schema.up.sql \
 		-f /docker-migrations/000002_seed_initial_data.sql \
 		-f /docker-migrations/000003_add_agronomy_monitoring_history.up.sql \
-		-f /docker-migrations/000004_extend_harvest_batch_traceability.up.sql
+		-f /docker-migrations/000004_extend_harvest_batch_traceability.up.sql \
+		-f /docker-migrations/000005_add_audit_log.up.sql
 	@echo "Database successfully migrated and seeded!"
 
 db-reset:

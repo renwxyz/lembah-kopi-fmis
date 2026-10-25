@@ -158,6 +158,10 @@ Jika sewaktu-waktu data database perlu di-reset atau dimigrasikan ulang:
   2. `000002_seed_initial_data.sql` (User admin & kelompok tani Glodogan)
   3. `000003_add_agronomy_monitoring_history.up.sql` (Aktivitas agronomi & monitoring pohon)
   4. `000004_extend_harvest_batch_traceability.up.sql` (Batch panen, pascaproses, dan penelusuran QR)
+  5. `000005_add_audit_log.up.sql` (Tabel `log_audit` untuk audit trail)
+
+> **Database yang sudah berjalan:** init script hanya jalan saat volume baru dibuat. Terapkan migrasi baru secara manual:
+> `docker exec -i lembah_kopi_db psql -U postgres -d lembah_kopi_db -f /docker-migrations/000005_add_audit_log.up.sql`
 
 ---
 
@@ -177,6 +181,9 @@ Berikut rangkuman fitur yang sudah aktif dan terintegrasi:
    * Route Handlers di Next.js (`/api/*`) bertindak sebagai proxy aman ke `core-system`.
 4. **Dokumentasi API**:
    * Spesifikasi lengkap OpenAPI 3.0 tersedia di `core-system/docs/openapi.yaml`.
+5. **Audit Trail (`/dashboard/audit-log`, khusus SUPER_ADMIN)**:
+   * Mencatat siapa melakukan apa pada resource apa (tambah/ubah/hapus, ganti kata sandi) serta login berhasil dan gagal. Body request dan password tidak pernah disimpan.
+   * Dicatat lewat middleware `audit_middleware.go`. API: `GET /api/v1/audit-log` dengan filter `q`, `username`, `aksi`, `resource`, `from`, `to`, plus paginasi.
 
 ---
 

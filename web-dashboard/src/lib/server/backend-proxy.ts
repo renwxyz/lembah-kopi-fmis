@@ -27,7 +27,35 @@ export async function proxyToBackend({
   }
 
   try {
-    const upstream = await backendFetch(path, withBearerToken(token, init));
+    const method = init.method ?? request.method;
+    const headers = new Headers(init.headers);
+
+    const contentType = request.headers.get("content-type");
+    if (contentType && !headers.has("Content-Type")) {
+      headers.set("Content-Type", contentType);
+    }
+
+    let body: BodyInit | null | undefined = init.body;
+    if (body === undefined && method !== "GET" && method !== "HEAD") {
+      try {
+        const text = await request.text();
+        if (text) {
+          body = text;
+        }
+      } catch {
+        // body was already read or empty
+      }
+    }
+
+    const upstream = await backendFetch(
+      path,
+      withBearerToken(token, {
+        ...init,
+        method,
+        headers,
+        body,
+      }),
+    );
     const response = await responseFromUpstream(upstream);
 
     if (upstream.status === 401) {

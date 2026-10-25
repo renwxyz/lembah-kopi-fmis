@@ -17,6 +17,22 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
+type routerOptions struct {
+	auditHandler  *handler.AuditHandler
+	auditRecorder middleware.AuditRecorder
+}
+
+// RouterOption mengonfigurasi fitur opsional router.
+type RouterOption func(*routerOptions)
+
+// WithAudit mengaktifkan pencatatan audit trail dan endpoint GET /audit-log (SUPER_ADMIN).
+func WithAudit(auditHandler *handler.AuditHandler, recorder middleware.AuditRecorder) RouterOption {
+	return func(o *routerOptions) {
+		o.auditHandler = auditHandler
+		o.auditRecorder = recorder
+	}
+}
+
 func NewRouter(
 	authHandler *handler.AuthHandler,
 	farmerHandler *handler.FarmerHandler,
@@ -32,7 +48,12 @@ func NewRouter(
 	dashboardHandler *handler.DashboardHandler,
 	jwtSecret string,
 	allowedOrigins []string,
+	opts ...RouterOption,
 ) *chi.Mux {
+	var options routerOptions
+	for _, opt := range opts {
+		opt(&options)
+	}
 	r := chi.NewRouter()
 	originAllowlist := make(map[string]struct{}, len(allowedOrigins))
 	for _, origin := range allowedOrigins {
@@ -65,10 +86,17 @@ func NewRouter(
 	r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL("/openapi.yaml")))
 
 	r.Route("/api/v1", func(r chi.Router) {
-		r.Post("/auth/login", authHandler.Login)
+		if options.auditRecorder != nil {
+			r.With(middleware.AuditLogin(options.auditRecorder)).Post("/auth/login", authHandler.Login)
+		} else {
+			r.Post("/auth/login", authHandler.Login)
+		}
 
 		r.Group(func(r chi.Router) {
 			r.Use(middleware.AuthMiddleware(jwtSecret))
+			if options.auditRecorder != nil {
+				r.Use(middleware.AuditMutations(options.auditRecorder))
+			}
 
 			r.Get("/auth/me", authHandler.GetProfile)
 			r.Put("/auth/password", authHandler.ChangePassword)
@@ -146,6 +174,9 @@ func NewRouter(
 
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireRole(domain.RoleSuperAdmin))
+				if options.auditHandler != nil {
+					r.Get("/audit-log", options.auditHandler.List)
+				}
 				r.Post("/admin", authHandler.CreateAdmin)
 				r.Post("/metode-pascaproses", processingMethodHandler.Create)
 				r.Put("/metode-pascaproses/{kode}", processingMethodHandler.Update)

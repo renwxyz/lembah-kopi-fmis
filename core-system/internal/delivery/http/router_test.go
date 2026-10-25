@@ -334,3 +334,51 @@ func TestDashboardOverviewRoute_Success(t *testing.T) {
 		t.Fatalf("farmer count = %d, want 10", payload.Data.Summary.FarmerCount)
 	}
 }
+
+type mockAuditUseCases struct{}
+
+func (mockAuditUseCases) List(_ context.Context, _ domain.AuditFilter, page, size int) (*domain.Page[domain.AuditLog], error) {
+	return &domain.Page[domain.AuditLog]{Items: []domain.AuditLog{}, Page: page, PageSize: size}, nil
+}
+
+func TestAuditLogRouteIsSuperAdminOnly(t *testing.T) {
+	jwtSecret := "supersecretjwtkeythatisatleast32chars"
+	router := NewRouter(
+		(*handler.AuthHandler)(nil),
+		(*handler.FarmerHandler)(nil),
+		(*handler.LandHandler)(nil),
+		(*handler.CropInventoryHandler)(nil),
+		(*handler.TreePopulationHandler)(nil),
+		(*handler.SoilConditionHandler)(nil),
+		(*handler.FertilizationHandler)(nil),
+		(*handler.PestDiseaseHandler)(nil),
+		(*handler.HarvestHandler)(nil),
+		(*handler.ProcessingMethodHandler)(nil),
+		(*handler.ProcessingBatchHandler)(nil),
+		(*handler.DashboardHandler)(nil),
+		jwtSecret,
+		nil,
+		WithAudit(handler.NewAuditHandler(mockAuditUseCases{}), nil),
+	)
+
+	call := func(role domain.AdminRole) int {
+		token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+			"sub": "ADM-001", "role": string(role), "exp": time.Now().Add(time.Hour).Unix(),
+		}).SignedString([]byte(jwtSecret))
+		if err != nil {
+			t.Fatalf("sign token: %v", err)
+		}
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/audit-log", nil)
+		req.Header.Set("Authorization", "Bearer "+token)
+		res := httptest.NewRecorder()
+		router.ServeHTTP(res, req)
+		return res.Code
+	}
+
+	if got := call(domain.RoleSuperAdmin); got != http.StatusOK {
+		t.Fatalf("SUPER_ADMIN status = %d, want 200", got)
+	}
+	if got := call(domain.RoleAdminKelompokTani); got != http.StatusForbidden {
+		t.Fatalf("ADMIN_KELOMPOK_TANI status = %d, want 403", got)
+	}
+}

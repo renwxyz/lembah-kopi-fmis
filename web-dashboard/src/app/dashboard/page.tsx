@@ -34,7 +34,7 @@ export default function DashboardPage() {
         inert={isSummaryHidden}
         className={`
           relative z-10
-          -mx-6 sm:-mx-8 lg:-mx-10
+          -mx-4 sm:-mx-8 lg:-mx-10
           mt-0
           transition-opacity duration-300 ease-in-out
           ${
@@ -50,10 +50,10 @@ export default function DashboardPage() {
           className={`
             pointer-events-none
             absolute inset-x-0 bottom-full
-            h-24
+            h-16
             bg-gradient-to-b
             from-transparent
-            via-[#F9F8F6]/50
+            via-[#F9F8F6]/40
             to-[#F9F8F6]
             transition-opacity duration-300
             ${isSummaryHidden ? "opacity-0" : "opacity-100"}
@@ -71,7 +71,7 @@ export default function DashboardPage() {
             }
           `}
         >
-          <div className="min-h-0 overflow-hidden bg-[#F9F8F6] px-6 pb-8 sm:px-8 lg:px-10">
+          <div className="min-h-0 overflow-hidden bg-[#F9F8F6] px-4 pb-8 sm:px-8 lg:px-10">
             <div className="space-y-8 pt-4">
               {/* JUDUL DAN TOMBOL AKSI */}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -100,16 +100,21 @@ export default function DashboardPage() {
                     Muat Ulang
                   </Button>
 
-                  <Button className="gap-2 text-xs">
+                  <Button
+                    disabled
+                    variant="default"
+                    className="gap-2 text-xs opacity-65 cursor-not-allowed"
+                    title="Fitur pencatatan panen dalam tahap pengembangan"
+                  >
                     <Plus className="h-4 w-4" />
-                    Catat Panen
+                    Catat Panen (Segera)
                   </Button>
                 </div>
               </div>
 
               {/* ERROR STATE BANNER */}
               {overviewQuery.isError && (
-                <div className="flex items-center justify-between gap-4 rounded-2xl border border-red-200 bg-red-50 p-4 text-xs text-red-800">
+                <div className="flex items-center justify-between gap-4 rounded-2xl bg-red-50 p-4 text-xs font-medium text-red-800">
                   <div className="flex items-center gap-2.5">
                     <AlertTriangle className="h-4 w-4 shrink-0 text-red-600" />
                     <span>
@@ -119,7 +124,7 @@ export default function DashboardPage() {
                   <button
                     type="button"
                     onClick={() => void overviewQuery.refetch()}
-                    className="font-semibold underline hover:no-underline"
+                    className="font-bold underline hover:no-underline"
                   >
                     Coba Lagi
                   </button>

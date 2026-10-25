@@ -1,7 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { AuthErrorRedirect } from "./auth-error-redirect";
 
 export default function QueryProvider({ children }: { children: React.ReactNode }) {
@@ -19,7 +19,9 @@ export default function QueryProvider({ children }: { children: React.ReactNode 
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthErrorRedirect />
+      <Suspense fallback={null}>
+        <AuthErrorRedirect />
+      </Suspense>
       {children}
     </QueryClientProvider>
   );

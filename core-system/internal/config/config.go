@@ -14,6 +14,8 @@ type Config struct {
 }
 
 func Load() (Config, error) {
+	loadDotEnv(".env", "../.env")
+
 	config := Config{
 		DatabaseURL:        strings.TrimSpace(os.Getenv("DATABASE_URL")),
 		JWTSecret:          os.Getenv("JWT_SECRET"),
@@ -40,4 +42,28 @@ func splitOrigins(value string) []string {
 		}
 	}
 	return origins
+}
+
+func loadDotEnv(filenames ...string) {
+	for _, filename := range filenames {
+		data, err := os.ReadFile(filename)
+		if err != nil {
+			continue
+		}
+		for _, line := range strings.Split(string(data), "\n") {
+			line = strings.TrimSpace(line)
+			if line == "" || strings.HasPrefix(line, "#") {
+				continue
+			}
+			parts := strings.SplitN(line, "=", 2)
+			if len(parts) == 2 {
+				key := strings.TrimSpace(parts[0])
+				val := strings.TrimSpace(parts[1])
+				val = strings.Trim(val, `"'`)
+				if _, exists := os.LookupEnv(key); !exists {
+					_ = os.Setenv(key, val)
+				}
+			}
+		}
+	}
 }

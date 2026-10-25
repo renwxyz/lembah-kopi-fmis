@@ -77,6 +77,8 @@ func run() error {
 	processingMethodHandler := handler.NewProcessingMethodHandler(service.NewProcessingMethodService(processingMethodRepository))
 	processingBatchHandler := handler.NewProcessingBatchHandler(service.NewProcessingBatchService(processingBatchRepository, processingMethodRepository))
 	dashboardHandler := handler.NewDashboardHandler(service.NewDashboardService(dashboardRepository))
+	auditService := service.NewAuditService(postgres.NewAuditRepository(db))
+	auditHandler := handler.NewAuditHandler(auditService)
 
 	server := &http.Server{
 		Addr: cfg.HTTPAddress,
@@ -86,6 +88,7 @@ func run() error {
 			harvestHandler, processingMethodHandler, processingBatchHandler,
 			dashboardHandler,
 			cfg.JWTSecret, cfg.CORSAllowedOrigins,
+			httpdelivery.WithAudit(auditHandler, auditService),
 		),
 		ReadHeaderTimeout: 5 * time.Second,
 	}

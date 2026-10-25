@@ -35,3 +35,19 @@ export async function getSession(): Promise<UserAdmin> {
   const payload = (await response.json()) as ApiResponse<UserAdmin>;
   return payload.data;
 }
+
+export async function changePassword(input: {
+  password_lama: string;
+  password_baru: string;
+  konfirmasi_password_baru: string;
+}): Promise<void> {
+  const response = await fetch("/api/auth/password", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  if (!response.ok) {
+    throw await getApiError(response);
+  }
+}

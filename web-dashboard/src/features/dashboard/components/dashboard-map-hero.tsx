@@ -1,21 +1,17 @@
-
 "use client";
 
 import dynamic from "next/dynamic";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, Maximize2 } from "lucide-react";
 import type { DashboardMapLand } from "@/features/dashboard/types";
 
-const DashboardMap = dynamic(
-  () => import("./dashboard-map"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="absolute inset-0 flex items-center justify-center bg-[#F9F8F6] text-xs font-medium text-[#6E5D53]">
-        Memuat Peta GIS...
-      </div>
-    ),
-  }
-);
+const DashboardMap = dynamic(() => import("./dashboard-map"), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 flex items-center justify-center bg-[#F9F8F6] text-xs font-medium text-muted-foreground">
+      Memuat Peta GIS...
+    </div>
+  ),
+});
 
 interface DashboardMapHeroProps {
   isSummaryHidden: boolean;
@@ -32,7 +28,7 @@ export function DashboardMapHero({
     <div
       className="
         sticky top-16 z-0
-        -mx-6 -mt-6
+        -mx-4 -mt-4
         sm:-mx-8 sm:-mt-8
         lg:-mx-10 lg:-mt-10
       "
@@ -48,7 +44,7 @@ export function DashboardMapHero({
           }
         `}
       >
-        <div className="absolute inset-0 [&>*]:!h-full [&>*]:!w-full">
+        <div className="absolute inset-0 [&>*]:!h-full [&>*]:!w-full [&_.leaflet-container]:!rounded-none">
           <DashboardMap lands={lands} />
         </div>
 
@@ -58,20 +54,14 @@ export function DashboardMapHero({
           aria-label={
             isSummaryHidden
               ? "Tampilkan ringkasan operasional"
-              : "Sembunyikan ringkasan operasional"
+              : "Buka peta layar penuh"
           }
           aria-expanded={!isSummaryHidden}
-          title={
-            isSummaryHidden
-              ? "Tampilkan ringkasan"
-              : "Sembunyikan ringkasan"
-          }
           className="
-            absolute bottom-5 left-1/2 z-[1000]
-            flex h-11 w-11 -translate-x-1/2
-            items-center justify-center
-            rounded-full border border-white/70
-            bg-white/95 text-[#2A1810]
+            absolute bottom-6 left-1/2 z-[1000]
+            flex -translate-x-1/2 items-center gap-2
+            rounded-full border border-white/80
+            bg-white/95 px-4 py-2 text-xs font-semibold text-foreground
             shadow-lg shadow-black/15
             backdrop-blur-md
             transition-all duration-200
@@ -79,14 +69,19 @@ export function DashboardMapHero({
             active:scale-95
             focus-visible:outline-none
             focus-visible:ring-2
-            focus-visible:ring-[#2A1810]
-            focus-visible:ring-offset-2
+            focus-visible:ring-primary
           "
         >
           {isSummaryHidden ? (
-            <ChevronUp className="h-5 w-5" />
+            <>
+              <ChevronDown className="h-4 w-4 text-primary" />
+              <span>Buka Ringkasan</span>
+            </>
           ) : (
-            <ChevronDown className="h-5 w-5" />
+            <>
+              <Maximize2 className="h-3.5 w-3.5 text-primary" />
+              <span>Peta Layar Penuh</span>
+            </>
           )}
         </button>
       </div>

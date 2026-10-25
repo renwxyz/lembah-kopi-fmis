@@ -9,6 +9,8 @@ servers:
   - url: /
     description: Server yang sedang membuka dokumentasi ini
 tags:
+  - name: Audit
+    description: Audit trail aktivitas admin (khusus SUPER_ADMIN)
   - name: Auth
     description: Autentikasi dan profil pengguna aktif
   - name: Admin Management
@@ -57,6 +59,51 @@ paths:
                     properties:
                       data:
                         $ref: "#/components/schemas/DashboardOverview"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/audit-log:
+    get:
+      tags: [Audit]
+      operationId: listAuditLog
+      summary: Daftar audit trail
+      description: Mengambil riwayat aktivitas admin (siapa melakukan apa pada resource apa), terbaru lebih dulu. Hanya SUPER_ADMIN.
+      parameters:
+        - {name: page, in: query, schema: {type: integer, minimum: 1, default: 1}}
+        - {name: page_size, in: query, schema: {type: integer, minimum: 1, maximum: 100, default: 20}}
+        - {name: username, in: query, schema: {type: string}, description: Filter nama pengguna (parsial).}
+        - {name: aksi, in: query, schema: {type: string, enum: [CREATE, UPDATE, DELETE, CHANGE_PASSWORD, LOGIN_SUCCESS, LOGIN_FAILED]}}
+        - {name: resource, in: query, schema: {type: string}, description: "Mis. lahan, petani, batch, lahan/inventaris."}
+        - {name: q, in: query, schema: {type: string}, description: Pencarian bebas pada username, resource, id resource, dan path.}
+        - {name: from, in: query, schema: {type: string, format: date}}
+        - {name: to, in: query, schema: {type: string, format: date}, description: Inklusif sampai akhir hari.}
+      responses:
+        "200":
+          description: Audit trail berhasil diambil.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        type: object
+                        required: [items, total, page, page_size]
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/AuditLog"
+                          total: {type: integer}
+                          page: {type: integer}
+                          page_size: {type: integer}
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -3070,6 +3117,23 @@ components:
                 type: array
                 items:
                   $ref: "#/components/schemas/SoilConditionLog"
+    AuditLog:
+      type: object
+      required: [id_audit, waktu, username, aksi, resource, metode, path, status_code]
+      properties:
+        id_audit: {type: integer, format: int64}
+        waktu: {type: string, format: date-time}
+        id_admin: {type: string, nullable: true}
+        username: {type: string}
+        peran: {type: string, nullable: true}
+        aksi: {type: string, enum: [CREATE, UPDATE, DELETE, CHANGE_PASSWORD, LOGIN_SUCCESS, LOGIN_FAILED]}
+        resource: {type: string}
+        resource_id: {type: string, nullable: true}
+        metode: {type: string}
+        path: {type: string}
+        status_code: {type: integer}
+        request_id: {type: string, nullable: true}
+        ip_address: {type: string, nullable: true}
     DashboardOverview:
       type: object
       required: [summary, map_lahan, batch_aktif, peringatan_kebun, panen_terbaru]

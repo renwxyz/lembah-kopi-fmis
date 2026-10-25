@@ -55,8 +55,8 @@ export function LoginForm() {
       {/* Wrapper Utama Responsif */}
       <div className="relative z-10 mx-auto flex min-h-svh w-full max-w-6xl items-stretch lg:items-center lg:px-6 lg:py-10">
         
-        {/* Card Grid Asimetris[cite: 1] */}
-        <div className="grid w-full overflow-hidden bg-white lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr] lg:rounded-3xl lg:border lg:border-[#E8E2DC] lg:shadow-xl lg:shadow-[#2A1810]/5">
+        {/* Card Grid Asimetris */}
+        <div className="grid w-full overflow-hidden bg-white lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr] lg:rounded-3xl lg:shadow-[0_20px_50px_rgba(42,24,16,0.12)]">
           
           {/* Banner Sisi Kiri (Hanya Muncul di Desktop >= lg)[cite: 1] */}
           <aside className="relative hidden lg:flex flex-col justify-between overflow-hidden bg-gradient-to-br from-[#2A1810] via-[#3D2318] to-[#1A0F0A] px-12 py-14 text-white">
@@ -123,11 +123,11 @@ export function LoginForm() {
                     Username atau email
                   </label>
                   <div className="relative">
-                    <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9E8E82]" />
+                    <User className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7669]" />
                     <Input
                       {...register("username_or_email")}
                       placeholder="Masukkan username atau email"
-                      className="w-full rounded-lg border border-[#E8E2DC] bg-white py-3 pr-4 pl-10 text-sm outline-none focus-visible:border-[#2A1810] focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+                      className="w-full rounded-xl bg-[#FAF8F5] pl-10 pr-4 text-sm font-medium text-[#2A1810] placeholder:text-[#8A7669] focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
                       disabled={loginMutation.isPending}
                     />
                   </div>
@@ -143,18 +143,18 @@ export function LoginForm() {
                     Kata sandi
                   </label>
                   <div className="relative">
-                    <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9E8E82]" />
+                    <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7669]" />
                     <Input
                       {...register("password")}
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••••••"
-                      className="w-full rounded-lg border border-[#E8E2DC] bg-white py-3 pr-11 pl-10 text-sm outline-none focus-visible:border-[#2A1810] focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+                      className="w-full rounded-xl bg-[#FAF8F5] pl-10 pr-11 text-sm font-medium text-[#2A1810] placeholder:text-[#8A7669] focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
                       disabled={loginMutation.isPending}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9E8E82] hover:text-[#2A1810] transition-colors"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8A7669] hover:text-[#2A1810] transition-colors"
                     >
                       {showPassword ? (
                         <EyeOff className="h-4 w-4" />

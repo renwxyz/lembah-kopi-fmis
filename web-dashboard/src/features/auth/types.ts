@@ -23,3 +23,9 @@ export interface LoginData {
   expires_at: string;
   user: UserAdmin;
 }
+
+export interface ChangePasswordInput {
+  password_lama: string;
+  password_baru: string;
+  konfirmasi_password_baru: string;
+}

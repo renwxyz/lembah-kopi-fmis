@@ -2,13 +2,13 @@
 
 import { useEffect, useMemo } from "react";
 import {
-  MapContainer,
   TileLayer,
   Polygon,
   Popup,
   Tooltip,
   useMap,
 } from "react-leaflet";
+import { SafeMapContainer } from "@/components/ui/safe-map-container";
 import { Sprout, Mountain, Scale, Trees } from "lucide-react";
 import type { DashboardMapLand } from "@/features/dashboard/types";
 
@@ -58,7 +58,7 @@ export default function DashboardMap({ lands = [] }: DashboardMapProps) {
 
   return (
     <div className="relative h-full w-full overflow-hidden">
-      <MapContainer
+      <SafeMapContainer
         center={initialCenter}
         zoom={15}
         minZoom={3}
@@ -155,7 +155,7 @@ export default function DashboardMap({ lands = [] }: DashboardMapProps) {
             </Popup>
           </Polygon>
         ))}
-      </MapContainer>
+      </SafeMapContainer>
     </div>
   );
 }
