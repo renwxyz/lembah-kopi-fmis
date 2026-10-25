@@ -37,6 +37,10 @@ tags:
     description: Katalog metode, batch pengolahan, histori tahap, dan traceability
   - name: Dashboard
     description: Ringkasan operasional dan data spasial dasbor
+  - name: Community Public
+    description: Konten beranda situs publik web-compro (tanpa autentikasi)
+  - name: CMS
+    description: Pengelolaan konten community profile. SUPER_ADMIN dan ADMIN_KELOMPOK_TANI dapat membaca, menambah, dan mengubah; operasi DELETE khusus SUPER_ADMIN.
 security:
   - BearerAuth: []
 paths:
@@ -1936,6 +1940,309 @@ paths:
           $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalError"
+  /api/v1/public/home:
+    get:
+      tags: [Community Public]
+      operationId: getPublicHome
+      summary: Seluruh konten beranda situs publik
+      description: Tanpa autentikasi. Berisi pengaturan (hero, about, kontak), produk kopi, media yang ditayangkan, maksimal 3 agenda mendatang (agenda yang lewat otomatis disembunyikan, zona WIB), dan maksimal 8 foto galeri. Response diberi header Cache-Control.
+      security: []
+      responses:
+        "200":
+          description: Konten beranda berhasil diambil.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    properties:
+                      data: {$ref: "#/components/schemas/PublicHome"}
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/cms/upload:
+    post:
+      tags: [CMS]
+      operationId: uploadCmsImage
+      summary: Unggah foto (dikompresi otomatis ke WebP)
+      description: Menerima JPG/PNG maksimal 10 MB. Orientasi EXIF dikoreksi, sisi terpanjang dibatasi 1600 px. Kembalikan `key` untuk dipakai pada field `foto_key`. Mengembalikan 503 bila MinIO/cwebp belum tersedia.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, folder]
+              properties:
+                file: {type: string, format: binary}
+                folder: {type: string, enum: [hero, produk, galeri]}
+      responses:
+        "201":
+          description: Foto berhasil diunggah.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    properties:
+                      data: {$ref: "#/components/schemas/CmsUploadedImage"}
+        "400": {$ref: "#/components/responses/InvalidRequest"}
+        "401": {$ref: "#/components/responses/Unauthorized"}
+        "403": {$ref: "#/components/responses/Forbidden"}
+        "503":
+          description: Penyimpanan foto belum dikonfigurasi atau cwebp belum terpasang.
+          content:
+            application/problem+json:
+              schema: {$ref: "#/components/schemas/Problem"}
+  /api/v1/cms/pengaturan:
+    get:
+      tags: [CMS]
+      operationId: getCmsSettings
+      summary: Ambil pengaturan situs (hero, about, kontak)
+      responses:
+        "200":
+          description: Pengaturan situs.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    properties:
+                      data: {$ref: "#/components/schemas/CmsSiteSettings"}
+        "401": {$ref: "#/components/responses/Unauthorized"}
+        "403": {$ref: "#/components/responses/Forbidden"}
+    put:
+      tags: [CMS]
+      operationId: updateCmsSettings
+      summary: Simpan pengaturan situs
+      description: about_nilai wajib tepat 3 poin. Nomor WhatsApp dinormalkan ke format 62xxxxxxxx.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CmsSiteSettingsRequest"}
+      responses:
+        "200":
+          description: Pengaturan tersimpan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessMetadata"
+                  - type: object
+                    properties:
+                      data: {$ref: "#/components/schemas/CmsSiteSettings"}
+        "400": {$ref: "#/components/responses/InvalidRequest"}
+        "401": {$ref: "#/components/responses/Unauthorized"}
+        "403": {$ref: "#/components/responses/Forbidden"}
+  /api/v1/cms/produk:
+    get:
+      tags: [CMS]
+      operationId: listCmsProducts
+      summary: Daftar produk kopi
+      responses:
+        "200": {description: Daftar produk kopi (array di data).}
+        "401": {$ref: "#/components/responses/Unauthorized"}
+        "403": {$ref: "#/components/responses/Forbidden"}
+    post:
+      tags: [CMS]
+      operationId: createCmsProduct
+      summary: Tambah produk kopi
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CmsProductRequest"}
+      responses:
+        "201": {description: Produk ditambahkan.}
+        "400": {$ref: "#/components/responses/InvalidRequest"}
+        "401": {$ref: "#/components/responses/Unauthorized"}
+        "403": {$ref: "#/components/responses/Forbidden"}
+  /api/v1/cms/produk/{id}:
+    parameters:
+      - {name: id, in: path, required: true, schema: {type: string}}
+    get:
+      tags: [CMS]
+      operationId: getCmsProduct
+      summary: Detail produk kopi
+      responses:
+        "200": {description: Detail produk.}
+        "404": {$ref: "#/components/responses/NotFound"}
+    put:
+      tags: [CMS]
+      operationId: updateCmsProduct
+      summary: Ubah produk kopi (foto lama dihapus bila diganti)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CmsProductRequest"}
+      responses:
+        "200": {description: Produk diperbarui.}
+        "400": {$ref: "#/components/responses/InvalidRequest"}
+        "404": {$ref: "#/components/responses/NotFound"}
+    delete:
+      tags: [CMS]
+      operationId: deleteCmsProduct
+      summary: Hapus produk kopi (SUPER_ADMIN)
+      responses:
+        "204": {description: Produk dihapus.}
+        "403": {$ref: "#/components/responses/Forbidden"}
+        "404": {$ref: "#/components/responses/NotFound"}
+  /api/v1/cms/media:
+    get:
+      tags: [CMS]
+      operationId: listCmsMedia
+      summary: Daftar media embed (YouTube/Instagram), termasuk yang disembunyikan
+      responses:
+        "200": {description: Daftar media.}
+        "401": {$ref: "#/components/responses/Unauthorized"}
+    post:
+      tags: [CMS]
+      operationId: createCmsMedia
+      summary: Tambah media dari tautan biasa
+      description: Backend mengekstrak ID dari tautan YouTube (watch, youtu.be, shorts, embed) atau Instagram (p, reel, tv). Tautan lain ditolak.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CmsMediaRequest"}
+      responses:
+        "201": {description: Media ditambahkan.}
+        "400": {$ref: "#/components/responses/InvalidRequest"}
+  /api/v1/cms/media/{id}:
+    parameters:
+      - {name: id, in: path, required: true, schema: {type: string}}
+    put:
+      tags: [CMS]
+      operationId: updateCmsMedia
+      summary: Ubah tautan media
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CmsMediaRequest"}
+      responses:
+        "200": {description: Media diperbarui.}
+        "400": {$ref: "#/components/responses/InvalidRequest"}
+        "404": {$ref: "#/components/responses/NotFound"}
+    delete:
+      tags: [CMS]
+      operationId: deleteCmsMedia
+      summary: Hapus media (SUPER_ADMIN)
+      responses:
+        "204": {description: Media dihapus.}
+        "403": {$ref: "#/components/responses/Forbidden"}
+        "404": {$ref: "#/components/responses/NotFound"}
+  /api/v1/cms/media/{id}/tampil:
+    put:
+      tags: [CMS]
+      operationId: setCmsMediaVisible
+      summary: Tayangkan atau sembunyikan media tanpa menghapus tautan
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tampil]
+              properties:
+                tampil: {type: boolean}
+      responses:
+        "200": {description: Status tayang diubah.}
+        "404": {$ref: "#/components/responses/NotFound"}
+  /api/v1/cms/agenda:
+    get:
+      tags: [CMS]
+      operationId: listCmsAgenda
+      summary: Daftar seluruh agenda (termasuk yang sudah lewat)
+      responses:
+        "200": {description: Daftar agenda.}
+        "401": {$ref: "#/components/responses/Unauthorized"}
+    post:
+      tags: [CMS]
+      operationId: createCmsAgenda
+      summary: Tambah agenda
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CmsAgendaRequest"}
+      responses:
+        "201": {description: Agenda ditambahkan.}
+        "400": {$ref: "#/components/responses/InvalidRequest"}
+  /api/v1/cms/agenda/{id}:
+    parameters:
+      - {name: id, in: path, required: true, schema: {type: string}}
+    put:
+      tags: [CMS]
+      operationId: updateCmsAgenda
+      summary: Ubah agenda
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CmsAgendaRequest"}
+      responses:
+        "200": {description: Agenda diperbarui.}
+        "400": {$ref: "#/components/responses/InvalidRequest"}
+        "404": {$ref: "#/components/responses/NotFound"}
+    delete:
+      tags: [CMS]
+      operationId: deleteCmsAgenda
+      summary: Hapus agenda (SUPER_ADMIN)
+      responses:
+        "204": {description: Agenda dihapus.}
+        "403": {$ref: "#/components/responses/Forbidden"}
+        "404": {$ref: "#/components/responses/NotFound"}
+  /api/v1/cms/galeri:
+    get:
+      tags: [CMS]
+      operationId: listCmsGallery
+      summary: Daftar foto galeri
+      responses:
+        "200": {description: Daftar foto galeri.}
+        "401": {$ref: "#/components/responses/Unauthorized"}
+    post:
+      tags: [CMS]
+      operationId: createCmsGalleryPhoto
+      summary: Tambah foto galeri (foto diunggah lebih dulu lewat /cms/upload)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CmsGalleryRequest"}
+      responses:
+        "201": {description: Foto ditambahkan.}
+        "400": {$ref: "#/components/responses/InvalidRequest"}
+  /api/v1/cms/galeri/{id}:
+    parameters:
+      - {name: id, in: path, required: true, schema: {type: string}}
+    put:
+      tags: [CMS]
+      operationId: updateCmsGalleryPhoto
+      summary: Ubah foto galeri
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CmsGalleryRequest"}
+      responses:
+        "200": {description: Foto diperbarui.}
+        "400": {$ref: "#/components/responses/InvalidRequest"}
+        "404": {$ref: "#/components/responses/NotFound"}
+    delete:
+      tags: [CMS]
+      operationId: deleteCmsGalleryPhoto
+      summary: Hapus foto galeri beserta filenya (SUPER_ADMIN)
+      responses:
+        "204": {description: Foto dihapus.}
+        "403": {$ref: "#/components/responses/Forbidden"}
+        "404": {$ref: "#/components/responses/NotFound"}
 components:
   securitySchemes:
     BearerAuth:
@@ -3206,3 +3513,115 @@ components:
               varietas: {type: string}
               berat_ceri_kg: {type: number}
               status_alokasi: {type: string}
+    CmsUploadedImage:
+      type: object
+      properties:
+        key: {type: string, example: "produk/0123456789abcdef0123456789abcdef.webp"}
+        url: {type: string, format: uri}
+    CmsCommunityValue:
+      type: object
+      properties:
+        judul: {type: string, maxLength: 60}
+        deskripsi: {type: string, maxLength: 200}
+    CmsSiteSettingsRequest:
+      type: object
+      required: [hero_judul, about_nilai]
+      properties:
+        hero_judul: {type: string, maxLength: 120}
+        hero_slogan: {type: string, maxLength: 200}
+        hero_foto_key: {type: string, description: "Key hasil /cms/upload dengan folder hero."}
+        nomor_whatsapp: {type: string, example: "0812-3456-7890"}
+        about_cerita: {type: string, maxLength: 5000}
+        about_nilai:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items: {$ref: "#/components/schemas/CmsCommunityValue"}
+        alamat: {type: string, maxLength: 500}
+        instagram_url: {type: string}
+        youtube_url: {type: string}
+        facebook_url: {type: string}
+        tiktok_url: {type: string}
+    CmsSiteSettings:
+      allOf:
+        - $ref: "#/components/schemas/CmsSiteSettingsRequest"
+        - type: object
+          properties:
+            hero_foto_url: {type: string, format: uri}
+            updated_at: {type: string, format: date-time}
+    CmsProductRequest:
+      type: object
+      required: [nama, varietas, proses]
+      properties:
+        nama: {type: string, maxLength: 120}
+        varietas: {type: string, enum: [ARABIKA, ROBUSTA, LIBERIKA, EXCELSA]}
+        proses: {type: string, enum: [NATURAL, HONEY, FULL_WASHED, SEMI_WASHED, WET_HULLED]}
+        foto_key: {type: string, description: "Key hasil /cms/upload dengan folder produk."}
+        status_ketersediaan: {type: string, enum: [TERSEDIA, TERBATAS, HABIS], default: TERSEDIA}
+    CmsProduct:
+      allOf:
+        - $ref: "#/components/schemas/CmsProductRequest"
+        - type: object
+          properties:
+            id_produk: {type: string}
+            foto_url: {type: string, format: uri}
+    CmsMediaRequest:
+      type: object
+      required: [url]
+      properties:
+        url: {type: string, example: "https://youtu.be/dQw4w9WgXcQ"}
+        tampil: {type: boolean, default: true}
+    CmsMedia:
+      type: object
+      properties:
+        id_media: {type: string}
+        tipe: {type: string, enum: [YOUTUBE, INSTAGRAM]}
+        url: {type: string}
+        external_id: {type: string}
+        embed_url: {type: string, format: uri}
+        tampil: {type: boolean}
+    CmsAgendaRequest:
+      type: object
+      required: [judul, tanggal]
+      properties:
+        judul: {type: string, maxLength: 150}
+        tanggal: {type: string, format: date}
+        keterangan: {type: string, maxLength: 300}
+    CmsAgenda:
+      allOf:
+        - $ref: "#/components/schemas/CmsAgendaRequest"
+        - type: object
+          properties:
+            id_agenda: {type: string}
+    CmsGalleryRequest:
+      type: object
+      required: [foto_key]
+      properties:
+        foto_key: {type: string, description: "Key hasil /cms/upload dengan folder galeri."}
+        keterangan: {type: string, maxLength: 200}
+        urutan: {type: integer, minimum: 0, maximum: 9999, default: 0}
+    CmsGalleryPhoto:
+      allOf:
+        - $ref: "#/components/schemas/CmsGalleryRequest"
+        - type: object
+          properties:
+            id_foto: {type: string}
+            foto_url: {type: string, format: uri}
+    PublicHome:
+      type: object
+      properties:
+        pengaturan: {$ref: "#/components/schemas/CmsSiteSettings"}
+        produk:
+          type: array
+          items: {$ref: "#/components/schemas/CmsProduct"}
+        media:
+          type: array
+          items: {$ref: "#/components/schemas/CmsMedia"}
+        agenda:
+          type: array
+          maxItems: 3
+          items: {$ref: "#/components/schemas/CmsAgenda"}
+        galeri:
+          type: array
+          maxItems: 8
+          items: {$ref: "#/components/schemas/CmsGalleryPhoto"}

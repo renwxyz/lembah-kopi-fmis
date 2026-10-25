@@ -16,6 +16,9 @@ import (
 	"lembah-kopi/core-system/internal/config"
 	httpdelivery "lembah-kopi/core-system/internal/delivery/http"
 	"lembah-kopi/core-system/internal/delivery/http/handler"
+	"lembah-kopi/core-system/internal/domain"
+	"lembah-kopi/core-system/internal/infrastructure/imaging"
+	"lembah-kopi/core-system/internal/infrastructure/storage"
 	"lembah-kopi/core-system/internal/repository/postgres"
 	"lembah-kopi/core-system/internal/service"
 
@@ -80,6 +83,33 @@ func run() error {
 	auditService := service.NewAuditService(postgres.NewAuditRepository(db))
 	auditHandler := handler.NewAuditHandler(auditService)
 
+	var (
+		objectStorage domain.ObjectStorage
+		imageProc     domain.ImageProcessor
+	)
+	if cfg.MinIOEndpoint != "" {
+		minioStorage, err := storage.NewMinIOStorage(storage.Config{
+			Endpoint: cfg.MinIOEndpoint, AccessKey: cfg.MinIOAccessKey, SecretKey: cfg.MinIOSecretKey,
+			Bucket: cfg.MinIOBucket, UseSSL: cfg.MinIOUseSSL, PublicURL: cfg.MinIOPublicURL,
+		})
+		if err != nil {
+			return err
+		}
+		bucketCtx, bucketCancel := context.WithTimeout(context.Background(), 10*time.Second)
+		if err := minioStorage.EnsureBucket(bucketCtx); err != nil {
+			slog.Warn("MinIO bucket is not ready; photo uploads may fail", "error", err)
+		}
+		bucketCancel()
+		webp := imaging.NewWebPProcessor("cwebp", 1600, 80)
+		if err := webp.Available(); err != nil {
+			slog.Warn("WebP encoder unavailable; photo uploads will fail until it is installed", "error", err)
+		}
+		objectStorage, imageProc = minioStorage, webp
+	} else {
+		slog.Warn("MINIO_ENDPOINT is not set; CMS photo uploads are disabled")
+	}
+	cmsHandler := handler.NewCMSHandler(service.NewCMSService(postgres.NewCMSRepository(db), objectStorage, imageProc))
+
 	server := &http.Server{
 		Addr: cfg.HTTPAddress,
 		Handler: httpdelivery.NewRouter(
@@ -89,8 +119,12 @@ func run() error {
 			dashboardHandler,
 			cfg.JWTSecret, cfg.CORSAllowedOrigins,
 			httpdelivery.WithAudit(auditHandler, auditService),
+			httpdelivery.WithCMS(cmsHandler),
 		),
 		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      60 * time.Second,
+		IdleTimeout:       120 * time.Second,
 	}
 
 	listener, err := net.Listen("tcp", cfg.HTTPAddress)

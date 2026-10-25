@@ -7,4 +7,5 @@ var (
 	ErrConflict     = errors.New("data berkonflik dengan data yang sudah ada")
 	ErrInvalid      = errors.New("data tidak valid")
 	ErrUnauthorized = errors.New("autentikasi gagal")
+	ErrUnavailable  = errors.New("fitur belum tersedia")
 )

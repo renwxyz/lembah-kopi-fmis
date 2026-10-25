@@ -20,10 +20,19 @@ import (
 type routerOptions struct {
 	auditHandler  *handler.AuditHandler
 	auditRecorder middleware.AuditRecorder
+	cmsHandler    *handler.CMSHandler
 }
 
 // RouterOption mengonfigurasi fitur opsional router.
 type RouterOption func(*routerOptions)
+
+// WithCMS mengaktifkan endpoint community profile: GET /public/home (tanpa auth)
+// dan /cms/* (SUPER_ADMIN & ADMIN; operasi hapus hanya SUPER_ADMIN).
+func WithCMS(cmsHandler *handler.CMSHandler) RouterOption {
+	return func(o *routerOptions) {
+		o.cmsHandler = cmsHandler
+	}
+}
 
 // WithAudit mengaktifkan pencatatan audit trail dan endpoint GET /audit-log (SUPER_ADMIN).
 func WithAudit(auditHandler *handler.AuditHandler, recorder middleware.AuditRecorder) RouterOption {
@@ -90,6 +99,10 @@ func NewRouter(
 			r.With(middleware.AuditLogin(options.auditRecorder)).Post("/auth/login", authHandler.Login)
 		} else {
 			r.Post("/auth/login", authHandler.Login)
+		}
+
+		if options.cmsHandler != nil {
+			r.Get("/public/home", options.cmsHandler.PublicHome)
 		}
 
 		r.Group(func(r chi.Router) {
@@ -172,10 +185,45 @@ func NewRouter(
 				})
 			})
 
+			if options.cmsHandler != nil {
+				cms := options.cmsHandler
+				r.Group(func(r chi.Router) {
+					r.Use(middleware.RequireRole(domain.RoleSuperAdmin, domain.RoleAdminKelompokTani))
+					r.Post("/cms/upload", cms.UploadImage)
+					r.Get("/cms/pengaturan", cms.GetSettings)
+					r.Put("/cms/pengaturan", cms.UpdateSettings)
+
+					r.Get("/cms/produk", cms.ListProducts)
+					r.Post("/cms/produk", cms.CreateProduct)
+					r.Get("/cms/produk/{id}", cms.GetProduct)
+					r.Put("/cms/produk/{id}", cms.UpdateProduct)
+
+					r.Get("/cms/media", cms.ListMedia)
+					r.Post("/cms/media", cms.CreateMedia)
+					r.Put("/cms/media/{id}", cms.UpdateMedia)
+					r.Put("/cms/media/{id}/tampil", cms.SetMediaVisible)
+
+					r.Get("/cms/agenda", cms.ListAgenda)
+					r.Post("/cms/agenda", cms.CreateAgenda)
+					r.Put("/cms/agenda/{id}", cms.UpdateAgenda)
+
+					r.Get("/cms/galeri", cms.ListGallery)
+					r.Post("/cms/galeri", cms.CreateGalleryPhoto)
+					r.Put("/cms/galeri/{id}", cms.UpdateGalleryPhoto)
+				})
+			}
+
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireRole(domain.RoleSuperAdmin))
 				if options.auditHandler != nil {
 					r.Get("/audit-log", options.auditHandler.List)
+				}
+				if options.cmsHandler != nil {
+					cms := options.cmsHandler
+					r.Delete("/cms/produk/{id}", cms.DeleteProduct)
+					r.Delete("/cms/media/{id}", cms.DeleteMedia)
+					r.Delete("/cms/agenda/{id}", cms.DeleteAgenda)
+					r.Delete("/cms/galeri/{id}", cms.DeleteGalleryPhoto)
 				}
 				r.Post("/admin", authHandler.CreateAdmin)
 				r.Post("/metode-pascaproses", processingMethodHandler.Create)

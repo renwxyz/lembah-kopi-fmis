@@ -44,6 +44,8 @@ func writeModuleError(w http.ResponseWriter, r *http.Request, err error) {
 		problem.Write(w, r, http.StatusNotFound, "https://api.lembahkopi.id/problems/not-found", "Resource not found", err.Error())
 	case errors.Is(err, domain.ErrConflict):
 		problem.Write(w, r, http.StatusConflict, "https://api.lembahkopi.id/problems/conflict", "Request conflict", err.Error())
+	case errors.Is(err, domain.ErrUnavailable):
+		problem.Write(w, r, http.StatusServiceUnavailable, "https://api.lembahkopi.id/problems/unavailable", "Service unavailable", err.Error())
 	default:
 		slog.Error("request failed", "error", err, "path", r.URL.Path)
 		problem.Write(w, r, http.StatusInternalServerError, "https://api.lembahkopi.id/problems/internal-error", "Internal server error", "An unexpected error occurred.")

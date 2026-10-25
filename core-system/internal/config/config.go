@@ -11,6 +11,14 @@ type Config struct {
 	JWTSecret          string
 	HTTPAddress        string
 	CORSAllowedOrigins []string
+
+	// MinIO (opsional; bila MinIOEndpoint kosong, unggah foto CMS dinonaktifkan).
+	MinIOEndpoint  string
+	MinIOAccessKey string
+	MinIOSecretKey string
+	MinIOBucket    string
+	MinIOUseSSL    bool
+	MinIOPublicURL string
 }
 
 func Load() (Config, error) {
@@ -21,6 +29,12 @@ func Load() (Config, error) {
 		JWTSecret:          os.Getenv("JWT_SECRET"),
 		HTTPAddress:        strings.TrimSpace(os.Getenv("HTTP_ADDRESS")),
 		CORSAllowedOrigins: splitOrigins(os.Getenv("CORS_ALLOWED_ORIGINS")),
+		MinIOEndpoint:      strings.TrimSpace(os.Getenv("MINIO_ENDPOINT")),
+		MinIOAccessKey:     strings.TrimSpace(os.Getenv("MINIO_ACCESS_KEY")),
+		MinIOSecretKey:     strings.TrimSpace(os.Getenv("MINIO_SECRET_KEY")),
+		MinIOBucket:        strings.TrimSpace(os.Getenv("MINIO_BUCKET")),
+		MinIOUseSSL:        strings.EqualFold(strings.TrimSpace(os.Getenv("MINIO_USE_SSL")), "true"),
+		MinIOPublicURL:     strings.TrimSpace(os.Getenv("MINIO_PUBLIC_URL")),
 	}
 	if config.DatabaseURL == "" {
 		return Config{}, fmt.Errorf("DATABASE_URL is required")
@@ -30,6 +44,17 @@ func Load() (Config, error) {
 	}
 	if config.HTTPAddress == "" {
 		config.HTTPAddress = ":8080"
+	}
+	if config.MinIOBucket == "" {
+		config.MinIOBucket = "lembah-kopi"
+	}
+	if config.MinIOEndpoint != "" {
+		if config.MinIOAccessKey == "" || config.MinIOSecretKey == "" {
+			return Config{}, fmt.Errorf("MINIO_ACCESS_KEY and MINIO_SECRET_KEY are required when MINIO_ENDPOINT is set")
+		}
+		if config.MinIOPublicURL == "" {
+			config.MinIOPublicURL = "http://" + config.MinIOEndpoint
+		}
 	}
 	return config, nil
 }

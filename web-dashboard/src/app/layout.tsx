@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import QueryProvider from "@/components/providers/query-provider";
 
 import "@/app/globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Lembah Kopi Dashboard",
@@ -18,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id">
-      <body className={inter.className}>
+      <body className="font-sans antialiased">
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>

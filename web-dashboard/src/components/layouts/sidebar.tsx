@@ -15,6 +15,7 @@ import {
   ScrollText,
   LogOut,
   X,
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@/features/auth/hooks/use-logout";
@@ -53,6 +54,12 @@ const navSections: NavSection[] = [
       { name: "Panen Ceri", href: "/dashboard/panen", icon: Wheat },
       { name: "Pascaproses & Batch", href: "/dashboard/batch", icon: Layers },
       { name: "Traceability", href: "/dashboard/traceability", icon: QrCode },
+    ],
+  },
+  {
+    title: "Publikasi & CMS",
+    items: [
+      { name: "Community Profile", href: "/dashboard/cms", icon: Globe },
     ],
   },
   {

@@ -38,9 +38,16 @@ export async function proxyToBackend({
     let body: BodyInit | null | undefined = init.body;
     if (body === undefined && method !== "GET" && method !== "HEAD") {
       try {
-        const text = await request.text();
-        if (text) {
-          body = text;
+        if (contentType && contentType.includes("multipart/form-data")) {
+          const formData = await request.formData();
+          body = formData;
+          // Hapus header Content-Type agar fetch otomatis menetapkan multipart boundary yang valid
+          headers.delete("Content-Type");
+        } else {
+          const text = await request.text();
+          if (text) {
+            body = text;
+          }
         }
       } catch {
         // body was already read or empty

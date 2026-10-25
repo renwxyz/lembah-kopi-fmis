@@ -12,7 +12,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /app/api ./cmd/api
 
 FROM alpine:3.20
 
-RUN apk --no-cache add ca-certificates tzdata
+# libwebp-tools menyediakan cwebp untuk kompresi foto CMS ke WebP.
+RUN apk --no-cache add ca-certificates tzdata libwebp-tools
 
 WORKDIR /app
 COPY --from=builder /app/api /app/api

@@ -19,6 +19,25 @@ services:
       timeout: 5s
       retries: 5
 
+  minio:
+    image: minio/minio:latest
+    container_name: lembah_kopi_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: lembahkopi
+      MINIO_ROOT_PASSWORD: lembahkopi-minio-dev-secret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   core-system:
     build:
       context: ./core-system
@@ -28,13 +47,22 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      minio:
+        condition: service_healthy
     ports:
       - "8080:8080"
     environment:
       DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/lembah_kopi_db?sslmode=disable
       JWT_SECRET: lembah-kopi-secret-key-development-minimum-32-chars-long
       HTTP_ADDRESS: :8080
-      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: lembahkopi
+      MINIO_SECRET_KEY: lembahkopi-minio-dev-secret
+      MINIO_BUCKET: lembah-kopi
+      MINIO_USE_SSL: "false"
+      # URL yang dibuka browser pengunjung untuk menampilkan foto.
+      MINIO_PUBLIC_URL: http://localhost:9000
 
   web-dashboard:
     build:
@@ -50,5 +78,20 @@ services:
       NEXT_PUBLIC_API_BASE_URL: http://localhost:8080/api/v1
       API_BASE_URL: http://core-system:8080/api/v1
 
+  web-compro:
+    build:
+      context: ./web-compro
+      dockerfile: Dockerfile
+    container_name: lembah_kopi_compro
+    restart: unless-stopped
+    depends_on:
+      - core-system
+    ports:
+      - "3001:3001"
+    environment:
+      CORE_SYSTEM_API_URL: http://core-system:8080/api/v1
+      NEXT_PUBLIC_API_URL: http://localhost:8080/api/v1
+
 volumes:
   pgdata_core:
+  miniodata:

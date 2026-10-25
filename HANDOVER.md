@@ -6,22 +6,25 @@ Dokumen ini ditujukan untuk rekan pengembang yang akan melanjutkan atau menjalan
 
 ## 1. Ikhtisar Arsitektur
 
-Repository ini berbentuk **monorepo** yang terdiri dari dua sub-proyek utama:
+Repository ini berbentuk **monorepo** yang terdiri dari sub-proyek berikut (`web-compro` masih direncanakan):
 
 ```
 lembah-kopi/
-├── core-system/          # Backend REST API (Go 1.24 + Chi Router + PostGIS)
+├── core-system/          # Backend REST API tunggal (Go 1.24 + Chi Router + PostGIS)
 │   ├── cmd/api/          # Composition root & HTTP server entrypoint
-│   ├── internal/         # Clean Architecture (domain, service, repository, delivery)
+│   ├── internal/         # Clean Architecture (domain, service, repository, delivery, infrastructure)
 │   ├── migrations/       # SQL Migration & Seeding files
 │   └── docs/             # Dokumentasi API (OpenAPI 3.0 / Swagger)
-├── web-dashboard/        # Frontend Dashboard (Next.js 16 + React 19 + Tailwind v4 + Leaflet)
+├── web-dashboard/        # Frontend Dashboard FMIS + Panel Manajemen CMS di sidebar (Port 3000)
 │   ├── src/app/          # Next.js App Router & API Route Handlers (Proxy)
 │   ├── src/components/   # Reusable UI & Feature components (GIS Map, Modal, Layout)
 │   ├── src/features/     # Feature-based logic, API clients, & TanStack Query hooks
 │   └── src/lib/          # Shared utilities (session cookie, backend client, formatting)
+├── web-compro/           # Frontend Community Profile Publik One-Page (Port 3001)
+│   ├── src/app/          # Next.js App Router (Landing Page ISR)
+│   └── src/components/   # Section Hero, About, Katalog Kopi, Media, Agenda, Galeri, Footer
 ├── docker/               # Script inisialisasi & container helper
-├── docker-compose.yml    # Root Docker Compose (PostGIS + Fullstack services)
+├── docker-compose.yml    # Root Docker Compose (PostGIS + MinIO + Fullstack services)
 ├── Makefile              # Shortcut perintah developer
 └── HANDOVER.md           # Panduan ini
 ```
@@ -77,17 +80,20 @@ go run ./cmd/api
 ```
 Backend akan aktif di: `http://localhost:8080` (Cek status: `http://localhost:8080/healthz`).
 
-#### **Langkah 4: Jalankan Web Dashboard**
+#### **Langkah 4: Jalankan Web Dashboard & Community Profile**
 Buka terminal baru:
 ```bash
-# Pastikan dependensi npm terinstall
-cd web-dashboard
-npm install
+# Jalankan Dashboard FMIS & CMS (port 3000)
+make run-frontend
+```
 
-# Jalankan dev server
-npm run dev
+Buka terminal lainnya jika ingin menyalakan situs publik:
+```bash
+# Jalankan Community Profile (port 3001)
+make run-compro
 ```
 Dashboard akan aktif di: `http://localhost:3000`.
+Situs publik akan aktif di: `http://localhost:3001`.
 
 ---
 
@@ -131,6 +137,13 @@ Database sudah terisi data awal (*seed data*) untuk pengujian login:
 | `JWT_SECRET` | *(string minimal 32 karakter)* | Secret key enkripsi token login |
 | `HTTP_ADDRESS` | `:8080` | Port listen server API |
 | `CORS_ALLOWED_ORIGINS` | `http://localhost:3000,http://127.0.0.1:3000` | Whitelist origin frontend |
+| `MINIO_ENDPOINT` | `localhost:9000` | Host:port MinIO. Kosong = unggah foto CMS nonaktif (endpoint upload mengembalikan 503) |
+| `MINIO_ACCESS_KEY` / `MINIO_SECRET_KEY` | `lembahkopi` / `lembahkopi-minio-dev-secret` | Kredensial MinIO (wajib bila endpoint diisi) |
+| `MINIO_BUCKET` | `lembah-kopi` | Bucket foto; dibuat otomatis dengan akses baca anonim saat backend start |
+| `MINIO_USE_SSL` | `false` | Gunakan HTTPS ke MinIO |
+| `MINIO_PUBLIC_URL` | `http://localhost:9000` | URL MinIO yang dibuka browser untuk menampilkan foto |
+
+> **Kompresi WebP** memakai biner `cwebp`. Mode full container sudah memasangnya di image. Untuk mode hybrid, pasang di host: `sudo apt install webp`. Tanpa `cwebp`, unggah foto gagal (503) tetapi fitur lain tetap berjalan.
 
 ### **Frontend (`web-dashboard/.env.local`)**
 | Variabel | Default / Contoh | Deskripsi |
@@ -159,9 +172,10 @@ Jika sewaktu-waktu data database perlu di-reset atau dimigrasikan ulang:
   3. `000003_add_agronomy_monitoring_history.up.sql` (Aktivitas agronomi & monitoring pohon)
   4. `000004_extend_harvest_batch_traceability.up.sql` (Batch panen, pascaproses, dan penelusuran QR)
   5. `000005_add_audit_log.up.sql` (Tabel `log_audit` untuk audit trail)
+  6. `000006_add_cms.up.sql` (Community Profile + CMS: pengaturan situs, produk kopi, media embed, agenda, galeri)
 
 > **Database yang sudah berjalan:** init script hanya jalan saat volume baru dibuat. Terapkan migrasi baru secara manual:
-> `docker exec -i lembah_kopi_db psql -U postgres -d lembah_kopi_db -f /docker-migrations/000005_add_audit_log.up.sql`
+> `docker exec -i lembah_kopi_db psql -U postgres -d lembah_kopi_db -f /docker-migrations/000006_add_cms.up.sql`
 
 ---
 
@@ -184,6 +198,11 @@ Berikut rangkuman fitur yang sudah aktif dan terintegrasi:
 5. **Audit Trail (`/dashboard/audit-log`, khusus SUPER_ADMIN)**:
    * Mencatat siapa melakukan apa pada resource apa (tambah/ubah/hapus, ganti kata sandi) serta login berhasil dan gagal. Body request dan password tidak pernah disimpan.
    * Dicatat lewat middleware `audit_middleware.go`. API: `GET /api/v1/audit-log` dengan filter `q`, `username`, `aksi`, `resource`, `from`, `to`, plus paginasi.
+6. **Community Profile + CMS (backend saja; UI dashboard & `web-compro` menyusul)**:
+   * Publik tanpa auth: `GET /api/v1/public/home` (hero, about, kontak, produk, media tayang, maks. 3 agenda mendatang, maks. 8 foto galeri; ber-header `Cache-Control`).
+   * CMS (`/api/v1/cms/*`): pengaturan situs, produk kopi, media embed YouTube/Instagram (cukup tempel URL), agenda, galeri, dan `POST /cms/upload` (JPG/PNG maks. 10 MB, koreksi EXIF, maks. 1600 px, disimpan WebP di MinIO).
+   * Hak akses: `SUPER_ADMIN` dan `ADMIN_KELOMPOK_TANI` dapat membaca/menambah/mengubah. Semua operasi `DELETE` CMS khusus `SUPER_ADMIN`. Admin dapat menyembunyikan media lewat `PUT /cms/media/{id}/tampil`.
+   * Jalankan MinIO: `make minio` (API `:9000`, console `:9001`).
 
 ---
 

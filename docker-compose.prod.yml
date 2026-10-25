@@ -1,0 +1,112 @@
+# ==============================================================================
+# LEMBAH KOPI MONOREPO - DOCKER COMPOSE PRODUCTION SPECIFICATION
+# ==============================================================================
+# Menjalankan seluruh stack aplikasi dengan container production non-root & standalone
+# Penggunaan:
+#   docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+# ==============================================================================
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: lembah_kopi_prod_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-lembah_kopi_prod}
+    volumes:
+      - pgdata_prod:/var/lib/postgresql/data
+      - ./docker/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+      - ./core-system/migrations:/docker-migrations:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-lembah_kopi_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal_net
+
+  minio:
+    image: minio/minio:latest
+    container_name: lembah_kopi_prod_minio
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-lembahkopi_admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - miniodata_prod:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal_net
+      - public_net
+
+  core-system:
+    build:
+      context: ./core-system
+      dockerfile: Dockerfile
+    container_name: lembah_kopi_prod_api
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      HTTP_ADDRESS: :8080
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET: ${MINIO_BUCKET:-lembah-kopi-prod}
+      MINIO_USE_SSL: "false"
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL}
+    networks:
+      - internal_net
+      - public_net
+
+  web-dashboard:
+    build:
+      context: ./web-dashboard
+      dockerfile: Dockerfile
+    container_name: lembah_kopi_prod_dashboard
+    restart: always
+    depends_on:
+      - core-system
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: ${DASHBOARD_NEXT_PUBLIC_API_BASE_URL}
+      API_BASE_URL: http://core-system:8080/api/v1
+    networks:
+      - internal_net
+      - public_net
+
+  web-compro:
+    build:
+      context: ./web-compro
+      dockerfile: Dockerfile
+    container_name: lembah_kopi_prod_compro
+    restart: always
+    depends_on:
+      - core-system
+    environment:
+      CORE_SYSTEM_API_URL: http://core-system:8080/api/v1
+      NEXT_PUBLIC_API_URL: ${COMPRO_NEXT_PUBLIC_API_URL}
+    networks:
+      - internal_net
+      - public_net
+
+volumes:
+  pgdata_prod:
+  miniodata_prod:
+
+networks:
+  internal_net:
+    internal: true
+  public_net:

@@ -210,3 +210,66 @@ erDiagram
 - Rollback `000004` akan membuang katalog metode, histori tahap batch, target
   proses, tautan inventaris panen, dan aturan alokasi baru; backup sebelum
   rollback tetap disarankan.
+
+## Schema Community Profile & CMS (`000006`)
+
+Migration `000006` menambahkan tabel independen untuk mengelola publikasi profil kelompok tani dan katalog pameran kopi publik:
+
+```mermaid
+erDiagram
+    CMS_PENGATURAN_SITUS {
+        smallint id PK
+        varchar hero_judul
+        varchar hero_slogan
+        varchar hero_foto_key
+        varchar nomor_whatsapp
+        text about_cerita
+        jsonb about_nilai
+        text alamat
+        varchar instagram_url
+        varchar youtube_url
+        varchar facebook_url
+        varchar tiktok_url
+        timestamptz updated_at
+    }
+
+    CMS_PRODUK_KOPI {
+        varchar id_produk PK
+        varchar nama
+        varchar varietas
+        varchar proses
+        varchar foto_key
+        varchar status_ketersediaan
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    CMS_MEDIA_EMBED {
+        varchar id_media PK
+        varchar tipe
+        varchar url
+        varchar external_id
+        boolean tampil
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    CMS_AGENDA {
+        varchar id_agenda PK
+        varchar judul
+        date tanggal
+        varchar keterangan
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    CMS_GALERI {
+        varchar id_foto PK
+        varchar foto_key
+        varchar keterangan
+        int urutan
+        timestamptz created_at
+        timestamptz updated_at
+    }
+```
+
