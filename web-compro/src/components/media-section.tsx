@@ -32,7 +32,13 @@ export function MediaSection({ media }: MediaSectionProps) {
               key={item.id_media}
               className="rounded-3xl border border-[#E8E2DC] bg-white overflow-hidden shadow-xs hover:shadow-md transition"
             >
-              <div className="relative aspect-video w-full bg-black/5">
+              <div
+                className={`relative w-full bg-black/5 ${
+                  item.tipe === "INSTAGRAM"
+                    ? "h-[480px] sm:h-[520px]"
+                    : "aspect-video"
+                }`}
+              >
                 {item.tipe === "YOUTUBE" ? (
                   <iframe
                     src={item.embed_url}

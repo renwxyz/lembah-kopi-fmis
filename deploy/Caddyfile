@@ -1,0 +1,88 @@
+# ==============================================================================
+# CADDYFILE PRODUCTION CONFIGURATION - LEMBAH KOPI
+# ==============================================================================
+# Caddy otomatis menangani sertifikat SSL Let's Encrypt / ZeroSSL,
+# HTTP/2, HTTP/3, serta reverse proxy ke container internal.
+#
+# Sesuaikan domain di bawah ini dengan domain asli Anda.
+# ==============================================================================
+
+{
+    email admin@lembahkopi.id
+    admin off
+}
+
+# ------------------------------------------------------------------------------
+# 1. API BACKEND (core-system)
+# ------------------------------------------------------------------------------
+api.lembahkopi.id {
+    reverse_proxy core-system:8080 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Logging akses
+    log {
+        output file /var/log/caddy/api_access.log {
+            roll_size 10MB
+            roll_keep 5
+        }
+    }
+}
+
+# ------------------------------------------------------------------------------
+# 2. WEB DASHBOARD ADMIN (web-dashboard Next.js)
+# ------------------------------------------------------------------------------
+admin.lembahkopi.id {
+    reverse_proxy web-dashboard:3000 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    log {
+        output file /var/log/caddy/dashboard_access.log {
+            roll_size 10MB
+            roll_keep 5
+        }
+    }
+}
+
+# ------------------------------------------------------------------------------
+# 3. COMMUNITY PROFILE (web-compro Next.js)
+# ------------------------------------------------------------------------------
+lembahkopi.id, www.lembahkopi.id {
+    reverse_proxy web-compro:3001 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    log {
+        output file /var/log/caddy/compro_access.log {
+            roll_size 10MB
+            roll_keep 5
+        }
+    }
+}
+
+# ------------------------------------------------------------------------------
+# 4. OBJECT STORAGE PUBLIC CDN (MinIO)
+# ------------------------------------------------------------------------------
+cdn.lembahkopi.id {
+    reverse_proxy minio:9000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    log {
+        output file /var/log/caddy/cdn_access.log {
+            roll_size 10MB
+            roll_keep 5
+        }
+    }
+}
+

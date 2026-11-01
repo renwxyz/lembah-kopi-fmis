@@ -15,6 +15,7 @@ import { formatDate, formatNumber } from "@/lib/format";
 import { ApiError } from "@/lib/api-error";
 import {
   useCreateSoilCondition,
+  useFertilizationList,
   useSoilConditionList,
 } from "../hooks/use-agronomi";
 import type { CreateSoilConditionInput, TahapPemantauan } from "../types";
@@ -282,15 +283,22 @@ function CreateSoilDialog({
   const [kVal, setKVal] = useState("50");
   const [ecVal, setEcVal] = useState("280");
   const [tahap, setTahap] = useState<TahapPemantauan | "">("");
+  const [fertilizerId, setFertilizerId] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const createMutation = useCreateSoilCondition(landId);
+  const { data: fertilizations = [] } = useFertilizationList(landId);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (tahap && !fertilizerId) {
+      setError("Pilih sesi aplikasi pemupukan terkait untuk pemantauan Pre/Post-Pemupukan.");
+      return;
+    }
 
     const input: CreateSoilConditionInput = {
       tanggal_ukur: new Date(tanggalUkur).toISOString(),
@@ -302,6 +310,7 @@ function CreateSoilDialog({
       k_value: kVal ? parseInt(kVal, 10) : null,
       ec_value: ecVal ? parseInt(ecVal, 10) : null,
       tahap_pemantauan: tahap ? (tahap as TahapPemantauan) : undefined,
+      id_pemupukan: tahap && fertilizerId ? fertilizerId : undefined,
     };
 
     try {
@@ -371,7 +380,15 @@ function CreateSoilDialog({
               </label>
               <select
                 value={tahap}
-                onChange={(e) => setTahap(e.target.value as TahapPemantauan | "")}
+                onChange={(e) => {
+                  const val = e.target.value as TahapPemantauan | "";
+                  setTahap(val);
+                  if (val && !fertilizerId && fertilizations.length > 0) {
+                    setFertilizerId(fertilizations[0].id_pemupukan);
+                  } else if (!val) {
+                    setFertilizerId("");
+                  }
+                }}
                 className="mt-1.5 flex h-10 w-full rounded-lg bg-[#FAF8F5] px-3.5 py-2 text-xs font-medium text-[#2A1810] border-0"
               >
                 <option value="">Sampling Rutin Berkala</option>
@@ -380,6 +397,31 @@ function CreateSoilDialog({
               </select>
             </div>
           </div>
+
+          {tahap && (
+            <div>
+              <label className="text-xs font-semibold text-[#2A1810] block">
+                Terkait Siklus Pemupukan <span className="text-red-500">*</span>
+              </label>
+              <select
+                value={fertilizerId}
+                onChange={(e) => setFertilizerId(e.target.value)}
+                required
+                className="mt-1.5 flex h-10 w-full rounded-lg bg-[#FAF8F5] px-3.5 py-2 text-xs font-medium text-[#2A1810] border-0"
+              >
+                <option value="">
+                  {fertilizations.length === 0
+                    ? "Belum ada catatan pemupukan di lahan ini"
+                    : "Pilih catatan pemupukan..."}
+                </option>
+                {fertilizations.map((f) => (
+                  <option key={f.id_pemupukan} value={f.id_pemupukan}>
+                    {f.jenis_pupuk} ({f.dosis_kg} kg • {formatDate(f.tanggal_aplikasi)})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div className="grid grid-cols-3 gap-3 pt-2">
             <div>

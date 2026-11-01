@@ -28,6 +28,7 @@ export function AgendaManager() {
     keterangan: "",
   });
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [todayStr] = useState(() => new Date().toISOString().split("T")[0]);
 
   const openCreateModal = () => {
     setEditingAgenda(null);
@@ -40,7 +41,7 @@ export function AgendaManager() {
     setEditingAgenda(agenda);
     setForm({
       judul: agenda.judul,
-      tanggal: agenda.tanggal,
+      tanggal: agenda.tanggal.slice(0, 10),
       keterangan: agenda.keterangan || "",
     });
     setErrorMsg(null);
@@ -81,9 +82,6 @@ export function AgendaManager() {
       </div>
     );
   }
-
-  // Tentukan apakah agenda sudah lewat dari hari ini
-  const todayStr = new Date().toISOString().split("T")[0];
 
   return (
     <div className="space-y-6">

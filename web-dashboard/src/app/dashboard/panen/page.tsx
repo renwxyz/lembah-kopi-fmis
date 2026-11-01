@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import {
   Wheat,
   Sparkles,
@@ -106,13 +107,13 @@ export default function PanenPage() {
           </div>
 
           {currentLand && (
-            <a
-              href={`/dashboard/lahan/${currentLand.id_lahan}`}
+            <Link
+              href={`/dashboard/lahan/${encodeURIComponent(currentLand.id_lahan)}`}
               className="flex items-center gap-1 text-xs font-semibold text-[#8A7669] transition-colors hover:text-[#2A1810]"
             >
               Lihat Detail Lahan 360°
               <ChevronRight className="h-4 w-4" />
-            </a>
+            </Link>
           )}
         </div>
       </div>

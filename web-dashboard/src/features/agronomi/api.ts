@@ -154,7 +154,11 @@ export async function createPestDisease(
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(input),
+      body: JSON.stringify({
+        tanggal_ditemukan: input.tanggal_ditemukan,
+        jenis_hama_penyakit: input.jenis_hama_penyakit,
+        tingkat_serangan: input.tingkat_serangan,
+      }),
     },
   );
 
@@ -163,7 +167,17 @@ export async function createPestDisease(
   }
 
   const payload = (await response.json()) as ApiResponse<PestDiseaseIncident>;
-  return payload.data;
+  const created = payload.data;
+
+  if (input.tindakan_penanganan && input.tindakan_penanganan.trim()) {
+    await addTreatment(created.id_insiden, {
+      tanggal_penanganan: new Date(input.tanggal_ditemukan).toISOString(),
+      tindakan_penanganan: input.tindakan_penanganan.trim(),
+      status_penanganan: input.status_penanganan ?? "DALAM_PENANGANAN",
+    });
+  }
+
+  return created;
 }
 
 export async function deletePestDisease(id: string): Promise<void> {

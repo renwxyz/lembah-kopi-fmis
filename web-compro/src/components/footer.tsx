@@ -6,6 +6,7 @@ import {
   Share2,
 } from "lucide-react";
 import type { SiteSettings } from "@/types";
+import { formatWhatsAppUrl, formatPhoneDisplay } from "@/lib/utils";
 
 interface FooterProps {
   settings: SiteSettings;
@@ -45,16 +46,16 @@ export function Footer({ settings }: FooterProps) {
                   "Desa Glodogan, Klaten Selatan, Jawa Tengah, Indonesia."}
               </span>
             </div>
-            {settings.nomor_whatsapp && (
+            {settings.nomor_whatsapp && formatWhatsAppUrl(settings.nomor_whatsapp) && (
               <div className="flex items-center gap-2.5 text-xs text-[#C6BCB3]">
                 <MessageCircle className="h-4 w-4 shrink-0 text-emerald-400" />
                 <a
-                  href={`https://wa.me/${settings.nomor_whatsapp}`}
+                  href={formatWhatsAppUrl(settings.nomor_whatsapp)!}
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-white transition"
                 >
-                  +{settings.nomor_whatsapp} (WhatsApp Resmi)
+                  {formatPhoneDisplay(settings.nomor_whatsapp)} (WhatsApp Resmi)
                 </a>
               </div>
             )}

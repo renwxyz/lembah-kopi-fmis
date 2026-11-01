@@ -24,10 +24,10 @@ export function ImageUploadField({
   required = false,
 }: ImageUploadFieldProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(
-    currentUrl || null
-  );
+  const [uploadedPreviewUrl, setUploadedPreviewUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const previewUrl = uploadedPreviewUrl ?? (currentUrl || null);
 
   const uploadMutation = useUploadCmsImage();
 
@@ -53,7 +53,7 @@ export function ImageUploadField({
       { folder, file },
       {
         onSuccess: (data) => {
-          setPreviewUrl(data.url);
+          setUploadedPreviewUrl(data.url);
           onSuccess(data.key, data.url);
         },
         onError: (err: unknown) => {
@@ -64,7 +64,7 @@ export function ImageUploadField({
   };
 
   const handleClear = () => {
-    setPreviewUrl(null);
+    setUploadedPreviewUrl(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
     if (onRemove) onRemove();
   };

@@ -23,11 +23,16 @@ export function DeletePetaniDialog({
 
   if (!isOpen || !petani) return null;
 
+  const handleClose = () => {
+    setError(null);
+    onClose();
+  };
+
   const handleDelete = async () => {
     setError(null);
     try {
       await deleteMutation.mutateAsync(petani.id_petani);
-      onClose();
+      handleClose();
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.status === 409 || err.message.toLowerCase().includes("referensi") || err.message.toLowerCase().includes("conflict")) {
@@ -53,7 +58,7 @@ export function DeletePetaniDialog({
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       {/* Dialog Card */}
@@ -82,7 +87,7 @@ export function DeletePetaniDialog({
 
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               aria-label="Tutup dialog"
               className="rounded-lg p-1 text-[#8A7669] hover:bg-[#F4F0EC] hover:text-[#2A1810]"
             >
@@ -101,7 +106,7 @@ export function DeletePetaniDialog({
             <Button
               type="button"
               variant="outline"
-              onClick={onClose}
+              onClick={handleClose}
               disabled={deleteMutation.isPending}
               className="h-9 rounded-lg border-0 bg-stone-100 text-xs font-medium text-stone-700 hover:bg-stone-200 shadow-none px-4"
             >

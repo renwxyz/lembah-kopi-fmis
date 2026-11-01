@@ -1,20 +1,21 @@
-.PHONY: help db minio db-down db-reset db-seed run-backend run-frontend run-compro docker-up docker-down test
+.PHONY: help db minio db-down db-reset db-seed run-backend run-frontend run-compro docker-up docker-down test seed-prod-admin
 
 help:
 	@echo "=========================================================="
 	@echo " Lembah Kopi FMIS - Developer Commands"
 	@echo "=========================================================="
-	@echo "  make db            - Start PostgreSQL + PostGIS (Docker)"
-	@echo "  make minio         - Start MinIO object storage for CMS photos (Docker)"
-	@echo "  make db-down       - Stop PostgreSQL container"
-	@echo "  make db-reset      - Reset DB volume & re-run all migrations"
-	@echo "  make db-seed       - Re-run SQL migrations & initial seed"
-	@echo "  make run-backend   - Run Go API locally (port 8080)"
-	@echo "  make run-frontend  - Run Next.js dashboard locally (port 3000)"
-	@echo "  make run-compro    - Run Next.js public profile locally (port 3001)"
-	@echo "  make docker-up     - Run entire stack via Docker Compose"
-	@echo "  make docker-down   - Stop all Docker containers"
-	@echo "  make test          - Run backend & frontend tests"
+	@echo "  make db             - Start PostgreSQL + PostGIS (Docker)"
+	@echo "  make minio          - Start MinIO object storage for CMS photos (Docker)"
+	@echo "  make db-down        - Stop PostgreSQL container"
+	@echo "  make db-reset       - Reset DB volume & re-run all migrations"
+	@echo "  make db-seed        - Re-run SQL migrations & initial seed"
+	@echo "  make run-backend    - Run Go API locally (port 8080)"
+	@echo "  make run-frontend   - Run Next.js dashboard locally (port 3000)"
+	@echo "  make run-compro     - Run Next.js public profile locally (port 3001)"
+	@echo "  make docker-up      - Run entire stack via Docker Compose"
+	@echo "  make docker-down    - Stop all Docker containers"
+	@echo "  make seed-prod-admin - Seed initial production Super Admin"
+	@echo "  make test           - Run backend & frontend tests"
 	@echo "=========================================================="
 
 db:
@@ -67,3 +68,6 @@ test:
 	cd web-dashboard && npm run typecheck
 	@echo "Checking community profile types..."
 	cd web-compro && npm run typecheck
+
+seed-prod-admin:
+	cd core-system && go run ./cmd/seed-admin

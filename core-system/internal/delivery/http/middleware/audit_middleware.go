@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"io"
 	"log/slog"
-	"net"
 	"net/http"
 	"strings"
 	"time"
@@ -162,8 +161,8 @@ func newAuditEntry(r *http.Request, action, resource string, resourceID *string,
 	if requestID := chiMiddleware.GetReqID(r.Context()); requestID != "" {
 		entry.RequestID = &requestID
 	}
-	if host, _, err := net.SplitHostPort(r.RemoteAddr); err == nil && host != "" {
-		entry.IPAddress = &host
+	if clientIP := GetClientIP(r); clientIP != "" {
+		entry.IPAddress = &clientIP
 	}
 	return entry
 }

@@ -31,15 +31,18 @@ export default function TraceabilityPage() {
   }, [batches, searchTerm]);
 
   const activeBatchId = useMemo(() => {
-    if (selectedBatchId && batches.some((b) => b.id_batch === selectedBatchId)) {
+    if (
+      selectedBatchId &&
+      filteredBatches.some((b) => b.id_batch === selectedBatchId)
+    ) {
       return selectedBatchId;
     }
-    return batches[0]?.id_batch ?? "";
-  }, [selectedBatchId, batches]);
+    return filteredBatches[0]?.id_batch ?? "";
+  }, [selectedBatchId, filteredBatches]);
 
   const currentBatch = useMemo(
-    () => batches.find((b) => b.id_batch === activeBatchId),
-    [batches, activeBatchId],
+    () => filteredBatches.find((b) => b.id_batch === activeBatchId),
+    [filteredBatches, activeBatchId],
   );
 
   return (

@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X, Loader2, AlertCircle, MapPin, CheckCircle2, Trash2 } from "lucide-react";
-import { useCreateLahan } from "@/features/lahan/hooks/use-create-lahan";
+import { useCreateLahan, useUpdateLahan } from "@/features/lahan/hooks/use-create-lahan";
 import {
   useSetLahanPolygon,
   useDeleteLahanPolygon,
@@ -57,6 +57,7 @@ function LahanDialogContent({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const createMutation = useCreateLahan();
+  const updateMutation = useUpdateLahan();
   const setPolygonMutation = useSetLahanPolygon();
   const deletePolygonMutation = useDeleteLahanPolygon();
   const farmersQuery = usePetaniList();
@@ -130,23 +131,29 @@ function LahanDialogContent({
 
     try {
       let targetLahanId = initialLahan?.id_lahan;
+      const elevasiNum = values.elevasi_mdpl ? Number(values.elevasi_mdpl) : null;
+      const latNum = centroid ? centroid[0] : (values.latitude ? Number(values.latitude) : null);
+      const lonNum = centroid ? centroid[1] : (values.longitude ? Number(values.longitude) : null);
+
+      const lahanPayload = {
+        id_petani: values.id_petani,
+        nama_petak: values.nama_petak.trim(),
+        dusun: values.dusun.trim(),
+        elevasi_mdpl: elevasiNum,
+        latitude: latNum,
+        longitude: lonNum,
+      };
 
       if (!isEditing) {
         // Step A: Buat Lahan Baru (dengan centroid terisi otomatis jika ada polygon)
-        const elevasiNum = values.elevasi_mdpl ? Number(values.elevasi_mdpl) : null;
-        const latNum = centroid ? centroid[0] : (values.latitude ? Number(values.latitude) : null);
-        const lonNum = centroid ? centroid[1] : (values.longitude ? Number(values.longitude) : null);
-
-        const newLahan = await createMutation.mutateAsync({
-          id_petani: values.id_petani,
-          nama_petak: values.nama_petak,
-          dusun: values.dusun,
-          elevasi_mdpl: elevasiNum,
-          latitude: latNum,
-          longitude: lonNum,
-        });
-
+        const newLahan = await createMutation.mutateAsync(lahanPayload);
         targetLahanId = newLahan.id_lahan;
+      } else if (targetLahanId) {
+        // Step A (Edit): Perbarui metadata lahan
+        await updateMutation.mutateAsync({
+          id: targetLahanId,
+          input: lahanPayload,
+        });
       }
 
       // Step B: Simpan Polygon jika ada 3 atau lebih titik

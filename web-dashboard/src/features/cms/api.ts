@@ -37,10 +37,24 @@ export async function getCmsSettings(): Promise<SiteSettings> {
 }
 
 export async function updateCmsSettings(data: SiteSettings): Promise<SiteSettings> {
+  const body = {
+    hero_judul: data.hero_judul,
+    hero_slogan: data.hero_slogan,
+    hero_foto_key: data.hero_foto_key,
+    nomor_whatsapp: data.nomor_whatsapp,
+    about_cerita: data.about_cerita,
+    about_nilai: data.about_nilai,
+    alamat: data.alamat,
+    instagram_url: data.instagram_url,
+    youtube_url: data.youtube_url,
+    facebook_url: data.facebook_url,
+    tiktok_url: data.tiktok_url,
+  };
+
   const res = await fetch("/api/cms/pengaturan", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw await getApiError(res);
   const payload = (await res.json()) as ApiResponse<SiteSettings>;
@@ -58,10 +72,18 @@ export async function getCmsProducts(): Promise<CoffeeProduct[]> {
 export async function createCmsProduct(
   data: Omit<CoffeeProduct, "id_produk" | "created_at" | "updated_at">,
 ): Promise<CoffeeProduct> {
+  const body = {
+    nama: data.nama,
+    varietas: data.varietas,
+    proses: data.proses,
+    foto_key: data.foto_key,
+    status_ketersediaan: data.status_ketersediaan,
+  };
+
   const res = await fetch("/api/cms/produk", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw await getApiError(res);
   const payload = (await res.json()) as ApiResponse<CoffeeProduct>;
@@ -72,10 +94,18 @@ export async function updateCmsProduct(
   id: string,
   data: Partial<CoffeeProduct>,
 ): Promise<CoffeeProduct> {
+  const body = {
+    nama: data.nama,
+    varietas: data.varietas,
+    proses: data.proses,
+    foto_key: data.foto_key,
+    status_ketersediaan: data.status_ketersediaan,
+  };
+
   const res = await fetch(`/api/cms/produk/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw await getApiError(res);
   const payload = (await res.json()) as ApiResponse<CoffeeProduct>;
@@ -102,7 +132,7 @@ export async function createCmsMedia(data: {
   const res = await fetch("/api/cms/media", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify({ url: data.url, tampil: data.tampil }),
   });
   if (!res.ok) throw await getApiError(res);
   const payload = (await res.json()) as ApiResponse<MediaEmbed>;
@@ -116,7 +146,7 @@ export async function updateCmsMedia(
   const res = await fetch(`/api/cms/media/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify({ url: data.url, tampil: data.tampil }),
   });
   if (!res.ok) throw await getApiError(res);
   const payload = (await res.json()) as ApiResponse<MediaEmbed>;
@@ -153,10 +183,16 @@ export async function getCmsAgenda(): Promise<Agenda[]> {
 export async function createCmsAgenda(
   data: Omit<Agenda, "id_agenda" | "created_at" | "updated_at">,
 ): Promise<Agenda> {
+  const body = {
+    judul: data.judul,
+    tanggal: data.tanggal,
+    keterangan: data.keterangan,
+  };
+
   const res = await fetch("/api/cms/agenda", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw await getApiError(res);
   const payload = (await res.json()) as ApiResponse<Agenda>;
@@ -167,10 +203,16 @@ export async function updateCmsAgenda(
   id: string,
   data: Partial<Agenda>,
 ): Promise<Agenda> {
+  const body = {
+    judul: data.judul,
+    tanggal: data.tanggal,
+    keterangan: data.keterangan,
+  };
+
   const res = await fetch(`/api/cms/agenda/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw await getApiError(res);
   const payload = (await res.json()) as ApiResponse<Agenda>;
@@ -195,10 +237,16 @@ export async function createCmsGalleryPhoto(data: {
   keterangan: string;
   urutan: number;
 }): Promise<GalleryPhoto> {
+  const body = {
+    foto_key: data.foto_key,
+    keterangan: data.keterangan,
+    urutan: data.urutan,
+  };
+
   const res = await fetch("/api/cms/galeri", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw await getApiError(res);
   const payload = (await res.json()) as ApiResponse<GalleryPhoto>;
@@ -209,10 +257,16 @@ export async function updateCmsGalleryPhoto(
   id: string,
   data: Partial<GalleryPhoto>,
 ): Promise<GalleryPhoto> {
+  const body = {
+    foto_key: data.foto_key,
+    keterangan: data.keterangan,
+    urutan: data.urutan,
+  };
+
   const res = await fetch(`/api/cms/galeri/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw await getApiError(res);
   const payload = (await res.json()) as ApiResponse<GalleryPhoto>;

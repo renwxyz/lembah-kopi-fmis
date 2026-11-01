@@ -1,5 +1,6 @@
 import { Coffee, MessageCircle } from "lucide-react";
 import type { CoffeeProduct } from "@/types";
+import { formatWhatsAppUrl } from "@/lib/utils";
 
 interface ProductsSectionProps {
   products: CoffeeProduct[];
@@ -37,11 +38,7 @@ export function ProductsSection({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((item) => {
               const inquiryMsg = `Halo Pengurus Lembah Kopi, saya tertarik dan ingin bertanya mengenai ketersediaan varietas: ${item.nama} (${item.varietas} - ${item.proses.replace("_", " ")})`;
-              const waLink = nomorWhatsApp
-                ? `https://wa.me/${nomorWhatsApp}?text=${encodeURIComponent(
-                    inquiryMsg
-                  )}`
-                : null;
+              const waLink = formatWhatsAppUrl(nomorWhatsApp, inquiryMsg);
 
               return (
                 <div

@@ -73,7 +73,8 @@ export async function proxyToBackend({
     }
 
     return response;
-  } catch {
+  } catch (err) {
+    console.error(`[BFF Proxy Error] Gagal meneruskan ${request.method} ke ${path}:`, err);
     return upstreamUnavailableResponse();
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Plus, RefreshCw, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDashboardOverview } from "@/features/dashboard/hooks/use-dashboard-overview";
@@ -101,13 +102,14 @@ export default function DashboardPage() {
                   </Button>
 
                   <Button
-                    disabled
+                    asChild
                     variant="default"
-                    className="gap-2 text-xs opacity-65 cursor-not-allowed"
-                    title="Fitur pencatatan panen dalam tahap pengembangan"
+                    className="gap-2 text-xs"
                   >
-                    <Plus className="h-4 w-4" />
-                    Catat Panen (Segera)
+                    <Link href="/dashboard/panen">
+                      <Plus className="h-4 w-4" />
+                      Catat Panen
+                    </Link>
                   </Button>
                 </div>
               </div>

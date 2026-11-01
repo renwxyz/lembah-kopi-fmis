@@ -307,7 +307,10 @@ function CreateEditFertilizationDialog({
 }) {
   const isEditing = Boolean(initialItem);
   const [tanggal, setTanggal] = useState(
-    () => initialItem ? initialItem.tanggal_aplikasi : new Date().toISOString().split("T")[0],
+    () =>
+      initialItem?.tanggal_aplikasi
+        ? initialItem.tanggal_aplikasi.slice(0, 10)
+        : new Date().toISOString().split("T")[0],
   );
   const [jenisPupuk, setJenisPupuk] = useState(
     initialItem ? initialItem.jenis_pupuk : "NPK 16-16-16",

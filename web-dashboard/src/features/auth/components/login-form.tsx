@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Lock, User, Sprout, Eye, EyeOff } from "lucide-react";
@@ -14,6 +14,13 @@ import { Input } from "@/components/ui/input";
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const rawReturnUrl = searchParams.get("returnUrl");
+  const returnUrl =
+    rawReturnUrl && rawReturnUrl.startsWith("/") && !rawReturnUrl.startsWith("//") && !rawReturnUrl.includes("://")
+      ? rawReturnUrl
+      : "/dashboard";
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -30,7 +37,7 @@ export function LoginForm() {
   const onSubmit = (data: LoginSchema) => {
     setErrorMessage(null);
     loginMutation.mutate(data, {
-      onSuccess: () => router.replace("/dashboard"),
+      onSuccess: () => router.replace(returnUrl),
       onError: (error) => {
         setErrorMessage(
           error instanceof ApiError

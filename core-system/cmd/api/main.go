@@ -108,6 +108,7 @@ func run() error {
 	} else {
 		slog.Warn("MINIO_ENDPOINT is not set; CMS photo uploads are disabled")
 	}
+	healthHandler := handler.NewHealthHandler(db)
 	cmsHandler := handler.NewCMSHandler(service.NewCMSService(postgres.NewCMSRepository(db), objectStorage, imageProc))
 
 	server := &http.Server{
@@ -120,6 +121,7 @@ func run() error {
 			cfg.JWTSecret, cfg.CORSAllowedOrigins,
 			httpdelivery.WithAudit(auditHandler, auditService),
 			httpdelivery.WithCMS(cmsHandler),
+			httpdelivery.WithHealthHandler(healthHandler),
 		),
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       15 * time.Second,

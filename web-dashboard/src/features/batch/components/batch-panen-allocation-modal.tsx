@@ -55,6 +55,13 @@ export function BatchPanenAllocationModal({
 
   if (!isOpen) return null;
 
+  const handleClose = () => {
+    setFormError("");
+    setSelectedHarvestId("");
+    setUsedWeight("");
+    onClose();
+  };
+
   const availableHarvests = (harvestData?.items ?? []).filter(
     (h) => h.status_alokasi !== "FULLY_BATCHED",
   );
@@ -132,7 +139,7 @@ export function BatchPanenAllocationModal({
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="rounded-lg p-1 text-[#8A7669] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
           >
             <X className="h-4 w-4" />
@@ -308,7 +315,7 @@ export function BatchPanenAllocationModal({
           </div>
           <Button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="rounded-xl bg-[#FAF8F5] px-4 py-2 text-xs font-semibold text-[#2A1810] hover:bg-[#F4F0EC]"
           >
             Tutup

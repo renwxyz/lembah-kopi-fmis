@@ -26,6 +26,15 @@ export function ChangePasswordDialog({
 
   if (!isOpen) return null;
 
+  const handleClose = () => {
+    setPasswordLama("");
+    setPasswordBaru("");
+    setKonfirmasiPasswordBaru("");
+    setError("");
+    setIsSuccess(false);
+    onClose();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -49,11 +58,7 @@ export function ChangePasswordDialog({
 
       setIsSuccess(true);
       setTimeout(() => {
-        setIsSuccess(false);
-        setPasswordLama("");
-        setPasswordBaru("");
-        setKonfirmasiPasswordBaru("");
-        onClose();
+        handleClose();
       }, 1500);
     } catch (err) {
       if (err instanceof ApiError) {
@@ -76,7 +81,7 @@ export function ChangePasswordDialog({
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="rounded-lg p-1 text-[#8A7669] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
           >
             <X className="h-4 w-4" />
@@ -149,7 +154,7 @@ export function ChangePasswordDialog({
               <Button
                 type="button"
                 variant="outline"
-                onClick={onClose}
+                onClick={handleClose}
                 className="rounded-xl border-[#E8E2DC] px-4 py-2 text-xs font-semibold text-[#6E5D53]"
               >
                 Batal

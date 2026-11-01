@@ -56,7 +56,13 @@ export function Header({ onMenuClick }: HeaderProps) {
     if (pathname?.startsWith("/dashboard/traceability")) {
       return {
         title: "Matriks Penelusuran Asal Lahan",
-        subtitle: "Verifikasi silsilah kebun, elevasi, varietas, dan QR trace",
+        subtitle: "Verifikasi silsilah kebun, elevasi, varietas, dan komposisi batch",
+      };
+    }
+    if (pathname?.startsWith("/dashboard/cms")) {
+      return {
+        title: "Manajemen Konten Publik (CMS)",
+        subtitle: "Kelola profil kelompok tani, katalog kopi, agenda, dan galeri website",
       };
     }
     return {

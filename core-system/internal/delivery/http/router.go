@@ -21,10 +21,18 @@ type routerOptions struct {
 	auditHandler  *handler.AuditHandler
 	auditRecorder middleware.AuditRecorder
 	cmsHandler    *handler.CMSHandler
+	healthHandler *handler.HealthHandler
 }
 
 // RouterOption mengonfigurasi fitur opsional router.
 type RouterOption func(*routerOptions)
+
+// WithHealthHandler menambahkan health check probe endpoint (/healthz dan /readyz).
+func WithHealthHandler(h *handler.HealthHandler) RouterOption {
+	return func(o *routerOptions) {
+		o.healthHandler = h
+	}
+}
 
 // WithCMS mengaktifkan endpoint community profile: GET /public/home (tanpa auth)
 // dan /cms/* (SUPER_ADMIN & ADMIN; operasi hapus hanya SUPER_ADMIN).
@@ -66,9 +74,14 @@ func NewRouter(
 	r := chi.NewRouter()
 	originAllowlist := make(map[string]struct{}, len(allowedOrigins))
 	for _, origin := range allowedOrigins {
-		originAllowlist[origin] = struct{}{}
+		norm := normalizeOrigin(origin)
+		if norm != "" {
+			originAllowlist[norm] = struct{}{}
+		}
 	}
 
+	r.Use(middleware.RealIP)
+	r.Use(middleware.SecurityHeaders)
 	r.Use(chiMiddleware.Logger)
 	r.Use(problem.Recoverer)
 	r.Use(chiMiddleware.RequestID)
@@ -78,7 +91,8 @@ func NewRouter(
 
 	r.Use(cors.Handler(cors.Options{
 		AllowOriginFunc: func(_ *http.Request, origin string) bool {
-			_, allowed := originAllowlist[origin]
+			norm := normalizeOrigin(origin)
+			_, allowed := originAllowlist[norm]
 			return allowed || isVSCodeWebviewOrigin(origin)
 		},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -94,12 +108,28 @@ func NewRouter(
 	})
 	r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL("/openapi.yaml")))
 
+	if options.healthHandler != nil {
+		r.Get("/healthz", options.healthHandler.Liveness)
+		r.Get("/readyz", options.healthHandler.Readiness)
+	} else {
+		r.Get("/healthz", func(w http.ResponseWriter, _ *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			_, _ = w.Write([]byte(`{"status":"UP"}`))
+		})
+	}
+
+	// Rate limiter untuk proteksi endpoint login (10 requests burst, replenish 0.2/sec = 12/min)
+	loginRateLimiter := middleware.NewIPRateLimiter(0.2, 10)
+
 	r.Route("/api/v1", func(r chi.Router) {
-		if options.auditRecorder != nil {
-			r.With(middleware.AuditLogin(options.auditRecorder)).Post("/auth/login", authHandler.Login)
-		} else {
+		r.Group(func(r chi.Router) {
+			r.Use(loginRateLimiter.LimitHandler)
+			if options.auditRecorder != nil {
+				r.Use(middleware.AuditLogin(options.auditRecorder))
+			}
 			r.Post("/auth/login", authHandler.Login)
-		}
+		})
 
 		if options.cmsHandler != nil {
 			r.Get("/public/home", options.cmsHandler.PublicHome)
@@ -234,6 +264,12 @@ func NewRouter(
 	})
 
 	return r
+}
+
+func normalizeOrigin(origin string) string {
+	origin = strings.TrimSpace(origin)
+	origin = strings.TrimRight(origin, "/")
+	return strings.ToLower(origin)
 }
 
 func isVSCodeWebviewOrigin(origin string) bool {

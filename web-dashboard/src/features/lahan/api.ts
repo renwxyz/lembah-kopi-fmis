@@ -101,7 +101,7 @@ export async function setLahanPolygon(
   return payload.data;
 }
 
-export async function deleteLahanPolygon(id: string): Promise<Lahan> {
+export async function deleteLahanPolygon(id: string): Promise<void> {
   const response = await fetch(`/api/lahan/${encodeURIComponent(id)}/polygon`, {
     method: "DELETE",
   });
@@ -109,9 +109,6 @@ export async function deleteLahanPolygon(id: string): Promise<Lahan> {
   if (!response.ok) {
     throw await getApiError(response);
   }
-
-  const payload = (await response.json()) as ApiResponse<Lahan>;
-  return payload.data;
 }
 
 // ==========================================

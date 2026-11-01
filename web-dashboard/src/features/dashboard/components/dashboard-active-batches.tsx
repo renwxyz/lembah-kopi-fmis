@@ -25,7 +25,7 @@ export function DashboardActiveBatches({
         </div>
 
         <Link
-          href="/dashboard/lahan"
+          href="/dashboard/batch"
           className="flex items-center gap-1 text-xs font-semibold text-foreground hover:underline"
         >
           Lihat Semua
@@ -42,8 +42,9 @@ export function DashboardActiveBatches({
       ) : (
         <div className="divide-y divide-border overflow-hidden rounded-xl border border-border">
           {batches.map((batch) => (
-            <div
+            <Link
               key={batch.id_batch}
+              href={`/dashboard/batch/${encodeURIComponent(batch.id_batch)}`}
               className="flex flex-col justify-between gap-3 bg-white p-4 transition-colors hover:bg-[#FAF8F5] sm:flex-row sm:items-center"
             >
               <div className="space-y-1">
@@ -75,7 +76,7 @@ export function DashboardActiveBatches({
                   </p>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

@@ -75,7 +75,7 @@ export function HarvestTab({ landId }: HarvestTabProps) {
 
   const openEditModal = (item: HarvestLog) => {
     setEditingItem(item);
-    setFormDate(item.tanggal_panen);
+    setFormDate(item.tanggal_panen ? item.tanggal_panen.slice(0, 10) : "");
     setFormWeight(String(item.berat_ceri_kg));
     setFormMethod(item.metode_petik);
     setFormInventoryId(item.id_inventaris || "");
@@ -86,6 +86,13 @@ export function HarvestTab({ landId }: HarvestTabProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError("");
+
+    if (!editingItem && !formInventoryId) {
+      setFormError(
+        "Blok tanaman & varietas wajib dipilih. Jika belum tersedia, tambahkan blok inventaris tanaman di detail lahan terlebih dahulu.",
+      );
+      return;
+    }
 
     const weightNum = parseFloat(formWeight);
     if (!formWeight || isNaN(weightNum) || weightNum <= 0) {
@@ -397,14 +404,19 @@ export function HarvestTab({ landId }: HarvestTabProps) {
               {!editingItem && (
                 <div className="space-y-1">
                   <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
-                    Blok Tanaman & Varietas
+                    Blok Tanaman & Varietas <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formInventoryId}
                     onChange={(e) => setFormInventoryId(e.target.value)}
+                    required
                     className="w-full rounded-xl border border-[#E8E2DC] bg-white px-3 py-2 text-xs font-medium text-[#2A1810] outline-none focus:ring-1 focus:ring-[#2A1810]"
                   >
-                    <option value="">Pilih Blok Tanaman (Opsional)</option>
+                    <option value="">
+                      {inventories.length === 0
+                        ? "Belum ada blok tanaman di lahan ini"
+                        : "Pilih Blok Tanaman..."}
+                    </option>
                     {inventories.map((inv) => (
                       <option key={inv.id_inventaris} value={inv.id_inventaris}>
                         {inv.varietas} — {inv.kelompok_usia.replace(/_/g, " ")}
@@ -412,7 +424,9 @@ export function HarvestTab({ landId }: HarvestTabProps) {
                     ))}
                   </select>
                   <p className="text-[10px] text-[#8A7669]">
-                    Mengaitkan panen dengan blok tanaman akan melacak umur dan silsilah tanaman saat batching.
+                    {inventories.length === 0
+                      ? "Tambahkan blok tanaman terlebih dahulu pada halaman Detail Lahan."
+                      : "Mengaitkan panen dengan blok tanaman menentukan varietas kopi dan silsilah tanaman saat batching."}
                   </p>
                 </div>
               )}

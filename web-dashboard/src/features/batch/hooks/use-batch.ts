@@ -98,6 +98,7 @@ export function useUpdateBatch(id: string) {
     mutationFn: (input: UpdateBatchInput) => updateBatch(id, input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: batchKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: batchKeys.traceability(id) });
       queryClient.invalidateQueries({ queryKey: batchKeys.lists() });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
@@ -123,6 +124,7 @@ export function useAddBatchStage(batchId: string) {
       queryClient.invalidateQueries({ queryKey: batchKeys.stages(batchId) });
       queryClient.invalidateQueries({ queryKey: batchKeys.detail(batchId) });
       queryClient.invalidateQueries({ queryKey: batchKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
   });
 }
@@ -135,6 +137,7 @@ export function useAddBatchMapping(batchId: string) {
       queryClient.invalidateQueries({ queryKey: batchKeys.mappings(batchId) });
       queryClient.invalidateQueries({ queryKey: batchKeys.detail(batchId) });
       queryClient.invalidateQueries({ queryKey: batchKeys.traceability(batchId) });
+      queryClient.invalidateQueries({ queryKey: batchKeys.lists() });
       queryClient.invalidateQueries({ queryKey: ["harvest"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
@@ -155,7 +158,9 @@ export function useUpdateBatchMapping(batchId: string) {
       queryClient.invalidateQueries({ queryKey: batchKeys.mappings(batchId) });
       queryClient.invalidateQueries({ queryKey: batchKeys.detail(batchId) });
       queryClient.invalidateQueries({ queryKey: batchKeys.traceability(batchId) });
+      queryClient.invalidateQueries({ queryKey: batchKeys.lists() });
       queryClient.invalidateQueries({ queryKey: ["harvest"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
   });
 }
@@ -168,7 +173,9 @@ export function useDeleteBatchMapping(batchId: string) {
       queryClient.invalidateQueries({ queryKey: batchKeys.mappings(batchId) });
       queryClient.invalidateQueries({ queryKey: batchKeys.detail(batchId) });
       queryClient.invalidateQueries({ queryKey: batchKeys.traceability(batchId) });
+      queryClient.invalidateQueries({ queryKey: batchKeys.lists() });
       queryClient.invalidateQueries({ queryKey: ["harvest"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
   });
 }

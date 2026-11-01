@@ -78,14 +78,9 @@ export function BatchTraceabilityCard({ batch }: BatchTraceabilityCardProps) {
               <p className="font-mono text-xs font-semibold text-white">
                 {batch.id_batch}
               </p>
-              <a
-                href={`/trace/${encodeURIComponent(batch.kode_qr_trace)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-1 inline-block text-[11px] font-semibold text-amber-300 underline hover:text-amber-200"
-              >
-                Buka Halaman Publik &rarr;
-              </a>
+              <span className="mt-1 inline-block rounded bg-amber-400/15 px-2 py-0.5 text-[10px] font-medium text-amber-200">
+                Fitur QR Publik (Hold MVP)
+              </span>
             </div>
           </div>
         </div>

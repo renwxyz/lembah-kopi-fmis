@@ -42,6 +42,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    ports:
+      - "127.0.0.1:9000:9000"
     networks:
       - internal_net
       - public_net
@@ -68,6 +70,8 @@ services:
       MINIO_BUCKET: ${MINIO_BUCKET:-lembah-kopi-prod}
       MINIO_USE_SSL: "false"
       MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL}
+    ports:
+      - "127.0.0.1:8080:8080"
     networks:
       - internal_net
       - public_net
@@ -83,6 +87,8 @@ services:
     environment:
       NEXT_PUBLIC_API_BASE_URL: ${DASHBOARD_NEXT_PUBLIC_API_BASE_URL}
       API_BASE_URL: http://core-system:8080/api/v1
+    ports:
+      - "127.0.0.1:3000:3000"
     networks:
       - internal_net
       - public_net
@@ -98,15 +104,39 @@ services:
     environment:
       CORE_SYSTEM_API_URL: http://core-system:8080/api/v1
       NEXT_PUBLIC_API_URL: ${COMPRO_NEXT_PUBLIC_API_URL}
+    ports:
+      - "127.0.0.1:3001:3001"
     networks:
       - internal_net
+      - public_net
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: lembah_kopi_prod_caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - core-system
+      - web-dashboard
+      - web-compro
+      - minio
+    networks:
       - public_net
 
 volumes:
   pgdata_prod:
   miniodata_prod:
+  caddy_data:
+  caddy_config:
 
 networks:
   internal_net:
     internal: true
   public_net:
+

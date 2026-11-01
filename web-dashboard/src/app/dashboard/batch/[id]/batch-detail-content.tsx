@@ -92,8 +92,10 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
     try {
       const input: UpdateBatchInput = {
         metode_proses: batch.metode_proses,
-        tanggal_mulai_olah: batch.tanggal_mulai_olah,
-        estimasi_tanggal_selesai: batch.estimasi_tanggal_selesai || null,
+        tanggal_mulai_olah: batch.tanggal_mulai_olah.slice(0, 10),
+        estimasi_tanggal_selesai: batch.estimasi_tanggal_selesai
+          ? batch.estimasi_tanggal_selesai.slice(0, 10)
+          : null,
         target_kadar_air_persen: batch.target_kadar_air_persen || null,
         berat_green_bean_kg: weightNum,
       };
@@ -213,7 +215,7 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex gap-2 border-b border-[#F4F0EC] pb-2">
+      <div className="flex overflow-x-auto gap-2 border-b border-[#F4F0EC] pb-2 no-scrollbar">
         <button
           type="button"
           onClick={() => setActiveTab("stages")}

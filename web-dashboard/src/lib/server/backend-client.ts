@@ -1,9 +1,9 @@
 import "server-only";
 
-const apiBaseUrl =
-  process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL;
-
 function getApiBaseUrl() {
+  const apiBaseUrl =
+    process.env["API_BASE_URL"] ?? process.env.NEXT_PUBLIC_API_BASE_URL;
+
   if (!apiBaseUrl) {
     throw new Error("API_BASE_URL must be configured on the server.");
   }

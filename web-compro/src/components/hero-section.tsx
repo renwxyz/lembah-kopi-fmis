@@ -1,16 +1,16 @@
 import { ArrowRight, MessageCircle } from "lucide-react";
 import type { SiteSettings } from "@/types";
+import { formatWhatsAppUrl } from "@/lib/utils";
 
 interface HeroSectionProps {
   settings: SiteSettings;
 }
 
 export function HeroSection({ settings }: HeroSectionProps) {
-  const waUrl = settings.nomor_whatsapp
-    ? `https://wa.me/${settings.nomor_whatsapp}?text=${encodeURIComponent(
-        `Halo Pengurus ${settings.hero_judul || "Lembah Kopi"}, saya ingin bertanya seputar kelompok tani dan produk kopi.`
-      )}`
-    : null;
+  const waUrl = formatWhatsAppUrl(
+    settings.nomor_whatsapp,
+    `Halo Pengurus ${settings.hero_judul || "Lembah Kopi"}, saya ingin bertanya seputar kelompok tani dan produk kopi.`
+  );
 
   return (
     <section className="relative min-h-[560px] flex items-center justify-center overflow-hidden bg-[#2A1810] text-white">
