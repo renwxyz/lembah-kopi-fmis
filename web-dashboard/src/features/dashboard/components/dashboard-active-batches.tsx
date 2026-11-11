@@ -13,7 +13,7 @@ export function DashboardActiveBatches({
   isPending,
 }: DashboardActiveBatchesProps) {
   return (
-    <div className="space-y-4 rounded-2xl border border-border bg-white p-6 shadow-sm lg:col-span-8">
+    <div className="space-y-4 rounded-2xl border border-border bg-surface p-6 shadow-sm lg:col-span-8">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-heading text-base font-bold text-foreground">
@@ -45,7 +45,7 @@ export function DashboardActiveBatches({
             <Link
               key={batch.id_batch}
               href={`/dashboard/batch/${encodeURIComponent(batch.id_batch)}`}
-              className="flex flex-col justify-between gap-3 bg-white p-4 transition-colors hover:bg-[#FAF8F5] sm:flex-row sm:items-center"
+              className="flex flex-col justify-between gap-3 bg-surface p-4 transition-colors hover:bg-cream-50 sm:flex-row sm:items-center"
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -68,10 +68,10 @@ export function DashboardActiveBatches({
 
               <div className="flex items-center justify-between gap-4 sm:justify-end">
                 <div className="text-left sm:text-right">
-                  <span className="inline-block rounded-full border border-amber-200/60 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-800">
+                  <span className="inline-block rounded-full border border-warning-ink/25/60 bg-warning-tint px-2.5 py-1 text-[11px] font-semibold text-warning-ink">
                     {batch.status_proses}
                   </span>
-                  <p className="mt-0.5 text-[10px] text-[#9E8E82]">
+                  <p className="mt-0.5 text-[10px] text-text-muted">
                     Est. Selesai: {formatDate(batch.estimasi_tanggal_selesai)}
                   </p>
                 </div>

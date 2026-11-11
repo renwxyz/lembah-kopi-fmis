@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import logoGlodogan from "@/assets/logo-glodogan.png";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
@@ -11,7 +13,6 @@ import {
   Wheat,
   Layers,
   QrCode,
-  Sprout,
   ScrollText,
   LogOut,
   X,
@@ -101,21 +102,28 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-[#E8E2DC] bg-white transition-transform duration-300 lg:translate-x-0",
+        "fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border bg-surface transition-transform duration-300 lg:translate-x-0",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}
     >
-      {/* Brand Header */}
-      <div className="flex h-16 shrink-0 items-center justify-between border-b border-[#E8E2DC] px-6">
+      {/* Logo */}
+      <div className="flex h-16 shrink-0 items-center justify-between border-b border-border px-5">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#2A1810] text-white shadow-xs">
-            <Sprout className="h-5 w-5" />
-          </div>
+          <Image
+            src={logoGlodogan}
+            alt="Logo Kelompok Tani Kopi Glodogan"
+            width={40}
+            height={40}
+            unoptimized
+            className="h-10 w-10"
+          />
           <div>
-            <h1 className="font-heading text-base font-bold text-[#2A1810]">
+            <h1 className="font-heading text-base font-bold leading-tight text-coffee-900">
               Lembah Kopi
             </h1>
-            <p className="text-[10px] text-[#6E5D53]">Management System</p>
+            <p className="text-[11px] leading-tight text-text-muted">
+              Management System
+            </p>
           </div>
         </div>
 
@@ -123,18 +131,18 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           type="button"
           onClick={onClose}
           aria-label="Tutup menu navigasi"
-          className="rounded-lg p-2 text-[#6E5D53] hover:bg-[#F4F0EC] lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full text-text-muted hover:bg-primary-tint lg:hidden"
         >
           <X className="h-5 w-5" />
         </button>
       </div>
 
-      {/* Nav List with Sections */}
+      {/* Menu */}
       <div className="flex flex-1 flex-col justify-between overflow-y-auto p-4">
-        <nav className="space-y-4">
+        <nav aria-label="Navigasi dashboard" className="space-y-5">
           {visibleSections.map((section) => (
             <div key={section.title}>
-              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-[#9E8E82] mb-1.5">
+              <p className="mb-1.5 px-3 text-xs font-semibold uppercase tracking-wider text-text-muted">
                 {section.title}
               </p>
 
@@ -151,19 +159,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       key={item.name}
                       href={item.href}
                       onClick={onClose}
+                      aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "flex items-center gap-3 rounded-xl px-3.5 py-2 text-sm font-semibold transition-all",
+                        "flex min-h-10 items-center gap-3 rounded-full px-3.5 py-2 text-sm font-semibold transition-colors",
                         isActive
-                          ? "bg-[#2A1810] text-white shadow-xs"
-                          : "text-[#6E5D53] hover:bg-[#F4F0EC] hover:text-[#2A1810]"
+                          ? "bg-primary-tint text-primary"
+                          : "text-text-muted hover:bg-primary-wash hover:text-coffee-900"
                       )}
                     >
-                      <item.icon
-                        className={cn(
-                          "h-4 w-4 shrink-0",
-                          isActive ? "text-white" : "text-[#9E8E82]"
-                        )}
-                      />
+                      <item.icon className="h-4 w-4 shrink-0" />
                       <span>{item.name}</span>
                     </Link>
                   );
@@ -173,18 +177,18 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        {/* Footer User Profile & Logout */}
-        <div className="border-t border-[#E8E2DC] pt-4 space-y-2">
+        {/* Profil pengguna dan keluar */}
+        <div className="mt-6 space-y-2 border-t border-border pt-4">
           {user && (
-            <div className="flex items-center gap-2.5 rounded-xl bg-[#FAF8F5] p-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1810] text-xs font-bold text-white">
+            <div className="flex items-center gap-2.5 rounded-2xl bg-cream-50 p-2.5">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
                 {initial}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-semibold text-[#2A1810]">
+                <p className="truncate text-sm font-semibold text-coffee-900">
                   {user.nama_lengkap}
                 </p>
-                <p className="truncate text-[10px] text-[#8A7669]">
+                <p className="truncate text-xs text-text-muted">
                   {isSuperAdmin ? "Super Admin" : "Kelompok Tani"}
                 </p>
               </div>
@@ -195,9 +199,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             type="button"
             onClick={handleLogout}
             disabled={logoutMutation.isPending}
-            className="flex w-full items-center justify-center gap-2 rounded-xl py-2 text-xs font-semibold text-red-600 transition-all hover:bg-red-50 disabled:opacity-50"
+            className="flex min-h-10 w-full items-center justify-center gap-2 rounded-full text-sm font-semibold text-danger transition-colors hover:bg-danger-tint disabled:opacity-50"
           >
-            <LogOut className="h-3.5 w-3.5 text-red-500" />
+            <LogOut className="h-4 w-4" />
             <span>Keluar Akun</span>
           </button>
         </div>

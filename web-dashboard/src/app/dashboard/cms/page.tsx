@@ -59,24 +59,24 @@ export default function CmsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#2A1810] text-white">
+            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-primary text-white">
               <Globe className="h-3.5 w-3.5" />
             </span>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#9E8E82]">
+            <span className="text-xs font-bold uppercase tracking-wider text-text-muted">
               Community Profile & CMS
             </span>
           </div>
-          <h1 className="font-heading text-2xl font-bold text-[#2A1810] mt-1">
+          <h1 className="font-heading text-2xl font-bold text-coffee-900 mt-1">
             Manajemen Konten Publik
           </h1>
-          <p className="text-xs text-[#8A7669]">
+          <p className="text-xs text-text-muted">
             Kelola profil kelompok tani, showcase produk kopi, agenda, video, dan dokumentasi foto untuk website publik.
           </p>
         </div>
       </div>
 
       {/* TABS NAVIGATION */}
-      <div className="flex overflow-x-auto pb-1 gap-2 border-b border-[#E8E2DC]">
+      <div className="flex overflow-x-auto pb-1 gap-2 border-b border-border">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           return (
@@ -86,13 +86,13 @@ export default function CmsPage() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-xs font-bold transition whitespace-nowrap border-b-2 -mb-[2px] ${
                 isActive
-                  ? "border-[#2A1810] bg-white text-[#2A1810] shadow-xs"
-                  : "border-transparent text-[#6E5D53] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+                  ? "border-primary bg-surface text-coffee-900 shadow-xs"
+                  : "border-transparent text-text-muted hover:bg-cream-50 hover:text-coffee-900"
               }`}
             >
               <tab.icon
                 className={`h-4 w-4 ${
-                  isActive ? "text-[#2A1810]" : "text-[#9E8E82]"
+                  isActive ? "text-coffee-900" : "text-text-muted"
                 }`}
               />
               <span>{tab.label}</span>

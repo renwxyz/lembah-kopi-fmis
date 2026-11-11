@@ -14,7 +14,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]">
+    <div className="min-h-screen bg-cream-50">
       <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
 
       {sidebarOpen && (
@@ -22,14 +22,14 @@ export function DashboardShell({ children }: DashboardShellProps) {
           type="button"
           aria-label="Tutup menu navigasi"
           onClick={closeSidebar}
-          className="fixed inset-0 z-30 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-30 bg-coffee-900/40 lg:hidden"
         />
       )}
 
       <div className="lg:pl-64">
         <Header onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="p-4 sm:p-8 lg:p-10">{children}</main>
+        <main className="p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );

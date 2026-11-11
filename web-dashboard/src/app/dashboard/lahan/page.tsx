@@ -74,16 +74,16 @@ export default function LahanPage() {
     <div className="space-y-7">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-[#8A7669]">
+          <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-text-muted">
             <span>Manajemen Kebun</span>
             <ChevronRight className="h-3.5 w-3.5" />
-            <span className="text-[#2A1810]">Pemetaan Lahan</span>
+            <span className="text-coffee-900">Pemetaan Lahan</span>
           </div>
 
-          <h1 className="font-heading text-2xl font-bold tracking-tight text-[#2A1810] sm:text-3xl">
+          <h1 className="font-heading text-2xl font-bold tracking-tight text-coffee-900 sm:text-3xl">
             Pemetaan Lahan
           </h1>
-          <p className="mt-1 text-sm text-[#6E5D53]">
+          <p className="mt-1 text-sm text-text-muted">
             Kelola data petak, lokasi geografis, dan plotting polygon batas wilayah perkebunan.
           </p>
         </div>
@@ -124,26 +124,26 @@ export default function LahanPage() {
         />
       </section>
 
-      <section className="overflow-hidden rounded-2xl bg-white shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)]">
+      <section className="overflow-hidden rounded-2xl bg-surface border border-border">
         <div className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="font-heading text-lg font-bold text-[#2A1810]">
+            <h2 className="font-heading text-lg font-bold text-coffee-900">
               Daftar Petak Lahan
             </h2>
-            <p className="mt-0.5 text-xs text-[#6E5D53]">
+            <p className="mt-0.5 text-xs text-text-muted">
               Total {formatNumber(data?.total)} petak lahan terdata di sistem
             </p>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative min-w-64">
-              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7669]" />
+              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Cari nama petak atau dusun..."
-                className="h-11 w-full rounded-xl bg-[#FAF8F5] pl-10 pr-4 text-xs font-medium text-[#2A1810] placeholder:text-[#8A7669] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+                className="h-11 w-full rounded-xl bg-cream-50 pl-10 pr-4 text-xs font-medium text-coffee-900 placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
               />
             </div>
 
@@ -165,15 +165,15 @@ export default function LahanPage() {
         </div>
 
         {lahanQuery.isLoading ? (
-          <div className="flex min-h-64 items-center justify-center gap-2.5 p-8 text-xs text-[#6E5D53]">
-            <LoaderCircle className="h-5 w-5 animate-spin text-[#2A1810]" />
+          <div className="flex min-h-64 items-center justify-center gap-2.5 p-8 text-xs text-text-muted">
+            <LoaderCircle className="h-5 w-5 animate-spin text-coffee-900" />
             <span>Memuat data lahan...</span>
           </div>
         ) : lahanQuery.isError ? (
           <div className="flex min-h-64 flex-col items-center justify-center gap-2 p-8 text-center text-xs">
-            <AlertCircle className="h-6 w-6 text-red-600" />
-            <p className="font-semibold text-red-800">Gagal memuat data lahan</p>
-            <p className="text-[#6E5D53]">{getErrorMessage(lahanQuery.error)}</p>
+            <AlertCircle className="h-6 w-6 text-danger" />
+            <p className="font-semibold text-danger-ink">Gagal memuat data lahan</p>
+            <p className="text-text-muted">{getErrorMessage(lahanQuery.error)}</p>
             <Button
               variant="outline"
               size="sm"
@@ -185,13 +185,13 @@ export default function LahanPage() {
           </div>
         ) : items.length === 0 ? (
           <div className="flex min-h-64 flex-col items-center justify-center gap-3 p-8 text-center">
-            <div className="rounded-full bg-[#F4F0EC] p-3 text-[#6E5D53]">
+            <div className="rounded-full bg-primary-tint p-3 text-text-muted">
               <MapPin className="h-6 w-6" />
             </div>
-            <h3 className="font-semibold text-[#2A1810]">
+            <h3 className="font-semibold text-coffee-900">
               {search ? "Lahan tidak ditemukan" : "Belum ada data lahan"}
             </h3>
-            <p className="max-w-sm text-xs text-[#6E5D53]">
+            <p className="max-w-sm text-xs text-text-muted">
               {search
                 ? "Coba gunakan kata kunci pencarian lain."
                 : "Klik 'Tambah Lahan & Plot Batas' untuk mulai mendaftarkan petak kebun."}
@@ -201,7 +201,7 @@ export default function LahanPage() {
           <>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[850px] text-left text-sm">
-                <thead className="bg-[#F7F4F0] text-xs font-semibold text-[#6E5D53]">
+                <thead className="border-b border-border bg-cream-50 text-xs font-semibold uppercase tracking-wider text-text-muted">
                   <tr>
                     <th className="px-6 py-4">Nama Petak</th>
                     <th className="px-6 py-4">Dusun</th>
@@ -211,44 +211,44 @@ export default function LahanPage() {
                     <th className="px-6 py-4 text-center">Aksi</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-black/[0.04]">
+                <tbody className="divide-y divide-border">
                   {items.map((item) => (
                     <tr
                       key={item.id_lahan}
-                      className="transition-colors hover:bg-[#FAF8F5]"
+                      className="transition-colors hover:bg-cream-50"
                     >
                       <td className="px-6 py-4">
                         <Link
                           href={`/dashboard/lahan/${encodeURIComponent(item.id_lahan)}`}
-                          className="font-bold text-[#2A1810] hover:text-[#5B3A29] hover:underline transition-colors block"
+                          className="font-bold text-coffee-900 hover:text-coffee-800 hover:underline transition-colors block"
                         >
                           {item.nama_petak}
                         </Link>
-                        <p className="mt-0.5 text-xs text-[#8A7669]">
+                        <p className="mt-0.5 text-xs text-text-muted">
                           ID: {item.id_lahan}
                         </p>
                       </td>
-                      <td className="px-6 py-4 text-sm font-medium text-[#4A3E37]">
+                      <td className="px-6 py-4 text-sm font-medium text-coffee-900">
                         {item.dusun || "—"}
                       </td>
-                      <td className="px-6 py-4 text-right text-sm font-medium text-[#4A3E37]">
+                      <td className="px-6 py-4 text-right text-sm font-medium text-coffee-900">
                         {item.elevasi_mdpl == null
                           ? "—"
                           : `${formatNumber(item.elevasi_mdpl, 0)} mdpl`}
                       </td>
-                      <td className="px-6 py-4 text-right text-sm font-bold text-[#2A1810]">
+                      <td className="px-6 py-4 text-right text-sm font-bold text-coffee-900">
                         {item.luas_m2 == null
                           ? "—"
                           : `${formatNumber(item.luas_m2, 1)} m²`}
                       </td>
                       <td className="px-6 py-4">
                         {item.polygon_geom ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-900">
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-700" />
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-success-tint px-3 py-1 text-xs font-semibold text-success-ink">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-success-ink" />
                             Terpetakan
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1 text-xs font-semibold text-stone-700">
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-tint px-3 py-1 text-xs font-semibold text-coffee-900">
                             Belum Ada Batas
                           </span>
                         )}
@@ -259,7 +259,7 @@ export default function LahanPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="h-8 gap-1.5 text-xs border-0 bg-stone-100 hover:bg-stone-200 text-[#2A1810] px-3"
+                              className="h-8 gap-1.5 text-xs border-0 bg-primary-tint hover:bg-primary-tint text-coffee-900 px-3"
                               title="Buka profil lengkap & inventaris pohon"
                             >
                               <Eye className="h-3.5 w-3.5" />
@@ -271,9 +271,9 @@ export default function LahanPage() {
                             variant="secondary"
                             size="sm"
                             onClick={() => handleOpenEdit(item)}
-                            className="h-8 gap-1.5 text-xs font-semibold text-[#2A1810] px-3"
+                            className="h-8 gap-1.5 text-xs font-semibold text-coffee-900 px-3"
                           >
-                            <Map className="h-3.5 w-3.5 text-[#2A1810]" />
+                            <Map className="h-3.5 w-3.5 text-coffee-900" />
                             {item.polygon_geom ? "Batas" : "Plot"}
                           </Button>
                         </div>
@@ -284,8 +284,8 @@ export default function LahanPage() {
               </table>
             </div>
 
-            <div className="flex flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between bg-[#FDFCFA]">
-              <p className="text-xs text-[#6E5D53]">
+            <div className="flex flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between bg-cream-50">
+              <p className="text-xs text-text-muted">
                 Menampilkan {(page - 1) * PAGE_SIZE + 1}–
                 {Math.min(page * PAGE_SIZE, data?.total ?? 0)} dari{" "}
                 {formatNumber(data?.total, 0)} lahan
@@ -303,7 +303,7 @@ export default function LahanPage() {
                   <ChevronLeft className="h-4 w-4" />
                   Sebelumnya
                 </Button>
-                <span className="px-2 text-xs font-semibold text-[#6E5D53]">
+                <span className="px-2 text-xs font-semibold text-text-muted">
                   {page} / {totalPages}
                 </span>
                 <Button

@@ -4,7 +4,10 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Lock, User, Sprout, Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
+import logoGlodogan from "@/assets/logo-glodogan.png";
+import logoGlodoganPutih from "@/assets/logo-glodogan-putih.png";
+import { Loader2, Lock, User, Eye, EyeOff } from "lucide-react";
 
 import { loginSchema, type LoginSchema } from "@/features/auth/validation";
 import { useLogin } from "@/features/auth/hooks/use-login";
@@ -49,7 +52,7 @@ export function LoginForm() {
   };
 
   return (
-    <div className="relative min-h-svh overflow-hidden bg-[#FAFAFA]">
+    <div className="relative min-h-svh overflow-hidden bg-cream-50">
       {/* Background Decorator Halus */}
       <div 
         aria-hidden="true" 
@@ -63,17 +66,15 @@ export function LoginForm() {
       <div className="relative z-10 mx-auto flex min-h-svh w-full max-w-6xl items-stretch lg:items-center lg:px-6 lg:py-10">
         
         {/* Card Grid Asimetris */}
-        <div className="grid w-full overflow-hidden bg-white lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr] lg:rounded-3xl lg:shadow-[0_20px_50px_rgba(42,24,16,0.12)]">
+        <div className="grid w-full overflow-hidden bg-surface lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr] lg:rounded-2xl lg:border lg:border-border">
           
           {/* Banner Sisi Kiri (Hanya Muncul di Desktop >= lg)[cite: 1] */}
-          <aside className="relative hidden lg:flex flex-col justify-between overflow-hidden bg-gradient-to-br from-[#2A1810] via-[#3D2318] to-[#1A0F0A] px-12 py-14 text-white">
-            <div aria-hidden="true" className="pointer-events-none absolute -top-20 -right-16 h-72 w-72 rounded-full bg-[#B83227]/20 blur-3xl" />
+          <aside className="relative hidden lg:flex flex-col justify-between overflow-hidden bg-gradient-to-br from-coffee-900 via-coffee-800 to-coffee-900 px-12 py-14 text-white">
+            <div aria-hidden="true" className="pointer-events-none absolute -top-20 -right-16 h-72 w-72 rounded-full bg-primary/30 blur-3xl" />
             
             <div className="relative flex items-center gap-3 font-semibold">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/10">
-                <Sprout className="h-6 w-6 text-[#E8E2DC]" />
-              </div>
-              <span className="font-heading text-xl font-bold tracking-tight text-[#FAF8F5]">
+              <Image src={logoGlodoganPutih} alt="Logo Kelompok Tani Kopi Glodogan" width={48} height={48} unoptimized className="h-12 w-12" />
+              <span className="font-heading text-xl font-bold tracking-tight text-cream-50">
                 Lembah Kopi
               </span>
             </div>
@@ -96,72 +97,70 @@ export function LoginForm() {
           </aside>
 
           {/* Form Section (Responsif Penuh di Mobile & Desktop)[cite: 1] */}
-          <div className="flex items-center justify-center bg-white/80 p-6 backdrop-blur-sm sm:p-10 lg:p-12">
+          <div className="flex items-center justify-center bg-surface/80 p-6 backdrop-blur-sm sm:p-10 lg:p-12">
             <div className="w-full max-w-md space-y-6">
               
               {/* Logo Tambahan Khusus Tampilan Mobile (< lg) */}
               <div className="flex items-center gap-2.5 lg:hidden mb-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#2A1810] text-white">
-                  <Sprout className="h-5 w-5 text-[#E8E2DC]" />
-                </div>
-                <span className="font-heading text-lg font-bold text-[#2A1810]">
+                <Image src={logoGlodogan} alt="Logo Kelompok Tani Kopi Glodogan" width={40} height={40} unoptimized className="h-10 w-10" />
+                <span className="font-heading text-lg font-bold text-coffee-900">
                   Lembah Kopi
                 </span>
               </div>
 
               <div>
-                <h1 className="font-heading text-2xl font-bold tracking-tight text-[#2A1810] sm:text-3xl">
+                <h1 className="font-heading text-2xl font-bold tracking-tight text-coffee-900 sm:text-3xl">
                   Masuk ke akun
                 </h1>
-                <p className="mt-2 text-sm text-[#6E5D53]">
+                <p className="mt-2 text-sm text-text-muted">
                   Gunakan kredensial pengurus yang telah terdaftar.
                 </p>
               </div>
 
               {errorMessage && (
-                <div className="rounded-lg border border-red-200 bg-red-50 p-3.5 text-xs font-medium text-red-700">
+                <div className="rounded-[10px] border border-danger/25 bg-danger-tint p-3.5 text-sm font-medium text-danger-ink">
                   {errorMessage}
                 </div>
               )}
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-[#2A1810]">
+                  <label className="block text-sm font-medium text-coffee-900">
                     Username atau email
                   </label>
                   <div className="relative">
-                    <User className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7669]" />
+                    <User className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
                     <Input
                       {...register("username_or_email")}
                       placeholder="Masukkan username atau email"
-                      className="w-full rounded-xl bg-[#FAF8F5] pl-10 pr-4 text-sm font-medium text-[#2A1810] placeholder:text-[#8A7669] focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+                      className="w-full bg-cream-50 pl-10 pr-4 text-sm font-medium text-coffee-900 placeholder:text-text-muted"
                       disabled={loginMutation.isPending}
                     />
                   </div>
                   {errors.username_or_email && (
-                    <p className="text-xs font-medium text-red-600 pt-0.5">
+                    <p className="text-sm font-medium text-danger pt-0.5">
                       {errors.username_or_email.message}
                     </p>
                   )}
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-[#2A1810]">
+                  <label className="block text-sm font-medium text-coffee-900">
                     Kata sandi
                   </label>
                   <div className="relative">
-                    <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7669]" />
+                    <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
                     <Input
                       {...register("password")}
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••••••"
-                      className="w-full rounded-xl bg-[#FAF8F5] pl-10 pr-11 text-sm font-medium text-[#2A1810] placeholder:text-[#8A7669] focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+                      className="w-full bg-cream-50 pl-10 pr-11 text-sm font-medium text-coffee-900 placeholder:text-text-muted"
                       disabled={loginMutation.isPending}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8A7669] hover:text-[#2A1810] transition-colors"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-coffee-900 transition-colors"
                     >
                       {showPassword ? (
                         <EyeOff className="h-4 w-4" />
@@ -171,7 +170,7 @@ export function LoginForm() {
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-xs font-medium text-red-600 pt-0.5">
+                    <p className="text-sm font-medium text-danger pt-0.5">
                       {errors.password.message}
                     </p>
                   )}
@@ -179,7 +178,7 @@ export function LoginForm() {
 
                 <Button
                   type="submit"
-                  className="mt-2 w-full h-10 rounded-lg bg-[#2A1810] text-white hover:bg-[#3D2318] font-semibold text-sm shadow-sm transition-all"
+                  className="mt-2 h-12 w-full text-sm"
                   disabled={loginMutation.isPending}
                 >
                   {loginMutation.isPending ? (
@@ -194,7 +193,7 @@ export function LoginForm() {
               </form>
 
               {/* Footer info khusus tampilan Mobile */}
-              <div className="pt-4 text-center text-xs text-[#9E8E82] lg:hidden">
+              <div className="pt-4 text-center text-xs text-text-muted lg:hidden">
                 © 2026 Kelompok Tani Lembah Kopi
               </div>
 

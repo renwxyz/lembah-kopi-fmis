@@ -81,17 +81,17 @@ export function InventarisTanamanTab({ landId }: InventarisTanamanTabProps) {
       {/* Tab Header & Action */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="font-heading text-lg font-bold text-[#2A1810]">
+          <h2 className="font-heading text-lg font-bold text-coffee-900">
             Inventarisasi Tanaman & Populasi Pohon (M1.3)
           </h2>
-          <p className="mt-0.5 text-xs text-[#6E5D53]">
+          <p className="mt-0.5 text-xs text-text-muted">
             Pendataan blok varietas kopi, kelompok usia tanam, dan estimasi populasi pohon aktif.
           </p>
         </div>
 
         <Button
           onClick={() => setIsAddOpen(true)}
-          className="h-9 gap-1.5 rounded-lg bg-[#2A1810] px-4 text-xs font-semibold text-white hover:bg-[#3D2317] shadow-sm self-start sm:self-auto"
+          className="h-9 gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold text-white hover:bg-primary-hover shadow-sm self-start sm:self-auto"
         >
           <Plus className="h-4 w-4" />
           Tambah Blok Tanam
@@ -100,70 +100,70 @@ export function InventarisTanamanTab({ landId }: InventarisTanamanTabProps) {
 
       {/* KPI Cards for Inventory */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl bg-white p-5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)] flex items-center justify-between">
+        <div className="rounded-xl bg-surface p-5 border border-border flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+            <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
               Total Pohon Lahan
             </span>
-            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#2A1810] block">
+            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-coffee-900 block">
               {formatNumber(totalPohon, 0)}
             </span>
-            <span className="text-xs text-[#6E5D53]">Pohon tercatat di semua blok</span>
+            <span className="text-xs text-text-muted">Pohon tercatat di semua blok</span>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-800">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-success-tint text-success-ink">
             <Trees className="h-5 w-5" />
           </div>
         </div>
 
-        <div className="rounded-xl bg-white p-5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)] flex items-center justify-between">
+        <div className="rounded-xl bg-surface p-5 border border-border flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+            <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
               Populasi Robusta
             </span>
-            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#2A1810] block">
+            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-coffee-900 block">
               {formatNumber(totalRobusta, 0)}
             </span>
-            <span className="text-xs text-[#6E5D53]">
+            <span className="text-xs text-text-muted">
               {totalPohon > 0
                 ? `${Math.round((totalRobusta / totalPohon) * 100)}% dari total pohon`
                 : "0%"}
             </span>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-900">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-warning-tint text-warning-ink">
             <Sprout className="h-5 w-5" />
           </div>
         </div>
 
-        <div className="rounded-xl bg-white p-5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)] flex items-center justify-between">
+        <div className="rounded-xl bg-surface p-5 border border-border flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+            <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
               Populasi Arabika
             </span>
-            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#2A1810] block">
+            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-coffee-900 block">
               {formatNumber(totalArabika, 0)}
             </span>
-            <span className="text-xs text-[#6E5D53]">
+            <span className="text-xs text-text-muted">
               {totalPohon > 0
                 ? `${Math.round((totalArabika / totalPohon) * 100)}% dari total pohon`
                 : "0%"}
             </span>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-900">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-info-tint text-info-ink">
             <PieChart className="h-5 w-5" />
           </div>
         </div>
       </div>
 
       {/* Main Inventory List */}
-      <div className="overflow-hidden rounded-xl bg-white shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)]">
+      <div className="overflow-hidden rounded-xl bg-surface border border-border">
         {isLoading ? (
           <div className="p-12 text-center">
-            <div className="inline-flex h-8 w-8 animate-spin items-center justify-center rounded-full border-2 border-[#2A1810] border-t-transparent" />
-            <p className="mt-2 text-xs text-[#8A7669]">Memuat inventaris tanaman...</p>
+            <div className="inline-flex h-8 w-8 animate-spin items-center justify-center rounded-full border-2 border-primary border-t-transparent" />
+            <p className="mt-2 text-xs text-text-muted">Memuat inventaris tanaman...</p>
           </div>
         ) : isError ? (
           <div className="p-8 text-center">
-            <p className="text-xs font-semibold text-red-600">Gagal memuat inventaris tanaman.</p>
+            <p className="text-xs font-semibold text-danger">Gagal memuat inventaris tanaman.</p>
             <Button
               variant="outline"
               onClick={() => refetch()}
@@ -174,18 +174,18 @@ export function InventarisTanamanTab({ landId }: InventarisTanamanTabProps) {
           </div>
         ) : items.length === 0 ? (
           <div className="p-10 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#FAF8F5] text-[#8A7669]">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-cream-50 text-text-muted">
               <Trees className="h-6 w-6" />
             </div>
-            <h3 className="mt-3 font-heading text-sm font-bold text-[#2A1810]">
+            <h3 className="mt-3 font-heading text-sm font-bold text-coffee-900">
               Belum Ada Blok Tanaman Tercatat
             </h3>
-            <p className="mt-1 text-xs text-[#8A7669] max-w-sm mx-auto">
+            <p className="mt-1 text-xs text-text-muted max-w-sm mx-auto">
               Petak kebun ini belum memiliki rincian varietas kopi atau estimasi populasi pohon.
             </p>
             <Button
               onClick={() => setIsAddOpen(true)}
-              className="mt-4 h-9 gap-1.5 rounded-lg bg-[#2A1810] text-xs font-semibold text-white shadow-sm"
+              className="mt-4 h-9 gap-1.5 rounded-lg bg-primary text-xs font-semibold text-white shadow-sm"
             >
               <Plus className="h-3.5 w-3.5" />
               Catat Blok Tanaman Pertama
@@ -193,8 +193,8 @@ export function InventarisTanamanTab({ landId }: InventarisTanamanTabProps) {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="border-b border-[#F4F0EC] bg-[#FCFBF9] text-[11px] font-semibold text-[#8A7669] uppercase tracking-wider">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-border bg-cream-50 text-xs font-semibold uppercase tracking-wider text-text-muted">
                 <tr>
                   <th className="px-6 py-3.5">ID Blok Inventaris</th>
                   <th className="px-6 py-3.5">Varietas Kopi</th>
@@ -203,7 +203,7 @@ export function InventarisTanamanTab({ landId }: InventarisTanamanTabProps) {
                   <th className="px-6 py-3.5 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#F4F0EC]">
+              <tbody className="divide-y divide-border">
                 {items.map((item) => {
                   const ageInfo = AGE_LABELS[item.kelompok_usia] || {
                     label: item.kelompok_usia,
@@ -213,10 +213,10 @@ export function InventarisTanamanTab({ landId }: InventarisTanamanTabProps) {
                   return (
                     <tr
                       key={item.id_inventaris}
-                      className="hover:bg-[#FAF8F5]/80 transition-colors"
+                      className="hover:bg-primary-wash transition-colors"
                     >
                       <td className="px-6 py-4">
-                        <span className="font-mono text-xs font-semibold text-[#6E5D53] bg-[#FAF8F5] px-2 py-0.5 rounded-md">
+                        <span className="font-mono text-xs font-semibold text-text-muted bg-cream-50 px-2 py-0.5 rounded-md">
                           {item.id_inventaris}
                         </span>
                       </td>
@@ -225,8 +225,8 @@ export function InventarisTanamanTab({ landId }: InventarisTanamanTabProps) {
                         <span
                           className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold ${
                             item.varietas === "ARABIKA"
-                              ? "bg-blue-50 text-blue-800"
-                              : "bg-amber-50 text-amber-900"
+                              ? "bg-info-tint text-info-ink"
+                              : "bg-warning-tint text-warning-ink"
                           }`}
                         >
                           <Sprout className="h-3.5 w-3.5" />
@@ -236,10 +236,10 @@ export function InventarisTanamanTab({ landId }: InventarisTanamanTabProps) {
 
                       <td className="px-6 py-4">
                         <div>
-                          <span className="font-semibold text-[#2A1810] block">
+                          <span className="font-semibold text-coffee-900 block">
                             {ageInfo.label}
                           </span>
-                          <span className="text-[11px] text-[#8A7669]">
+                          <span className="text-[11px] text-text-muted">
                             {ageInfo.desc}
                           </span>
                         </div>
@@ -247,10 +247,10 @@ export function InventarisTanamanTab({ landId }: InventarisTanamanTabProps) {
 
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <span className="font-heading font-bold text-sm text-[#2A1810]">
+                          <span className="font-heading font-bold text-sm text-coffee-900">
                             {formatNumber(item.jumlah_pohon, 0)}
                           </span>
-                          <span className="text-xs text-[#8A7669]">Pohon</span>
+                          <span className="text-xs text-text-muted">Pohon</span>
                         </div>
                       </td>
 
@@ -259,7 +259,7 @@ export function InventarisTanamanTab({ landId }: InventarisTanamanTabProps) {
                           <button
                             type="button"
                             onClick={() => setEditingItem(item)}
-                            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[#6E5D53] hover:bg-[#F4F0EC] hover:text-[#2A1810] transition-colors"
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-muted hover:bg-primary-tint hover:text-coffee-900 transition-colors"
                             title="Perbarui jumlah pohon"
                           >
                             <Pencil className="h-3.5 w-3.5" />
@@ -268,7 +268,7 @@ export function InventarisTanamanTab({ landId }: InventarisTanamanTabProps) {
                           <button
                             type="button"
                             onClick={() => setDeletingId(item.id_inventaris)}
-                            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-danger hover:bg-danger-tint hover:text-danger-ink transition-colors"
                             title="Hapus blok tanaman"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
@@ -367,20 +367,20 @@ function CreateInventoryDialog({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
     >
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-white shadow-[0_25px_60px_-15px_rgba(42,24,16,0.25)]">
-        <div className="flex shrink-0 items-center justify-between border-b border-[#EFECE6] px-6 py-4.5 bg-white">
-          <h3 className="font-heading text-base font-bold text-[#2A1810]">
+      <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-surface shadow-xl">
+        <div className="flex shrink-0 items-center justify-between border-b border-border px-6 py-4.5 bg-surface">
+          <h3 className="font-heading text-base font-bold text-coffee-900">
             Tambah Blok Tanaman Kopi
           </h3>
           <button
             type="button"
             onClick={onClose}
             aria-label="Tutup dialog"
-            className="rounded-lg p-1 text-[#8A7669] hover:bg-[#F4F0EC]"
+            className="rounded-lg p-1 text-text-muted hover:bg-primary-tint"
           >
             <X className="h-4 w-4" />
           </button>
@@ -388,20 +388,20 @@ function CreateInventoryDialog({
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="flex items-start gap-2 rounded-lg bg-red-50 p-3 text-xs text-red-800">
-              <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+            <div className="flex items-start gap-2 rounded-lg bg-danger-tint p-3 text-xs text-danger-ink">
+              <AlertCircle className="h-4 w-4 shrink-0 text-danger mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Varietas Kopi <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Varietas Kopi <span className="text-danger">*</span>
             </label>
             <select
               value={varietas}
               onChange={(e) => setVarietas(e.target.value as CoffeeVariety)}
-              className="mt-1.5 flex h-10 w-full rounded-lg bg-[#FAF8F5] px-3.5 py-2 text-sm font-medium text-[#2A1810] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+              className="mt-1.5 flex h-10 w-full rounded-lg bg-cream-50 px-3.5 py-2 text-sm font-medium text-coffee-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
             >
               <option value="ROBUSTA">Kopi Robusta</option>
               <option value="ARABIKA">Kopi Arabika</option>
@@ -409,13 +409,13 @@ function CreateInventoryDialog({
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Kelompok Usia Tanaman <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Kelompok Usia Tanaman <span className="text-danger">*</span>
             </label>
             <select
               value={kelompokUsia}
               onChange={(e) => setKelompokUsia(e.target.value as PlantAgeGroup)}
-              className="mt-1.5 flex h-10 w-full rounded-lg bg-[#FAF8F5] px-3.5 py-2 text-sm font-medium text-[#2A1810] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+              className="mt-1.5 flex h-10 w-full rounded-lg bg-cream-50 px-3.5 py-2 text-sm font-medium text-coffee-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
             >
               <option value="LIMA_TAHUN_KURANG">
                 &lt; 5 Tahun (Tanaman Belum Menghasilkan / Muda)
@@ -430,35 +430,35 @@ function CreateInventoryDialog({
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Estimasi Populasi Pohon <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Estimasi Populasi Pohon <span className="text-danger">*</span>
             </label>
             <Input
               type="number"
               value={jumlahPohon}
               onChange={(e) => setJumlahPohon(e.target.value)}
               placeholder="Contoh: 1500"
-              className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0 focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+              className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0 focus-visible:ring-2 focus-visible:ring-primary/20"
             />
-            <p className="mt-1 text-[11px] text-[#8A7669]">
+            <p className="mt-1 text-[11px] text-text-muted">
               Perkiraan jumlah tegakan pohon kopi aktif pada blok/varietas ini.
             </p>
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#EFECE6]">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-border">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={createMutation.isPending}
-              className="h-9 rounded-lg border-0 bg-stone-100 text-xs font-medium text-stone-700"
+              className="h-9 rounded-lg border-0 bg-primary-tint text-xs font-medium text-coffee-900"
             >
               Batal
             </Button>
             <Button
               type="submit"
               disabled={createMutation.isPending}
-              className="h-9 gap-2 rounded-lg bg-[#2A1810] text-xs font-medium text-white shadow-sm"
+              className="h-9 gap-2 rounded-lg bg-primary text-xs font-medium text-white shadow-sm"
             >
               {createMutation.isPending && (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -523,19 +523,19 @@ function EditPopulationDialog({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
     >
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-sm overflow-hidden rounded-xl bg-white shadow-[0_25px_60px_-15px_rgba(42,24,16,0.25)]">
-        <div className="flex shrink-0 items-center justify-between border-b border-[#EFECE6] px-5 py-4 bg-white">
-          <h3 className="font-heading text-sm font-bold text-[#2A1810]">
+      <div className="relative w-full max-w-sm overflow-hidden rounded-xl bg-surface shadow-xl">
+        <div className="flex shrink-0 items-center justify-between border-b border-border px-5 py-4 bg-surface">
+          <h3 className="font-heading text-sm font-bold text-coffee-900">
             Ubah Populasi Pohon ({item.varietas})
           </h3>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1 text-[#8A7669] hover:bg-[#F4F0EC]"
+            className="rounded-lg p-1 text-text-muted hover:bg-primary-tint"
           >
             <X className="h-4 w-4" />
           </button>
@@ -543,39 +543,39 @@ function EditPopulationDialog({
 
         <form onSubmit={handleSubmit} className="p-5 space-y-3.5">
           {error && (
-            <div className="flex items-start gap-2 rounded-lg bg-red-50 p-2.5 text-xs text-red-800">
-              <AlertCircle className="h-3.5 w-3.5 shrink-0 text-red-600 mt-0.5" />
+            <div className="flex items-start gap-2 rounded-lg bg-danger-tint p-2.5 text-xs text-danger-ink">
+              <AlertCircle className="h-3.5 w-3.5 shrink-0 text-danger mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
+            <label className="text-xs font-semibold text-coffee-900 block">
               Jumlah Pohon Aktif
             </label>
             <Input
               type="number"
               value={treeCount}
               onChange={(e) => setTreeCount(e.target.value)}
-              className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0"
+              className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0"
               autoFocus
             />
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#EFECE6]">
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={setPopulationMutation.isPending}
-              className="h-8 rounded-lg border-0 bg-stone-100 text-xs"
+              className="h-8 rounded-lg border-0 bg-primary-tint text-xs"
             >
               Batal
             </Button>
             <Button
               type="submit"
               disabled={setPopulationMutation.isPending}
-              className="h-8 gap-1.5 rounded-lg bg-[#2A1810] text-xs font-medium text-white shadow-sm"
+              className="h-8 gap-1.5 rounded-lg bg-primary text-xs font-medium text-white shadow-sm"
             >
               {setPopulationMutation.isPending && (
                 <Loader2 className="h-3 w-3 animate-spin" />
@@ -610,14 +610,14 @@ function DeleteConfirmDialog({
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
     >
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+        className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-sm rounded-xl bg-white p-5 shadow-2xl">
-        <h4 className="font-heading text-sm font-bold text-[#2A1810]">
+      <div className="relative w-full max-w-sm rounded-xl bg-surface p-5 shadow-2xl">
+        <h4 className="font-heading text-sm font-bold text-coffee-900">
           Hapus Blok Tanaman?
         </h4>
-        <p className="mt-1 text-xs text-[#6E5D53]">
+        <p className="mt-1 text-xs text-text-muted">
           Blok inventaris dan estimasi populasi pohon ini akan dihapus dari data lahan.
         </p>
 
@@ -627,7 +627,7 @@ function DeleteConfirmDialog({
             variant="outline"
             onClick={onClose}
             disabled={isPending}
-            className="h-8 text-xs border-0 bg-stone-100"
+            className="h-8 text-xs border-0 bg-primary-tint"
           >
             Batal
           </Button>
@@ -635,7 +635,7 @@ function DeleteConfirmDialog({
             type="button"
             onClick={onConfirm}
             disabled={isPending}
-            className="h-8 text-xs bg-red-600 text-white hover:bg-red-700"
+            className="h-8 text-xs bg-danger text-white hover:bg-danger"
           >
             {isPending && <Loader2 className="h-3 w-3 animate-spin mr-1.5" />}
             Hapus Blok

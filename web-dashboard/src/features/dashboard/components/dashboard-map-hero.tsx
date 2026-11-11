@@ -7,7 +7,7 @@ import type { DashboardMapLand } from "@/features/dashboard/types";
 const DashboardMap = dynamic(() => import("./dashboard-map"), {
   ssr: false,
   loading: () => (
-    <div className="absolute inset-0 flex items-center justify-center bg-[#F9F8F6] text-xs font-medium text-muted-foreground">
+    <div className="absolute inset-0 flex items-center justify-center bg-cream-50 text-xs font-medium text-muted-foreground">
       Memuat Peta GIS...
     </div>
   ),
@@ -29,8 +29,8 @@ export function DashboardMapHero({
       className="
         sticky top-16 z-0
         -mx-4 -mt-4
-        sm:-mx-8 sm:-mt-8
-        lg:-mx-10 lg:-mt-10
+        sm:-mx-6 sm:-mt-6
+        lg:-mx-8 lg:-mt-8
       "
     >
       <div

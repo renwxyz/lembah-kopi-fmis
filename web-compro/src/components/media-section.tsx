@@ -1,4 +1,5 @@
 import type { MediaEmbed } from "@/types";
+import { SectionHeading } from "@/components/section-heading";
 
 interface MediaSectionProps {
   media: MediaEmbed[];
@@ -11,29 +12,25 @@ export function MediaSection({ media }: MediaSectionProps) {
   if (visibleMedia.length === 0) return null;
 
   return (
-    <section id="media" className="py-20 bg-[#FAF8F5]">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#9E8E82]">
-            Dokumentasi & Sorotan
-          </span>
-          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#2A1810] mt-1.5">
-            Aktivitas di Kebun & Komunitas
-          </h2>
-          <p className="mt-2 text-xs sm:text-sm text-[#8A7669]">
-            Tayangan video dan unggahan cerita keseharian petani dari saluran YouTube dan Instagram kami.
-          </p>
-          <div className="mx-auto mt-3 h-1 w-12 rounded-full bg-[#2A1810]" />
+    <section id="media" className="section-y bg-cream-50">
+      <div className="container-lk">
+        <div data-reveal>
+          <SectionHeading
+            eyebrow="Dokumentasi & Sorotan"
+            title="Aktivitas di Kebun & Komunitas"
+            subtitle="Tayangan video dan unggahan cerita keseharian petani dari saluran YouTube dan Instagram kami."
+          />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {visibleMedia.map((item) => (
-            <div
+            <li
               key={item.id_media}
-              className="rounded-3xl border border-[#E8E2DC] bg-white overflow-hidden shadow-xs hover:shadow-md transition"
+              data-reveal
+              className="card-lift overflow-hidden rounded-card border border-border bg-surface"
             >
               <div
-                className={`relative w-full bg-black/5 ${
+                className={`relative w-full bg-primary-wash ${
                   item.tipe === "INSTAGRAM"
                     ? "h-[480px] sm:h-[520px]"
                     : "aspect-video"
@@ -43,6 +40,7 @@ export function MediaSection({ media }: MediaSectionProps) {
                   <iframe
                     src={item.embed_url}
                     title="Lembah Kopi YouTube Video"
+                    loading="lazy"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     className="h-full w-full border-0"
@@ -51,15 +49,15 @@ export function MediaSection({ media }: MediaSectionProps) {
                   <iframe
                     src={item.embed_url}
                     title="Lembah Kopi Instagram Post"
-                    className="h-full w-full border-0 bg-white"
+                    loading="lazy"
+                    className="h-full w-full border-0 bg-surface"
                   />
                 )}
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );
 }
-

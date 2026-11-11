@@ -32,10 +32,10 @@ export default function BatchPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-heading text-xl font-bold tracking-tight text-[#2A1810]">
+          <h1 className="font-heading text-xl font-bold tracking-tight text-coffee-900">
             Manajemen Batch & Tracking Pascaproses
           </h1>
-          <p className="mt-1 text-xs text-[#6E5D53]">
+          <p className="mt-1 text-xs text-text-muted">
             Pengelompokan hasil panen ceri menjadi batch olahan (Natural, Wash, Full Wash, Wine, Honey) dan pelacakan rendemen biji kopi (Modul PRD M3.2 & M3.3).
           </p>
         </div>
@@ -43,7 +43,7 @@ export default function BatchPage() {
         <Button
           type="button"
           onClick={() => setIsCreateModalOpen(true)}
-          className="flex items-center gap-2 rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-[#3D251A] shrink-0"
+          className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-primary-hover shrink-0 min-h-10"
         >
           <Plus className="h-4 w-4" />
           Buka Batch Pascaproses Baru

@@ -5,6 +5,9 @@ import { ProductsSection } from "@/components/products-section";
 import { MediaSection } from "@/components/media-section";
 import { AgendaSection } from "@/components/agenda-section";
 import { GallerySection } from "@/components/gallery-section";
+import { LocationSection } from "@/components/location-section";
+import { ScrollReveal } from "@/components/scroll-reveal";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { Footer } from "@/components/footer";
 import { getPublicHomeData } from "@/lib/api";
 
@@ -34,7 +37,8 @@ export default async function HomePage() {
         deskripsi: "Menjaga keseimbangan ekosistem tanah dan resapan air di desa.",
       },
     ],
-    alamat: "Desa Glodogan, Klaten, Jawa Tengah",
+    // Alamat hanya boleh berasal dari CMS; kosong = blok Lokasi disembunyikan.
+    alamat: "",
     instagram_url: "",
     youtube_url: "",
     facebook_url: "",
@@ -56,11 +60,18 @@ export default async function HomePage() {
           products={products}
           nomorWhatsApp={settings.nomor_whatsapp}
         />
+        {/* Section Mitra disembunyikan: belum ada data mitra di CMS (DESIGN.md 5.1 butir 4) */}
+        <LocationSection alamat={settings.alamat} />
         <MediaSection media={media} />
         <AgendaSection agenda={agenda} />
         <GallerySection gallery={gallery} />
       </main>
       <Footer settings={settings} />
+      <WhatsAppFloat
+        nomorWhatsApp={settings.nomor_whatsapp}
+        judul={settings.hero_judul}
+      />
+      <ScrollReveal />
     </div>
   );
 }

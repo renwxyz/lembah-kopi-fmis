@@ -6,6 +6,7 @@ import { MapPin } from "lucide-react";
 import { SafeMapContainer } from "@/components/ui/safe-map-container";
 import { geoJsonPolygonToLatLngs, calculatePolygonCentroid } from "@/lib/gis";
 import type { Lahan } from "../types";
+import { MAP_COLORS } from "@/lib/map-colors";
 
 export interface LahanPolygonMiniMapProps {
   lahan: Lahan;
@@ -29,7 +30,7 @@ export default function LahanPolygonMiniMap({ lahan }: LahanPolygonMiniMapProps)
   }, [polygonCoords, lahan.latitude, lahan.longitude]);
 
   return (
-    <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-xl bg-stone-100 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)] [&_.leaflet-container]:!rounded-none">
+    <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-xl bg-primary-tint border border-border [&_.leaflet-container]:!rounded-none">
       <SafeMapContainer
         center={centroid}
         zoom={17}
@@ -47,12 +48,16 @@ export default function LahanPolygonMiniMap({ lahan }: LahanPolygonMiniMapProps)
         />
 
         {polygonCoords.length >= 3 && (
+          <Polygon positions={polygonCoords} interactive={false} pathOptions={{ color: MAP_COLORS.surface, weight: 5, opacity: 0.85, fill: false }} />
+        )}
+
+        {polygonCoords.length >= 3 && (
           <Polygon
             positions={polygonCoords}
             pathOptions={{
-              color: "#16a34a",
-              fillColor: "#22c55e",
-              fillOpacity: 0.35,
+              color: MAP_COLORS.primary,
+              fillColor: MAP_COLORS.primary,
+              fillOpacity: 0.25,
               weight: 2.5,
             }}
           >
@@ -68,8 +73,8 @@ export default function LahanPolygonMiniMap({ lahan }: LahanPolygonMiniMapProps)
           center={centroid}
           radius={7}
           pathOptions={{
-            color: "#ffffff",
-            fillColor: "#16a34a",
+            color: MAP_COLORS.surface,
+            fillColor: MAP_COLORS.primary,
             fillOpacity: 1,
             weight: 2.5,
           }}
@@ -81,8 +86,8 @@ export default function LahanPolygonMiniMap({ lahan }: LahanPolygonMiniMapProps)
       </SafeMapContainer>
 
       {/* Floating Info Overlay */}
-      <div className="absolute top-3 left-3 z-[1000] flex items-center gap-1.5 rounded-lg bg-[#2A1810]/85 px-2.5 py-1 text-[11px] font-medium text-white shadow-sm backdrop-blur-md">
-        <MapPin className="h-3.5 w-3.5 text-emerald-400" />
+      <div className="absolute top-3 left-3 z-[1000] flex items-center gap-1.5 rounded-full bg-primary/85 px-2.5 py-1 text-[11px] font-medium text-white shadow-sm backdrop-blur-md min-h-10">
+        <MapPin className="h-3.5 w-3.5 text-sage-300" />
         <span>
           {polygonCoords.length >= 3
             ? "Batas Polygon Terplot"
@@ -90,7 +95,7 @@ export default function LahanPolygonMiniMap({ lahan }: LahanPolygonMiniMapProps)
         </span>
       </div>
 
-      <div className="absolute bottom-2.5 right-3 z-[1000] pointer-events-none rounded bg-black/40 px-2 py-0.5 text-[10px] font-medium text-white/70 backdrop-blur-sm">
+      <div className="absolute bottom-2.5 right-3 z-[1000] pointer-events-none rounded bg-coffee-900/40 px-2 py-0.5 text-[10px] font-medium text-white/70 backdrop-blur-sm">
         Esri World Imagery
       </div>
     </div>

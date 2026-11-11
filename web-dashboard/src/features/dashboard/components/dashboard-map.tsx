@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { Fragment, useEffect, useMemo } from "react";
 import {
   TileLayer,
   Polygon,
@@ -11,6 +11,7 @@ import {
 import { SafeMapContainer } from "@/components/ui/safe-map-container";
 import { Sprout, Mountain, Scale, Trees } from "lucide-react";
 import type { DashboardMapLand } from "@/features/dashboard/types";
+import { MAP_COLORS } from "@/lib/map-colors";
 
 interface DashboardMapProps {
   lands?: DashboardMapLand[];
@@ -76,50 +77,51 @@ export default function DashboardMap({ lands = [] }: DashboardMapProps) {
         {allPoints.length > 0 && <MapAutoBounds points={allPoints} />}
 
         {renderedPolygons.map(({ land, positions }) => (
+          <Fragment key={land.id_lahan}>
+          <Polygon positions={positions} interactive={false} pathOptions={{ color: MAP_COLORS.surface, weight: 5, opacity: 0.85, fill: false }} />
           <Polygon
-            key={land.id_lahan}
             positions={positions}
             pathOptions={{
-              color: "#166534",
-              fillColor: "#22c55e",
-              fillOpacity: 0.4,
+              color: MAP_COLORS.primary,
+              fillColor: MAP_COLORS.primary,
+              fillOpacity: 0.25,
               weight: 2,
             }}
           >
             <Tooltip sticky direction="top">
-              <span className="font-bold text-[#2A1810]">
+              <span className="font-bold text-coffee-900">
                 {land.nama_petak}
               </span>
               <br />
-              <span className="text-xs text-[#6E5D53]">
+              <span className="text-xs text-text-muted">
                 Petani: {land.nama_petani}
               </span>
             </Tooltip>
 
             <Popup>
               <div className="min-w-[190px] space-y-2 p-1">
-                <div className="border-b border-[#E8E2DC] pb-1.5">
-                  <span className="inline-block rounded bg-[#F4F0EC] px-2 py-0.5 text-[10px] font-bold text-[#6E5D53]">
+                <div className="border-b border-border pb-1.5">
+                  <span className="inline-block rounded bg-primary-tint px-2 py-0.5 text-[10px] font-bold text-text-muted">
                     {land.id_lahan}
                   </span>
-                  <h3 className="mt-1 font-heading text-sm font-bold text-[#2A1810]">
+                  <h3 className="mt-1 font-heading text-sm font-bold text-coffee-900">
                     {land.nama_petak}
                   </h3>
-                  <p className="text-[11px] text-[#6E5D53]">{land.dusun}</p>
+                  <p className="text-[11px] text-text-muted">{land.dusun}</p>
                 </div>
 
-                <div className="space-y-1.5 text-xs text-[#2A1810]">
+                <div className="space-y-1.5 text-xs text-coffee-900">
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1 text-[#6E5D53]">
-                      <Sprout className="h-3 w-3 text-[#2A1810]" />
+                    <span className="flex items-center gap-1 text-text-muted">
+                      <Sprout className="h-3 w-3 text-coffee-900" />
                       Pemilik
                     </span>
                     <span className="font-semibold">{land.nama_petani}</span>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1 text-[#6E5D53]">
-                      <Mountain className="h-3 w-3 text-[#2A1810]" />
+                    <span className="flex items-center gap-1 text-text-muted">
+                      <Mountain className="h-3 w-3 text-coffee-900" />
                       Elevasi
                     </span>
                     <span className="font-semibold">
@@ -130,8 +132,8 @@ export default function DashboardMap({ lands = [] }: DashboardMapProps) {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1 text-[#6E5D53]">
-                      <Scale className="h-3 w-3 text-[#2A1810]" />
+                    <span className="flex items-center gap-1 text-text-muted">
+                      <Scale className="h-3 w-3 text-coffee-900" />
                       Luas Lahan
                     </span>
                     <span className="font-semibold">
@@ -142,8 +144,8 @@ export default function DashboardMap({ lands = [] }: DashboardMapProps) {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1 text-[#6E5D53]">
-                      <Trees className="h-3 w-3 text-[#2A1810]" />
+                    <span className="flex items-center gap-1 text-text-muted">
+                      <Trees className="h-3 w-3 text-coffee-900" />
                       Populasi Pohon
                     </span>
                     <span className="font-semibold">
@@ -154,6 +156,7 @@ export default function DashboardMap({ lands = [] }: DashboardMapProps) {
               </div>
             </Popup>
           </Polygon>
+          </Fragment>
         ))}
       </SafeMapContainer>
     </div>

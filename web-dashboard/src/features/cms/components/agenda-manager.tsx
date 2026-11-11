@@ -78,7 +78,7 @@ export function AgendaManager() {
   if (isLoading) {
     return (
       <div className="flex h-48 items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-[#6E5D53]" />
+        <Loader2 className="h-6 w-6 animate-spin text-text-muted" />
       </div>
     );
   }
@@ -87,17 +87,17 @@ export function AgendaManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-bold text-[#2A1810]">
+          <h2 className="text-base font-bold text-coffee-900">
             Agenda & Pengumuman Komunitas
           </h2>
-          <p className="text-xs text-[#8A7669]">
+          <p className="text-xs text-text-muted">
             Kegiatan terdekat (maks. 3) akan ditampilkan di publik. Kegiatan yang lewat otomatis terarsip.
           </p>
         </div>
         <button
           type="button"
           onClick={openCreateModal}
-          className="flex items-center gap-2 rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#3D2317] transition"
+          className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary-hover transition min-h-10"
         >
           <Plus className="h-4 w-4" />
           <span>Tambah Agenda</span>
@@ -105,27 +105,27 @@ export function AgendaManager() {
       </div>
 
       {agendaList.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#D6CEC7] bg-[#FAF8F5] p-12 text-center">
-          <Calendar className="mx-auto h-10 w-10 text-[#9E8E82] mb-2 stroke-[1.5]" />
-          <h3 className="text-sm font-bold text-[#2A1810]">
+        <div className="rounded-2xl border border-dashed border-border bg-cream-50 p-12 text-center">
+          <Calendar className="mx-auto h-10 w-10 text-text-muted mb-2 stroke-[1.5]" />
+          <h3 className="text-sm font-bold text-coffee-900">
             Belum ada agenda kegiatan
           </h3>
-          <p className="text-xs text-[#8A7669] mt-1 mb-4">
+          <p className="text-xs text-text-muted mt-1 mb-4">
             Catat jadwal panen raya, pelatihan, atau studi banding kelompok tani.
           </p>
           <button
             type="button"
             onClick={openCreateModal}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-semibold text-white"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white min-h-10"
           >
             <Plus className="h-4 w-4" />
             <span>Tambah Agenda Pertama</span>
           </button>
         </div>
       ) : (
-        <div className="rounded-2xl border border-[#E8E2DC] bg-white overflow-hidden shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-[#FAF8F5] border-b border-[#E8E2DC] text-[#6E5D53] uppercase font-bold text-[10px] tracking-wider">
+        <div className="rounded-2xl border border-border bg-surface overflow-hidden shadow-xs">
+          <table className="w-full text-left text-sm">
+            <thead className="border-b border-border bg-cream-50 text-xs font-semibold uppercase tracking-wider text-text-muted">
               <tr>
                 <th className="py-3 px-4">Tanggal Pelaksanaan</th>
                 <th className="py-3 px-4">Judul Agenda</th>
@@ -134,32 +134,32 @@ export function AgendaManager() {
                 <th className="py-3 px-4 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#F0EBE6]">
+            <tbody className="divide-y divide-border">
               {agendaList.map((item) => {
                 const isPassed = item.tanggal < todayStr;
                 return (
                   <tr
                     key={item.id_agenda}
-                    className={`hover:bg-[#FAF8F5]/60 transition ${
-                      isPassed ? "opacity-60 bg-[#FAF8F5]/30" : ""
+                    className={`hover:bg-primary-wash transition ${
+                      isPassed ? "opacity-60 bg-cream-50/30" : ""
                     }`}
                   >
-                    <td className="py-3 px-4 font-mono font-semibold text-[#2A1810] whitespace-nowrap">
+                    <td className="py-3 px-4 font-mono font-semibold text-coffee-900 whitespace-nowrap">
                       {item.tanggal}
                     </td>
-                    <td className="py-3 px-4 font-semibold text-[#2A1810]">
+                    <td className="py-3 px-4 font-semibold text-coffee-900">
                       {item.judul}
                     </td>
-                    <td className="py-3 px-4 text-[#6E5D53] max-w-xs truncate">
+                    <td className="py-3 px-4 text-text-muted max-w-xs truncate">
                       {item.keterangan || "-"}
                     </td>
                     <td className="py-3 px-4">
                       {isPassed ? (
-                        <span className="inline-flex rounded-md bg-[#F4F0EC] px-2 py-0.5 text-[10px] font-bold text-[#8A7669]">
+                        <span className="inline-flex rounded-md bg-primary-tint px-2 py-0.5 text-[10px] font-bold text-text-muted">
                           Terarsip (Lewat)
                         </span>
                       ) : (
-                        <span className="inline-flex rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                        <span className="inline-flex rounded-md bg-success-tint px-2 py-0.5 text-[10px] font-bold text-success-ink">
                           Mendatang (Aktif)
                         </span>
                       )}
@@ -168,7 +168,7 @@ export function AgendaManager() {
                       <button
                         type="button"
                         onClick={() => openEditModal(item)}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-[#2A1810] hover:text-[#6E5D53]"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-coffee-900 hover:text-text-muted"
                       >
                         <Edit2 className="h-3.5 w-3.5" />
                         <span>Edit</span>
@@ -181,7 +181,7 @@ export function AgendaManager() {
                             handleDelete(item.id_agenda, item.judul)
                           }
                           disabled={deleteMutation.isPending}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700 disabled:opacity-50"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-danger hover:text-danger-ink disabled:opacity-50"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                           <span>Hapus</span>
@@ -198,16 +198,16 @@ export function AgendaManager() {
 
       {/* MODAL AGENDA */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <div className="flex items-center justify-between pb-4 border-b border-[#E8E2DC]">
-              <h3 className="font-heading font-bold text-base text-[#2A1810]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-coffee-900/40 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-surface p-6 shadow-xl">
+            <div className="flex items-center justify-between pb-4 border-b border-border">
+              <h3 className="font-heading font-bold text-base text-coffee-900">
                 {editingAgenda ? "Edit Agenda Kegiatan" : "Tambah Agenda Baru"}
               </h3>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="text-[#8A7669] hover:text-[#2A1810]"
+                className="text-text-muted hover:text-coffee-900"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -215,8 +215,8 @@ export function AgendaManager() {
 
             <form onSubmit={handleSubmit} className="space-y-4 pt-4">
               <div>
-                <label className="block text-xs font-semibold text-[#2A1810] mb-1">
-                  Judul Agenda <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-coffee-900 mb-1">
+                  Judul Agenda <span className="text-danger">*</span>
                 </label>
                 <input
                   type="text"
@@ -225,13 +225,13 @@ export function AgendaManager() {
                   placeholder="Contoh: Panen Raya Kopi Arabika Glodogan"
                   value={form.judul}
                   onChange={(e) => setForm({ ...form, judul: e.target.value })}
-                  className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+                  className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#2A1810] mb-1">
-                  Tanggal Pelaksanaan <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-coffee-900 mb-1">
+                  Tanggal Pelaksanaan <span className="text-danger">*</span>
                 </label>
                 <input
                   type="date"
@@ -240,12 +240,12 @@ export function AgendaManager() {
                   onChange={(e) =>
                     setForm({ ...form, tanggal: e.target.value })
                   }
-                  className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+                  className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+                <label className="block text-xs font-semibold text-coffee-900 mb-1">
                   Keterangan Singkat (1 Kalimat)
                 </label>
                 <textarea
@@ -256,19 +256,19 @@ export function AgendaManager() {
                   onChange={(e) =>
                     setForm({ ...form, keterangan: e.target.value })
                   }
-                  className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+                  className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
                 />
               </div>
 
               {errorMsg && (
-                <p className="text-xs font-medium text-red-600">{errorMsg}</p>
+                <p className="text-xs font-medium text-danger">{errorMsg}</p>
               )}
 
-              <div className="flex justify-end gap-2 pt-4 border-t border-[#E8E2DC]">
+              <div className="flex justify-end gap-2 pt-4 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="rounded-xl border border-[#D6CEC7] px-4 py-2 text-xs font-semibold text-[#6E5D53] hover:bg-[#F4F0EC]"
+                  className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text-muted hover:bg-primary-tint"
                 >
                   Batal
                 </button>
@@ -277,7 +277,7 @@ export function AgendaManager() {
                   disabled={
                     createMutation.isPending || updateMutation.isPending
                   }
-                  className="flex items-center gap-1.5 rounded-xl bg-[#2A1810] px-5 py-2 text-xs font-bold text-white hover:bg-[#3D2317] disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded-full bg-primary px-5 py-2 text-xs font-bold text-white hover:bg-primary-hover disabled:opacity-50 min-h-10"
                 >
                   {(createMutation.isPending || updateMutation.isPending) && (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />

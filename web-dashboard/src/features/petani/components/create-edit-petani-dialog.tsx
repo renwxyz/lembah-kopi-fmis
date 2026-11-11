@@ -103,26 +103,26 @@ function PetaniDialogContent({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-[0_25px_60px_-15px_rgba(42,24,16,0.25)]">
+      <div className="relative w-full max-w-lg overflow-hidden rounded-xl bg-surface shadow-xl">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between border-b border-[#EFECE6] px-6 py-4.5 bg-white">
+        <div className="flex shrink-0 items-center justify-between border-b border-border px-6 py-4.5 bg-surface">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FAF8F5] text-[#2A1810]">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cream-50 text-coffee-900">
               <User className="h-4 w-4" />
             </div>
             <div>
               <h2
                 id="petani-modal-title"
-                className="font-heading text-base font-bold text-[#2A1810]"
+                className="font-heading text-base font-bold text-coffee-900"
               >
                 {isEditing ? "Ubah Data Petani" : "Tambah Anggota Petani"}
               </h2>
-              <p className="text-xs text-[#6E5D53]">
+              <p className="text-xs text-text-muted">
                 {isEditing
                   ? "Perbarui informasi kontak anggota kelompok tani."
                   : "Daftarkan petani baru ke dalam sistem FMIS Glodogan."}
@@ -134,7 +134,7 @@ function PetaniDialogContent({
             type="button"
             onClick={onClose}
             aria-label="Tutup dialog"
-            className="rounded-lg p-1.5 text-[#8A7669] hover:bg-[#F4F0EC] hover:text-[#2A1810] transition-colors"
+            className="rounded-lg p-1.5 text-text-muted hover:bg-primary-tint hover:text-coffee-900 transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -143,59 +143,59 @@ function PetaniDialogContent({
         {/* Form Body */}
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
           {serverError && (
-            <div className="flex items-start gap-2.5 rounded-lg bg-red-50 p-3.5 text-xs text-red-800">
-              <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+            <div className="flex items-start gap-2.5 rounded-lg bg-danger-tint p-3.5 text-xs text-danger-ink">
+              <AlertCircle className="h-4 w-4 shrink-0 text-danger mt-0.5" />
               <div className="flex-1 font-medium">{serverError}</div>
             </div>
           )}
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Nama Lengkap Petani <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Nama Lengkap Petani <span className="text-danger">*</span>
             </label>
             <Input
               {...register("nama_lengkap")}
               placeholder="Contoh: Pak Sugeng Hartono"
-              className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0 focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+              className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0 focus-visible:ring-2 focus-visible:ring-primary/20"
             />
             {errors.nama_lengkap && (
-              <p className="mt-1 text-xs text-red-600 font-medium">
+              <p className="mt-1 text-xs text-danger font-medium">
                 {errors.nama_lengkap.message}
               </p>
             )}
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Nomor Handphone / WhatsApp <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Nomor Handphone / WhatsApp <span className="text-danger">*</span>
             </label>
             <div className="relative mt-1.5">
               <Input
                 {...register("no_hp")}
                 type="tel"
                 placeholder="Contoh: 081234567890"
-                className="h-10 rounded-lg bg-[#FAF8F5] border-0 pl-9 focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+                className="h-10 rounded-lg bg-cream-50 border-0 pl-9 focus-visible:ring-2 focus-visible:ring-primary/20"
               />
-              <Phone className="absolute left-3 top-3 h-4 w-4 text-[#8A7669] pointer-events-none" />
+              <Phone className="absolute left-3 top-3 h-4 w-4 text-text-muted pointer-events-none" />
             </div>
             {errors.no_hp && (
-              <p className="mt-1 text-xs text-red-600 font-medium">
+              <p className="mt-1 text-xs text-danger font-medium">
                 {errors.no_hp.message}
               </p>
             )}
-            <p className="mt-1 text-[11px] text-[#8A7669]">
+            <p className="mt-1 text-[11px] text-text-muted">
               Digunakan untuk koordinasi jadwal panen, penyuluhan, dan pemupukan.
             </p>
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-[#EFECE6]">
+          <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-border">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={isSubmitting}
-              className="h-9 rounded-lg border-0 bg-stone-100 text-xs font-medium text-stone-700 hover:bg-stone-200 shadow-none px-4"
+              className="h-9 rounded-lg border-0 bg-primary-tint text-xs font-medium text-coffee-900 hover:bg-primary-tint shadow-none px-4"
             >
               Batal
             </Button>
@@ -203,7 +203,7 @@ function PetaniDialogContent({
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="h-9 gap-2 rounded-lg bg-[#2A1810] text-xs font-medium text-white hover:bg-[#3D2317] shadow-sm px-4"
+              className="h-9 gap-2 rounded-full bg-primary text-xs font-medium text-white hover:bg-primary-hover shadow-sm px-4"
             >
               {isSubmitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               {isEditing ? "Simpan Perubahan" : "Tambah Petani"}

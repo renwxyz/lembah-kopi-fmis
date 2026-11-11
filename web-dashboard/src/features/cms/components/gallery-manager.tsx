@@ -90,7 +90,7 @@ export function GalleryManager() {
   if (isLoading) {
     return (
       <div className="flex h-48 items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-[#6E5D53]" />
+        <Loader2 className="h-6 w-6 animate-spin text-text-muted" />
       </div>
     );
   }
@@ -99,17 +99,17 @@ export function GalleryManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-bold text-[#2A1810]">
+          <h2 className="text-base font-bold text-coffee-900">
             Dokumentasi & Galeri Foto
           </h2>
-          <p className="text-xs text-[#8A7669]">
+          <p className="text-xs text-text-muted">
             Maksimal 6-8 foto terbaik akan disajikan di grid galeri publik.
           </p>
         </div>
         <button
           type="button"
           onClick={openCreateModal}
-          className="flex items-center gap-2 rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#3D2317] transition"
+          className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary-hover transition min-h-10"
         >
           <Plus className="h-4 w-4" />
           <span>Tambah Foto</span>
@@ -117,18 +117,18 @@ export function GalleryManager() {
       </div>
 
       {gallery.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#D6CEC7] bg-[#FAF8F5] p-12 text-center">
-          <ImageIcon className="mx-auto h-10 w-10 text-[#9E8E82] mb-2 stroke-[1.5]" />
-          <h3 className="text-sm font-bold text-[#2A1810]">
+        <div className="rounded-2xl border border-dashed border-border bg-cream-50 p-12 text-center">
+          <ImageIcon className="mx-auto h-10 w-10 text-text-muted mb-2 stroke-[1.5]" />
+          <h3 className="text-sm font-bold text-coffee-900">
             Belum ada foto galeri
           </h3>
-          <p className="text-xs text-[#8A7669] mt-1 mb-4">
+          <p className="text-xs text-text-muted mt-1 mb-4">
             Unggah foto panen, stasiun penjemuran, atau aktivitas petani kopi Glodogan.
           </p>
           <button
             type="button"
             onClick={openCreateModal}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-semibold text-white"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white min-h-10"
           >
             <Plus className="h-4 w-4" />
             <span>Unggah Foto Pertama</span>
@@ -139,9 +139,9 @@ export function GalleryManager() {
           {gallery.map((photo) => (
             <div
               key={photo.id_foto}
-              className="group relative flex flex-col rounded-2xl border border-[#E8E2DC] bg-white overflow-hidden shadow-xs hover:shadow-md transition"
+              className="group relative flex flex-col rounded-2xl border border-border bg-surface overflow-hidden shadow-xs hover:shadow-md transition"
             >
-              <div className="aspect-square w-full bg-[#FAF8F5] relative overflow-hidden">
+              <div className="aspect-square w-full bg-cream-50 relative overflow-hidden">
                 {photo.foto_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -150,25 +150,25 @@ export function GalleryManager() {
                     className="h-full w-full object-cover group-hover:scale-105 transition duration-300"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-[#9E8E82]">
+                  <div className="flex h-full w-full items-center justify-center text-text-muted">
                     <ImageIcon className="h-8 w-8" />
                   </div>
                 )}
-                <div className="absolute top-2 left-2 bg-black/60 text-white rounded-md px-1.5 py-0.5 text-[10px] font-mono">
+                <div className="absolute top-2 left-2 bg-coffee-900/60 text-white rounded-md px-1.5 py-0.5 text-[10px] font-mono">
                   #{photo.urutan}
                 </div>
               </div>
 
-              <div className="p-3 space-y-2 bg-white">
-                <p className="text-xs text-[#2A1810] truncate font-medium">
+              <div className="p-3 space-y-2 bg-surface">
+                <p className="text-xs text-coffee-900 truncate font-medium">
                   {photo.keterangan || "(Tanpa keterangan)"}
                 </p>
 
-                <div className="flex items-center justify-between border-t border-[#F0EBE6] pt-2">
+                <div className="flex items-center justify-between border-t border-border pt-2">
                   <button
                     type="button"
                     onClick={() => openEditModal(photo)}
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2A1810] hover:text-[#6E5D53]"
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-coffee-900 hover:text-text-muted"
                   >
                     <Edit2 className="h-3 w-3" />
                     <span>Edit</span>
@@ -179,7 +179,7 @@ export function GalleryManager() {
                       type="button"
                       onClick={() => handleDelete(photo.id_foto)}
                       disabled={deleteMutation.isPending}
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-600 hover:text-red-700 disabled:opacity-50"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-danger hover:text-danger-ink disabled:opacity-50"
                     >
                       <Trash2 className="h-3 w-3" />
                       <span>Hapus</span>
@@ -194,16 +194,16 @@ export function GalleryManager() {
 
       {/* MODAL FOTO GALERI */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <div className="flex items-center justify-between pb-4 border-b border-[#E8E2DC]">
-              <h3 className="font-heading font-bold text-base text-[#2A1810]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-coffee-900/40 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-surface p-6 shadow-xl">
+            <div className="flex items-center justify-between pb-4 border-b border-border">
+              <h3 className="font-heading font-bold text-base text-coffee-900">
                 {editingPhoto ? "Edit Foto Galeri" : "Tambah Foto Galeri"}
               </h3>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="text-[#8A7669] hover:text-[#2A1810]"
+                className="text-text-muted hover:text-coffee-900"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -225,7 +225,7 @@ export function GalleryManager() {
               />
 
               <div>
-                <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+                <label className="block text-xs font-semibold text-coffee-900 mb-1">
                   Keterangan Foto (Caption)
                 </label>
                 <input
@@ -236,12 +236,12 @@ export function GalleryManager() {
                   onChange={(e) =>
                     setForm({ ...form, keterangan: e.target.value })
                   }
-                  className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+                  className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+                <label className="block text-xs font-semibold text-coffee-900 mb-1">
                   Urutan Penayangan (Angka terkecil tampil lebih dulu)
                 </label>
                 <input
@@ -252,19 +252,19 @@ export function GalleryManager() {
                   onChange={(e) =>
                     setForm({ ...form, urutan: parseInt(e.target.value) || 0 })
                   }
-                  className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+                  className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
                 />
               </div>
 
               {errorMsg && (
-                <p className="text-xs font-medium text-red-600">{errorMsg}</p>
+                <p className="text-xs font-medium text-danger">{errorMsg}</p>
               )}
 
-              <div className="flex justify-end gap-2 pt-4 border-t border-[#E8E2DC]">
+              <div className="flex justify-end gap-2 pt-4 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="rounded-xl border border-[#D6CEC7] px-4 py-2 text-xs font-semibold text-[#6E5D53] hover:bg-[#F4F0EC]"
+                  className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text-muted hover:bg-primary-tint"
                 >
                   Batal
                 </button>
@@ -273,7 +273,7 @@ export function GalleryManager() {
                   disabled={
                     createMutation.isPending || updateMutation.isPending
                   }
-                  className="flex items-center gap-1.5 rounded-xl bg-[#2A1810] px-5 py-2 text-xs font-bold text-white hover:bg-[#3D2317] disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded-full bg-primary px-5 py-2 text-xs font-bold text-white hover:bg-primary-hover disabled:opacity-50 min-h-10"
                 >
                   {(createMutation.isPending || updateMutation.isPending) && (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />

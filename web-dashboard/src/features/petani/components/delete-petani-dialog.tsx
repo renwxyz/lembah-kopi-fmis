@@ -57,28 +57,28 @@ export function DeletePetaniDialog({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm transition-opacity"
         onClick={handleClose}
       />
 
       {/* Dialog Card */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-white shadow-[0_25px_60px_-15px_rgba(42,24,16,0.25)]">
+      <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-surface shadow-xl">
         <div className="p-6">
           <div className="flex items-start gap-3.5">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-700">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-danger-tint text-danger-ink">
               <AlertTriangle className="h-5 w-5" />
             </div>
 
             <div className="flex-1">
               <h3
                 id="delete-petani-title"
-                className="font-heading text-base font-bold text-[#2A1810]"
+                className="font-heading text-base font-bold text-coffee-900"
               >
                 Hapus Anggota Petani
               </h3>
-              <p className="mt-1 text-xs text-[#6E5D53]">
+              <p className="mt-1 text-xs text-text-muted">
                 Apakah Anda yakin ingin menghapus anggota petani{" "}
-                <span className="font-semibold text-[#2A1810]">
+                <span className="font-semibold text-coffee-900">
                   &ldquo;{petani.nama_lengkap}&rdquo;
                 </span>{" "}
                 ({petani.no_hp || petani.id_petani})?
@@ -89,15 +89,15 @@ export function DeletePetaniDialog({
               type="button"
               onClick={handleClose}
               aria-label="Tutup dialog"
-              className="rounded-lg p-1 text-[#8A7669] hover:bg-[#F4F0EC] hover:text-[#2A1810]"
+              className="rounded-lg p-1 text-text-muted hover:bg-primary-tint hover:text-coffee-900"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
           {error && (
-            <div className="mt-4 flex items-start gap-2.5 rounded-lg bg-red-50 p-3 text-xs text-red-800">
-              <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+            <div className="mt-4 flex items-start gap-2.5 rounded-lg bg-danger-tint p-3 text-xs text-danger-ink">
+              <AlertCircle className="h-4 w-4 shrink-0 text-danger mt-0.5" />
               <div className="flex-1 font-medium">{error}</div>
             </div>
           )}
@@ -108,7 +108,7 @@ export function DeletePetaniDialog({
               variant="outline"
               onClick={handleClose}
               disabled={deleteMutation.isPending}
-              className="h-9 rounded-lg border-0 bg-stone-100 text-xs font-medium text-stone-700 hover:bg-stone-200 shadow-none px-4"
+              className="h-9 rounded-lg border-0 bg-primary-tint text-xs font-medium text-coffee-900 hover:bg-primary-tint shadow-none px-4"
             >
               Batal
             </Button>
@@ -117,7 +117,7 @@ export function DeletePetaniDialog({
               type="button"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
-              className="h-9 gap-2 rounded-lg bg-red-600 text-xs font-medium text-white hover:bg-red-700 shadow-sm px-4"
+              className="h-9 gap-2 rounded-lg bg-danger text-xs font-medium text-white hover:bg-danger shadow-sm px-4"
             >
               {deleteMutation.isPending && (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />

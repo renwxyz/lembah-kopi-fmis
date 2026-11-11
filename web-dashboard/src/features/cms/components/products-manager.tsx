@@ -99,7 +99,7 @@ export function ProductsManager() {
   if (isLoading) {
     return (
       <div className="flex h-48 items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-[#6E5D53]" />
+        <Loader2 className="h-6 w-6 animate-spin text-text-muted" />
       </div>
     );
   }
@@ -108,17 +108,17 @@ export function ProductsManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-bold text-[#2A1810]">
+          <h2 className="text-base font-bold text-coffee-900">
             Katalog Varietas Kopi
           </h2>
-          <p className="text-xs text-[#8A7669]">
+          <p className="text-xs text-text-muted">
             Produk etalase showcase publik dengan tautan direct pesan ke WhatsApp.
           </p>
         </div>
         <button
           type="button"
           onClick={openCreateModal}
-          className="flex items-center gap-2 rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#3D2317] transition"
+          className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary-hover transition min-h-10"
         >
           <Plus className="h-4 w-4" />
           <span>Tambah Kopi</span>
@@ -126,18 +126,18 @@ export function ProductsManager() {
       </div>
 
       {products.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#D6CEC7] bg-[#FAF8F5] p-12 text-center">
-          <Coffee className="mx-auto h-10 w-10 text-[#9E8E82] mb-2 stroke-[1.5]" />
-          <h3 className="text-sm font-bold text-[#2A1810]">
+        <div className="rounded-2xl border border-dashed border-border bg-cream-50 p-12 text-center">
+          <Coffee className="mx-auto h-10 w-10 text-text-muted mb-2 stroke-[1.5]" />
+          <h3 className="text-sm font-bold text-coffee-900">
             Belum ada varietas kopi terdaftar
           </h3>
-          <p className="text-xs text-[#8A7669] mt-1 mb-4">
+          <p className="text-xs text-text-muted mt-1 mb-4">
             Tambahkan produk unggulan kelompok tani untuk ditampilkan pada grid katalog publik.
           </p>
           <button
             type="button"
             onClick={openCreateModal}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-semibold text-white"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white min-h-10"
           >
             <Plus className="h-4 w-4" />
             <span>Tambah Kopi Pertama</span>
@@ -148,9 +148,9 @@ export function ProductsManager() {
           {products.map((item) => (
             <div
               key={item.id_produk}
-              className="flex flex-col rounded-2xl border border-[#E8E2DC] bg-white overflow-hidden shadow-xs hover:shadow-md transition"
+              className="flex flex-col rounded-2xl border border-border bg-surface overflow-hidden shadow-xs hover:shadow-md transition"
             >
-              <div className="relative h-44 w-full bg-[#FAF8F5]">
+              <div className="relative h-44 w-full bg-cream-50">
                 {item.foto_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -159,7 +159,7 @@ export function ProductsManager() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-[#9E8E82]">
+                  <div className="flex h-full w-full items-center justify-center text-text-muted">
                     <Coffee className="h-10 w-10 stroke-[1.5]" />
                   </div>
                 )}
@@ -167,10 +167,10 @@ export function ProductsManager() {
                   <span
                     className={`inline-flex rounded-lg px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${
                       item.status_ketersediaan === "TERSEDIA"
-                        ? "bg-emerald-100 text-emerald-800"
+                        ? "bg-success-tint text-success-ink"
                         : item.status_ketersediaan === "TERBATAS"
-                        ? "bg-amber-100 text-amber-800"
-                        : "bg-red-100 text-red-800"
+                        ? "bg-warning-tint text-warning-ink"
+                        : "bg-danger-tint text-danger-ink"
                     }`}
                   >
                     {item.status_ketersediaan}
@@ -180,11 +180,11 @@ export function ProductsManager() {
 
               <div className="flex flex-1 flex-col justify-between p-4 space-y-3">
                 <div>
-                  <h3 className="font-heading font-bold text-sm text-[#2A1810]">
+                  <h3 className="font-heading font-bold text-sm text-coffee-900">
                     {item.nama}
                   </h3>
-                  <div className="mt-1 flex items-center gap-2 text-xs text-[#8A7669]">
-                    <span className="font-semibold text-[#6E5D53]">
+                  <div className="mt-1 flex items-center gap-2 text-xs text-text-muted">
+                    <span className="font-semibold text-text-muted">
                       {item.varietas}
                     </span>
                     <span>•</span>
@@ -192,11 +192,11 @@ export function ProductsManager() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-[#F0EBE6] pt-3">
+                <div className="flex items-center justify-between border-t border-border pt-3">
                   <button
                     type="button"
                     onClick={() => openEditModal(item)}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2A1810] hover:text-[#6E5D53]"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-coffee-900 hover:text-text-muted"
                   >
                     <Edit2 className="h-3.5 w-3.5" />
                     <span>Edit</span>
@@ -207,7 +207,7 @@ export function ProductsManager() {
                       type="button"
                       onClick={() => handleDelete(item.id_produk, item.nama)}
                       disabled={deleteMutation.isPending}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700 disabled:opacity-50"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-danger hover:text-danger-ink disabled:opacity-50"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                       <span>Hapus</span>
@@ -222,16 +222,16 @@ export function ProductsManager() {
 
       {/* MODAL TAMBAH / EDIT KOPI */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-4 border-b border-[#E8E2DC]">
-              <h3 className="font-heading font-bold text-base text-[#2A1810]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-coffee-900/40 p-4">
+          <div className="w-full max-w-lg rounded-2xl bg-surface p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-4 border-b border-border">
+              <h3 className="font-heading font-bold text-base text-coffee-900">
                 {editingProduct ? "Edit Varietas Kopi" : "Tambah Varietas Kopi"}
               </h3>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="text-[#8A7669] hover:text-[#2A1810]"
+                className="text-text-muted hover:text-coffee-900"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -239,8 +239,8 @@ export function ProductsManager() {
 
             <form onSubmit={handleSubmit} className="space-y-4 pt-4">
               <div>
-                <label className="block text-xs font-semibold text-[#2A1810] mb-1">
-                  Nama Produk Kopi <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-coffee-900 mb-1">
+                  Nama Produk Kopi <span className="text-danger">*</span>
                 </label>
                 <input
                   type="text"
@@ -249,13 +249,13 @@ export function ProductsManager() {
                   placeholder="Contoh: Glodogan Arabika Honey Premium"
                   value={form.nama}
                   onChange={(e) => setForm({ ...form, nama: e.target.value })}
-                  className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+                  className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+                  <label className="block text-xs font-semibold text-coffee-900 mb-1">
                     Jenis Varietas
                   </label>
                   <select
@@ -266,7 +266,7 @@ export function ProductsManager() {
                         varietas: e.target.value as CoffeeProduct["varietas"],
                       })
                     }
-                    className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3 py-2 text-xs font-semibold text-[#2A1810] focus:outline-hidden"
+                    className="w-full rounded-xl border border-border bg-cream-50 px-3 py-2 text-xs font-semibold text-coffee-900 focus:outline-hidden"
                   >
                     <option value="ARABIKA">Arabika</option>
                     <option value="ROBUSTA">Robusta</option>
@@ -276,7 +276,7 @@ export function ProductsManager() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+                  <label className="block text-xs font-semibold text-coffee-900 mb-1">
                     Proses Pengolahan
                   </label>
                   <select
@@ -287,7 +287,7 @@ export function ProductsManager() {
                         proses: e.target.value as CoffeeProduct["proses"],
                       })
                     }
-                    className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3 py-2 text-xs font-semibold text-[#2A1810] focus:outline-hidden"
+                    className="w-full rounded-xl border border-border bg-cream-50 px-3 py-2 text-xs font-semibold text-coffee-900 focus:outline-hidden"
                   >
                     <option value="NATURAL">Natural</option>
                     <option value="HONEY">Honey</option>
@@ -299,7 +299,7 @@ export function ProductsManager() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+                <label className="block text-xs font-semibold text-coffee-900 mb-1">
                   Status Ketersediaan
                 </label>
                 <div className="flex gap-2">
@@ -314,11 +314,11 @@ export function ProductsManager() {
                         className={`flex-1 rounded-xl py-2 text-xs font-bold transition border ${
                           form.status_ketersediaan === status
                             ? status === "TERSEDIA"
-                              ? "bg-emerald-600 border-emerald-600 text-white"
+                              ? "bg-success border-success text-white"
                               : status === "TERBATAS"
-                              ? "bg-amber-600 border-amber-600 text-white"
-                              : "bg-red-600 border-red-600 text-white"
-                            : "bg-[#FAF8F5] border-[#E8E2DC] text-[#6E5D53]"
+                              ? "bg-warning-ink border-warning-ink text-white"
+                              : "bg-danger border-danger text-white"
+                            : "bg-cream-50 border-border text-text-muted"
                         }`}
                       >
                         {status}
@@ -342,14 +342,14 @@ export function ProductsManager() {
               />
 
               {formError && (
-                <p className="text-xs font-medium text-red-600">{formError}</p>
+                <p className="text-xs font-medium text-danger">{formError}</p>
               )}
 
-              <div className="flex justify-end gap-2 pt-4 border-t border-[#E8E2DC]">
+              <div className="flex justify-end gap-2 pt-4 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="rounded-xl border border-[#D6CEC7] px-4 py-2 text-xs font-semibold text-[#6E5D53] hover:bg-[#F4F0EC]"
+                  className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text-muted hover:bg-primary-tint"
                 >
                   Batal
                 </button>
@@ -358,7 +358,7 @@ export function ProductsManager() {
                   disabled={
                     createMutation.isPending || updateMutation.isPending
                   }
-                  className="flex items-center gap-1.5 rounded-xl bg-[#2A1810] px-5 py-2 text-xs font-bold text-white hover:bg-[#3D2317] disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded-full bg-primary px-5 py-2 text-xs font-bold text-white hover:bg-primary-hover disabled:opacity-50 min-h-10"
                 >
                   {(createMutation.isPending || updateMutation.isPending) && (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />

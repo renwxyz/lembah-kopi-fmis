@@ -68,19 +68,19 @@ export function CreateBatchDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-[#F4F0EC] pb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-coffee-900/40 p-4 backdrop-blur-xs">
+      <div className="w-full max-w-md rounded-2xl bg-surface p-6 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-border pb-4">
           <div className="flex items-center gap-2">
-            <Layers className="h-5 w-5 text-[#8A7669]" />
-            <h3 className="font-heading text-sm font-bold text-[#2A1810]">
+            <Layers className="h-5 w-5 text-text-muted" />
+            <h3 className="font-heading text-sm font-bold text-coffee-900">
               Buka Batch Pascaproses Baru
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1 text-[#8A7669] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+            className="rounded-lg p-1 text-text-muted hover:bg-cream-50 hover:text-coffee-900"
           >
             <X className="h-4 w-4" />
           </button>
@@ -88,21 +88,21 @@ export function CreateBatchDialog({
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           {formError && (
-            <div className="rounded-xl bg-red-50 p-3 text-xs text-red-700">
+            <div className="rounded-xl bg-danger-tint p-3 text-xs text-danger-ink">
               {formError}
             </div>
           )}
 
           {/* Metode Pascaproses */}
           <div className="space-y-1">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
               Metode Pengolahan
             </label>
             <select
               value={methodCode}
               onChange={(e) => setMethodCode(e.target.value)}
               required
-              className="w-full rounded-xl border border-[#E8E2DC] bg-white px-3 py-2 text-xs font-semibold text-[#2A1810] outline-none focus:ring-1 focus:ring-[#2A1810]"
+              className="w-full rounded-[10px] border border-border bg-surface px-3 py-2 text-xs font-semibold text-coffee-900 outline-none focus:ring-1 focus:ring-primary"
             >
               {methods.length === 0 ? (
                 <>
@@ -122,14 +122,14 @@ export function CreateBatchDialog({
                   ))
               )}
             </select>
-            <p className="text-[10px] text-[#8A7669]">
+            <p className="text-[10px] text-text-muted">
               Metode menentukan alur fermentasi, pencucian, dan target rendemen rasa.
             </p>
           </div>
 
           {/* Tanggal Mulai Olah */}
           <div className="space-y-1">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
               Tanggal Mulai Olah
             </label>
             <Input
@@ -137,26 +137,26 @@ export function CreateBatchDialog({
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               required
-              className="rounded-xl border-[#E8E2DC] text-xs"
+              className="rounded-xl border-border text-xs"
             />
           </div>
 
           {/* Estimasi Selesai */}
           <div className="space-y-1">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
               Estimasi Tanggal Selesai (Opsional)
             </label>
             <Input
               type="date"
               value={estimatedDate}
               onChange={(e) => setEstimatedDate(e.target.value)}
-              className="rounded-xl border-[#E8E2DC] text-xs"
+              className="rounded-xl border-border text-xs"
             />
           </div>
 
           {/* Target Kadar Air % */}
           <div className="space-y-1">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
               Target Kadar Air Biji Kering (%)
             </label>
             <div className="relative">
@@ -168,31 +168,31 @@ export function CreateBatchDialog({
                 placeholder="11 - 12%"
                 value={targetMoisture}
                 onChange={(e) => setTargetMoisture(e.target.value)}
-                className="rounded-xl border-[#E8E2DC] pr-10 text-xs"
+                className="rounded-xl border-border pr-10 text-xs"
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#8A7669]">
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-text-muted">
                 %
               </span>
             </div>
-            <p className="text-[10px] text-[#8A7669]">
+            <p className="text-[10px] text-text-muted">
               Standar SNI kadar air green bean kopi berkisar antara 11.0% - 12.5%.
             </p>
           </div>
 
           {/* Submit */}
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#F4F0EC]">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-border">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              className="rounded-xl border-[#E8E2DC] px-4 py-2 text-xs font-semibold text-[#6E5D53]"
+              className="rounded-xl border-border px-4 py-2 text-xs font-semibold text-text-muted"
             >
               Batal
             </Button>
             <Button
               type="submit"
               disabled={createMutation.isPending}
-              className="rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-semibold text-white hover:bg-[#3D251A]"
+              className="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white hover:bg-primary-hover min-h-10"
             >
               {createMutation.isPending ? (
                 <div className="flex items-center gap-1.5">

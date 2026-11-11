@@ -73,23 +73,23 @@ export function Header({ onMenuClick }: HeaderProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-20 flex h-16 w-full items-center justify-between border-b border-[#E8E2DC] bg-white/90 px-4 backdrop-blur-md sm:px-6">
+      <header className="sticky top-0 z-20 flex h-16 w-full items-center justify-between border-b border-border bg-surface px-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
           <button
             type="button"
             onClick={onMenuClick}
             aria-label="Buka menu navigasi"
             aria-expanded={false}
-            className="shrink-0 rounded-lg p-2 text-[#2A1810] transition-colors hover:bg-[#F4F0EC] lg:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-coffee-900 transition-colors hover:bg-primary-tint lg:hidden"
           >
             <Menu className="h-6 w-6" />
           </button>
 
           <div className="min-w-0">
-            <h2 className="truncate font-heading text-base font-bold text-[#2A1810] sm:text-lg">
+            <h2 className="truncate font-heading text-base font-bold text-coffee-900 sm:text-lg">
               {pageMeta.title}
             </h2>
-            <p className="truncate text-xs text-[#6E5D53]">
+            <p className="truncate text-sm text-text-muted">
               {pageMeta.subtitle}
             </p>
           </div>
@@ -97,10 +97,10 @@ export function Header({ onMenuClick }: HeaderProps) {
 
         <div className="ml-3 flex shrink-0 items-center gap-3">
           <div className="hidden text-right sm:block">
-            <p className="text-xs font-semibold text-[#2A1810]">
+            <p className="text-sm font-semibold text-coffee-900">
               {user?.nama_lengkap ?? "Admin Lembah Kopi"}
             </p>
-            <p className="text-[10px] text-[#9E8E82]">
+            <p className="text-xs text-text-muted">
               {user?.role === "SUPER_ADMIN"
                 ? "Super Admin"
                 : "Pengurus Kelompok Tani"}
@@ -111,7 +111,7 @@ export function Header({ onMenuClick }: HeaderProps) {
             type="button"
             onClick={() => setIsChangePasswordOpen(true)}
             title="Kelola Profil & Kata Sandi"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#E8E2DC] bg-[#F4F0EC] text-[#2A1810] transition-colors hover:bg-[#E8E2DC] hover:text-[#2A1810]"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-primary-tint text-primary transition-colors hover:bg-border"
           >
             <User className="h-5 w-5" />
           </button>

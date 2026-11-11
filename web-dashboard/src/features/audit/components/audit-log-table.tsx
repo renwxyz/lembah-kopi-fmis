@@ -17,16 +17,16 @@ import {
 const PAGE_SIZE = 20;
 
 const ACTION_STYLES: Record<AuditAction, string> = {
-  CREATE: "bg-emerald-50 text-emerald-700",
-  UPDATE: "bg-sky-50 text-sky-700",
-  DELETE: "bg-red-50 text-red-700",
-  CHANGE_PASSWORD: "bg-amber-50 text-amber-700",
-  LOGIN_SUCCESS: "bg-[#F4F0EC] text-[#2A1810]",
-  LOGIN_FAILED: "bg-red-100 text-red-800",
+  CREATE: "bg-success-tint text-success-ink",
+  UPDATE: "bg-info-tint text-info-ink",
+  DELETE: "bg-danger-tint text-danger-ink",
+  CHANGE_PASSWORD: "bg-warning-tint text-warning-ink",
+  LOGIN_SUCCESS: "bg-primary-tint text-coffee-900",
+  LOGIN_FAILED: "bg-danger-tint text-danger-ink",
 };
 
 const selectClassName =
-  "h-9 rounded-lg border border-[#E8E2DC] bg-white px-3 text-xs text-[#2A1810] focus:outline-none focus:ring-2 focus:ring-[#2A1810]/20";
+  "h-9 rounded-lg border border-border bg-surface px-3 text-xs text-coffee-900 focus:outline-none focus:ring-2 focus:ring-primary/20";
 
 function formatDateTime(iso: string): string {
   const date = new Date(iso);
@@ -81,17 +81,17 @@ export function AuditLogTable() {
   );
 
   if (sessionQuery.isLoading) {
-    return <div className="h-40 animate-pulse rounded-2xl bg-[#F4F0EC]" />;
+    return <div className="h-40 animate-pulse rounded-2xl bg-primary-tint" />;
   }
 
   if (!isSuperAdmin) {
     return (
-      <div className="flex flex-col items-center rounded-2xl border border-[#E8E2DC] bg-white px-6 py-16 text-center">
-        <ShieldAlert className="h-10 w-10 text-[#9E8E82]" />
-        <h3 className="mt-3 font-heading text-sm font-bold text-[#2A1810]">
+      <div className="flex flex-col items-center rounded-2xl border border-border bg-surface px-6 py-16 text-center">
+        <ShieldAlert className="h-10 w-10 text-text-muted" />
+        <h3 className="mt-3 font-heading text-sm font-bold text-coffee-900">
           Akses ditolak
         </h3>
-        <p className="mt-1 text-xs text-[#6E5D53]">
+        <p className="mt-1 text-xs text-text-muted">
           Audit trail hanya dapat dilihat oleh Super Admin.
         </p>
       </div>
@@ -114,10 +114,10 @@ export function AuditLogTable() {
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#E8E2DC] bg-white shadow-sm">
-      <div className="flex flex-col gap-3 border-b border-[#F4F0EC] p-4 lg:flex-row lg:flex-wrap lg:items-center">
+    <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
+      <div className="flex flex-col gap-3 border-b border-border p-4 lg:flex-row lg:flex-wrap lg:items-center">
         <div className="relative min-w-[220px] flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#9E8E82]" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" />
           <Input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
@@ -173,7 +173,7 @@ export function AuditLogTable() {
             aria-label="Dari tanggal"
             className={selectClassName}
           />
-          <span className="text-xs text-[#9E8E82]">s/d</span>
+          <span className="text-xs text-text-muted">s/d</span>
           <input
             type="date"
             value={to}
@@ -192,7 +192,7 @@ export function AuditLogTable() {
             type="button"
             variant="ghost"
             onClick={resetFilters}
-            className="h-9 text-xs font-semibold text-[#6E5D53]"
+            className="h-9 text-xs font-semibold text-text-muted"
           >
             Reset
           </Button>
@@ -202,33 +202,33 @@ export function AuditLogTable() {
       {isLoading ? (
         <div className="space-y-2 p-4">
           {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="h-10 animate-pulse rounded-lg bg-[#F4F0EC]" />
+            <div key={index} className="h-10 animate-pulse rounded-lg bg-primary-tint" />
           ))}
         </div>
       ) : isError ? (
         <div className="flex flex-col items-center px-6 py-14 text-center">
-          <p className="text-sm font-semibold text-[#2A1810]">
+          <p className="text-sm font-semibold text-coffee-900">
             Gagal memuat audit trail
           </p>
           <Button
             type="button"
             onClick={() => refetch()}
-            className="mt-3 h-9 rounded-lg bg-[#2A1810] text-xs font-semibold text-white"
+            className="mt-3 h-9 rounded-lg bg-primary text-xs font-semibold text-white"
           >
             Coba lagi
           </Button>
         </div>
       ) : items.length === 0 ? (
         <div className="flex flex-col items-center px-6 py-14 text-center">
-          <ScrollText className="h-10 w-10 text-[#9E8E82]" />
-          <p className="mt-3 text-sm font-semibold text-[#2A1810]">
+          <ScrollText className="h-10 w-10 text-text-muted" />
+          <p className="mt-3 text-sm font-semibold text-coffee-900">
             {hasFilter ? "Tidak ada aktivitas yang cocok" : "Belum ada aktivitas tercatat"}
           </p>
         </div>
       ) : (
         <div className={cn("overflow-x-auto", isFetching && "opacity-70 transition-opacity")}>
-          <table className="w-full text-left text-xs">
-            <thead className="border-b border-[#F4F0EC] bg-[#FCFBF9] text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+          <table className="w-full text-left text-sm">
+            <thead className="border-b border-border bg-cream-50 text-xs font-semibold uppercase tracking-wider text-text-muted">
               <tr>
                 <th className="px-6 py-3.5">Waktu</th>
                 <th className="px-6 py-3.5">Pengguna</th>
@@ -238,30 +238,30 @@ export function AuditLogTable() {
                 <th className="px-6 py-3.5">IP</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#F4F0EC]">
+            <tbody className="divide-y divide-border">
               {items.map((item) => (
-                <tr key={item.id_audit} className="transition-colors hover:bg-[#FAF8F5]/80">
-                  <td className="whitespace-nowrap px-6 py-3.5 text-[#6E5D53]">
+                <tr key={item.id_audit} className="transition-colors hover:bg-primary-wash">
+                  <td className="whitespace-nowrap px-6 py-3.5 text-text-muted">
                     {formatDateTime(item.waktu)}
                   </td>
                   <td className="px-6 py-3.5">
-                    <span className="block font-semibold text-[#2A1810]">{item.username}</span>
-                    <span className="text-[11px] text-[#8A7669]">{roleLabel(item.peran)}</span>
+                    <span className="block font-semibold text-coffee-900">{item.username}</span>
+                    <span className="text-[11px] text-text-muted">{roleLabel(item.peran)}</span>
                   </td>
                   <td className="px-6 py-3.5">
                     <span
                       className={cn(
                         "inline-flex rounded-md px-2 py-0.5 text-[11px] font-semibold",
-                        ACTION_STYLES[item.aksi] ?? "bg-[#F4F0EC] text-[#2A1810]",
+                        ACTION_STYLES[item.aksi] ?? "bg-primary-tint text-coffee-900",
                       )}
                     >
                       {AUDIT_ACTION_LABELS[item.aksi] ?? item.aksi}
                     </span>
                   </td>
                   <td className="px-6 py-3.5">
-                    <span className="block font-medium text-[#2A1810]">{item.resource}</span>
+                    <span className="block font-medium text-coffee-900">{item.resource}</span>
                     {item.resource_id && (
-                      <span className="font-mono text-[11px] text-[#8A7669]">
+                      <span className="font-mono text-[11px] text-text-muted">
                         {item.resource_id}
                       </span>
                     )}
@@ -270,13 +270,13 @@ export function AuditLogTable() {
                     <span
                       className={cn(
                         "font-mono font-semibold",
-                        item.status_code >= 400 ? "text-red-600" : "text-emerald-700",
+                        item.status_code >= 400 ? "text-danger" : "text-success-ink",
                       )}
                     >
                       {item.status_code}
                     </span>
                   </td>
-                  <td className="px-6 py-3.5 font-mono text-[#6E5D53]">
+                  <td className="px-6 py-3.5 font-mono text-text-muted">
                     {item.ip_address ?? "—"}
                   </td>
                 </tr>
@@ -286,7 +286,7 @@ export function AuditLogTable() {
         </div>
       )}
 
-      <div className="flex items-center justify-between border-t border-[#F4F0EC] px-6 py-3 text-xs text-[#6E5D53]">
+      <div className="flex items-center justify-between border-t border-border px-6 py-3 text-xs text-text-muted">
         <span>
           {total} aktivitas · Halaman {Math.min(page, totalPages)} dari {totalPages}
         </span>

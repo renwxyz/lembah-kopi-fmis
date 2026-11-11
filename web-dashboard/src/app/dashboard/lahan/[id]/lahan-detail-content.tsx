@@ -28,8 +28,8 @@ const LahanPolygonMiniMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-64 sm:h-72 w-full items-center justify-center rounded-xl bg-[#FAF8F5]">
-        <span className="text-xs text-[#8A7669]">Memuat peta spasial kebun...</span>
+      <div className="flex h-64 sm:h-72 w-full items-center justify-center rounded-xl bg-cream-50">
+        <span className="text-xs text-text-muted">Memuat peta spasial kebun...</span>
       </div>
     ),
   },
@@ -50,8 +50,8 @@ export function LahanDetailContent({ id }: LahanDetailContentProps) {
   if (isLoading) {
     return (
       <div className="flex h-[60vh] flex-col items-center justify-center gap-3">
-        <LoaderCircle className="h-8 w-8 animate-spin text-[#2A1810]" />
-        <p className="text-xs text-[#8A7669]">Memuat profil lengkap lahan...</p>
+        <LoaderCircle className="h-8 w-8 animate-spin text-coffee-900" />
+        <p className="text-xs text-text-muted">Memuat profil lengkap lahan...</p>
       </div>
     );
   }
@@ -59,11 +59,11 @@ export function LahanDetailContent({ id }: LahanDetailContentProps) {
   if (isError || !lahan) {
     return (
       <div className="flex h-[60vh] flex-col items-center justify-center gap-3 p-6 text-center">
-        <AlertCircle className="h-10 w-10 text-red-600" />
-        <h2 className="font-heading text-base font-bold text-[#2A1810]">
+        <AlertCircle className="h-10 w-10 text-danger" />
+        <h2 className="font-heading text-base font-bold text-coffee-900">
           Lahan Tidak Ditemukan
         </h2>
-        <p className="text-xs text-[#8A7669] max-w-sm">
+        <p className="text-xs text-text-muted max-w-sm">
           Data petak lahan dengan ID ini tidak tersedia atau telah dihapus dari sistem.
         </p>
         <div className="mt-2 flex items-center gap-3">
@@ -71,7 +71,7 @@ export function LahanDetailContent({ id }: LahanDetailContentProps) {
             Coba Lagi
           </Button>
           <Link href="/dashboard/lahan">
-            <Button className="h-8 text-xs bg-[#2A1810] text-white">
+            <Button className="h-8 text-xs bg-primary text-white">
               Kembali ke Daftar
             </Button>
           </Link>
@@ -96,8 +96,8 @@ export function LahanDetailContent({ id }: LahanDetailContentProps) {
               onClick={() => setActiveTab("inventaris")}
               className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-xs font-semibold transition-all shrink-0 ${
                 activeTab === "inventaris"
-                  ? "bg-[#2A1810] text-white shadow-xs"
-                  : "bg-white text-[#6E5D53] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+                  ? "bg-primary text-white shadow-xs"
+                  : "bg-surface text-text-muted hover:bg-cream-50 hover:text-coffee-900"
               }`}
             >
               <Trees className="h-4 w-4" />
@@ -109,8 +109,8 @@ export function LahanDetailContent({ id }: LahanDetailContentProps) {
               onClick={() => setActiveTab("tanah")}
               className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-xs font-semibold transition-all shrink-0 ${
                 activeTab === "tanah"
-                  ? "bg-[#2A1810] text-white shadow-xs"
-                  : "bg-white text-[#6E5D53] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+                  ? "bg-primary text-white shadow-xs"
+                  : "bg-surface text-text-muted hover:bg-cream-50 hover:text-coffee-900"
               }`}
             >
               <Activity className="h-4 w-4" />
@@ -122,8 +122,8 @@ export function LahanDetailContent({ id }: LahanDetailContentProps) {
               onClick={() => setActiveTab("pemupukan")}
               className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-xs font-semibold transition-all shrink-0 ${
                 activeTab === "pemupukan"
-                  ? "bg-[#2A1810] text-white shadow-xs"
-                  : "bg-white text-[#6E5D53] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+                  ? "bg-primary text-white shadow-xs"
+                  : "bg-surface text-text-muted hover:bg-cream-50 hover:text-coffee-900"
               }`}
             >
               <Droplets className="h-4 w-4" />
@@ -135,8 +135,8 @@ export function LahanDetailContent({ id }: LahanDetailContentProps) {
               onClick={() => setActiveTab("hama")}
               className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-xs font-semibold transition-all shrink-0 ${
                 activeTab === "hama"
-                  ? "bg-[#2A1810] text-white shadow-xs"
-                  : "bg-white text-[#6E5D53] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+                  ? "bg-primary text-white shadow-xs"
+                  : "bg-surface text-text-muted hover:bg-cream-50 hover:text-coffee-900"
               }`}
             >
               <Bug className="h-4 w-4" />
@@ -148,8 +148,8 @@ export function LahanDetailContent({ id }: LahanDetailContentProps) {
               onClick={() => setActiveTab("panen")}
               className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-xs font-semibold transition-all shrink-0 ${
                 activeTab === "panen"
-                  ? "bg-[#2A1810] text-white shadow-xs"
-                  : "bg-white text-[#6E5D53] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+                  ? "bg-primary text-white shadow-xs"
+                  : "bg-surface text-text-muted hover:bg-cream-50 hover:text-coffee-900"
               }`}
             >
               <Wheat className="h-4 w-4" />
@@ -182,46 +182,46 @@ export function LahanDetailContent({ id }: LahanDetailContentProps) {
         {/* Right Column: MiniMap & Geospasial Overview (~33% desktop) */}
         <div className="lg:col-span-4 space-y-4">
           <div className="space-y-2">
-            <span className="text-xs font-semibold text-[#2A1810] block">
+            <span className="text-xs font-semibold text-coffee-900 block">
               Peta Batas Geospasial Lahan
             </span>
             <LahanPolygonMiniMap lahan={lahan} />
           </div>
 
-          <div className="rounded-xl bg-white p-5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)] space-y-3">
-            <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-[#8A7669]">
+          <div className="rounded-xl bg-surface p-5 border border-border space-y-3">
+            <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-text-muted">
               Koordinat GPS & Lokasi
             </h3>
 
             <div className="space-y-2 text-xs">
-              <div className="flex items-center justify-between py-1 border-b border-[#F4F0EC]">
-                <span className="text-[#8A7669]">Titik Centroid</span>
-                <span className="font-mono font-medium text-[#2A1810]">
+              <div className="flex items-center justify-between py-1 border-b border-border">
+                <span className="text-text-muted">Titik Centroid</span>
+                <span className="font-mono font-medium text-coffee-900">
                   {lahan.latitude && lahan.longitude
                     ? `${lahan.latitude.toFixed(5)}, ${lahan.longitude.toFixed(5)}`
                     : "—"}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between py-1 border-b border-[#F4F0EC]">
-                <span className="text-[#8A7669]">Dusun</span>
-                <span className="font-medium text-[#2A1810]">{lahan.dusun}</span>
+              <div className="flex items-center justify-between py-1 border-b border-border">
+                <span className="text-text-muted">Dusun</span>
+                <span className="font-medium text-coffee-900">{lahan.dusun}</span>
               </div>
 
-              <div className="flex items-center justify-between py-1 border-b border-[#F4F0EC]">
-                <span className="text-[#8A7669]">Ketinggian</span>
-                <span className="font-medium text-[#2A1810]">
+              <div className="flex items-center justify-between py-1 border-b border-border">
+                <span className="text-text-muted">Ketinggian</span>
+                <span className="font-medium text-coffee-900">
                   {lahan.elevasi_mdpl ? `${lahan.elevasi_mdpl} mdpl` : "—"}
                 </span>
               </div>
 
               <div className="flex items-center justify-between py-1">
-                <span className="text-[#8A7669]">Status Polygon</span>
+                <span className="text-text-muted">Status Polygon</span>
                 <span
                   className={`inline-flex items-center gap-1 font-semibold ${
                     lahan.polygon_geom
-                      ? "text-emerald-700"
-                      : "text-amber-700"
+                      ? "text-success-ink"
+                      : "text-warning-ink"
                   }`}
                 >
                   <MapPin className="h-3 w-3" />

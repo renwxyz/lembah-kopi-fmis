@@ -2,14 +2,40 @@
 @import "leaflet/dist/leaflet.css";
 @import "tailwindcss";
 
+/* =========================================================
+   TOKEN DESAIN — sumber: DESIGN.md bagian 3 dan 7
+   Semua warna komponen harus memakai token di bawah ini.
+========================================================= */
 @theme inline {
+  /* Token proyek */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-tint: var(--primary-tint);
+  --color-primary-wash: var(--primary-wash);
+  --color-coffee-900: var(--coffee-900);
+  --color-coffee-800: var(--coffee-800);
+  --color-cream-50: var(--cream-50);
+  --color-surface: var(--surface);
+  --color-text-muted: var(--text-muted);
+  --color-sage-300: var(--sage-300);
+  --color-success: var(--success);
+  --color-success-tint: var(--success-tint);
+  --color-success-ink: var(--success-ink);
+  --color-warning-tint: var(--warning-tint);
+  --color-warning-ink: var(--warning-ink);
+  --color-danger: var(--danger);
+  --color-danger-tint: var(--danger-tint);
+  --color-danger-ink: var(--danger-ink);
+  --color-info-tint: var(--info-tint);
+  --color-info-ink: var(--info-ink);
+
+  /* Alias kompatibel untuk komponen ui (shadcn) yang sudah ada */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
-  --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -17,6 +43,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-heading: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
@@ -25,20 +52,43 @@
   :root {
     --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
     --font-heading: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
-    --background: #F9F8F6;
-    --foreground: #2A1810;
-    --card: #FFFFFF;
-    --card-foreground: #2A1810;
-    --border: #E8E2DC;
-    --input: #E8E2DC;
-    --primary: #2A1810;
-    --primary-foreground: #FFFFFF;
-    --secondary: #F4F0EC;
-    --secondary-foreground: #2A1810;
-    --muted: #F4F0EC;
-    --muted-foreground: #6E5D53;
-    --destructive: #DC2626;
-    --destructive-foreground: #FFFFFF;
+
+    --primary: #51613A;
+    --primary-hover: #3E4B2C;
+    --primary-tint: #EEF1E6;
+    --primary-wash: #F5F7F0;
+    --coffee-900: #2A1810;
+    --coffee-800: #341E14;
+    --cream-50: #FAF8F5;
+    --surface: #FFFFFF;
+    --border: #E7E2DB;
+    --text-muted: #6B5F58;
+    --sage-300: #C5D1A3;
+    --whatsapp: #25D366;
+    --success: #2E7D4F;
+    --success-tint: #E3F3EA;
+    --success-ink: #1F5C37;
+    --warning-tint: #FDF1D8;
+    --warning-ink: #7A4F0A;
+    --danger: #B42318;
+    --danger-tint: #FDE7E4;
+    --danger-ink: #8E1B12;
+    --info-tint: #E4EEFA;
+    --info-ink: #1E4E8C;
+
+    /* Alias komponen ui */
+    --background: var(--cream-50);
+    --foreground: var(--coffee-900);
+    --card: var(--surface);
+    --card-foreground: var(--coffee-900);
+    --input: var(--border);
+    --primary-foreground: var(--surface);
+    --secondary: var(--primary-tint);
+    --secondary-foreground: var(--coffee-900);
+    --muted: var(--primary-tint);
+    --muted-foreground: var(--text-muted);
+    --destructive: var(--danger);
+    --destructive-foreground: var(--surface);
     --radius: 0.75rem;
   }
 
@@ -47,9 +97,29 @@
     color: var(--foreground);
     min-height: 100vh;
   }
+
+  body {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* Fokus keyboard: cincin 2 px warna primary dengan jarak 2 px (DESIGN.md 4.2) */
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
-/* =========================================
+/* =========================================================
    FIX UNTUK BENTROK TAILWIND & LEAFLET
 ========================================= */
 .leaflet-container {
@@ -57,6 +127,7 @@
   height: 100% !important;
   z-index: 10 !important;
   border-radius: 0 !important;
+  font-family: var(--font-sans);
 }
 
 /* Mematikan Tailwind Preflight pada gambar Leaflet */
@@ -73,6 +144,6 @@
 }
 
 .leaflet-popup-content-wrapper {
-  border-radius: 0.75rem !important;
-  box-shadow: 0 4px 6px -1px rgb(42 24 16 / 0.1) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--coffee-900) 14%, transparent) !important;
 }

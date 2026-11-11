@@ -122,25 +122,25 @@ export function BatchPanenAllocationModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
-      <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-coffee-900/40 p-4 backdrop-blur-xs">
+      <div className="w-full max-w-2xl rounded-2xl bg-surface p-6 shadow-2xl max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#F4F0EC] pb-4 shrink-0">
+        <div className="flex items-center justify-between border-b border-border pb-4 shrink-0">
           <div>
             <div className="flex items-center gap-2">
-              <Wheat className="h-5 w-5 text-[#8A7669]" />
-              <h3 className="font-heading text-sm font-bold text-[#2A1810]">
+              <Wheat className="h-5 w-5 text-text-muted" />
+              <h3 className="font-heading text-sm font-bold text-coffee-900">
                 Alokasi Hasil Panen ke Batch {batch.id_batch}
               </h3>
             </div>
-            <p className="mt-0.5 text-xs text-[#8A7669]">
+            <p className="mt-0.5 text-xs text-text-muted">
               Gabungkan timbangan ceri dari satu atau beberapa kebun ke dalam batch olahan ini (M3.3).
             </p>
           </div>
           <button
             type="button"
             onClick={handleClose}
-            className="rounded-lg p-1 text-[#8A7669] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+            className="rounded-lg p-1 text-text-muted hover:bg-cream-50 hover:text-coffee-900"
           >
             <X className="h-4 w-4" />
           </button>
@@ -149,13 +149,13 @@ export function BatchPanenAllocationModal({
         {/* Scrollable Content */}
         <div className="overflow-y-auto py-4 space-y-6 flex-1 pr-1">
           {/* Section 1: Form Tambah Alokasi */}
-          <div className="rounded-xl bg-[#FAF8F5] p-4 space-y-3">
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#2A1810]">
+          <div className="rounded-xl bg-cream-50 p-4 space-y-3">
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-coffee-900">
               + Masukkan Ceri Panen ke Batch
             </h4>
 
             {formError && (
-              <div className="rounded-xl bg-red-50 p-2.5 text-xs text-red-700">
+              <div className="rounded-xl bg-danger-tint p-2.5 text-xs text-danger-ink">
                 {formError}
               </div>
             )}
@@ -164,7 +164,7 @@ export function BatchPanenAllocationModal({
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {/* Pilih Lahan */}
                 <div className="space-y-1">
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-[#8A7669]">
+                  <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
                     Lahan Asal Panen
                   </label>
                   <select
@@ -173,7 +173,7 @@ export function BatchPanenAllocationModal({
                       setSelectedLandId(e.target.value);
                       setSelectedHarvestId("");
                     }}
-                    className="w-full rounded-xl border border-[#E8E2DC] bg-white px-3 py-2 text-xs font-medium text-[#2A1810] outline-none"
+                    className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-xs font-medium text-coffee-900 outline-none"
                   >
                     {lahanList.map((l) => (
                       <option key={l.id_lahan} value={l.id_lahan}>
@@ -185,7 +185,7 @@ export function BatchPanenAllocationModal({
 
                 {/* Pilih Transaksi Panen */}
                 <div className="space-y-1">
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-[#8A7669]">
+                  <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
                     Catatan Panen Tersedia
                   </label>
                   <select
@@ -198,7 +198,7 @@ export function BatchPanenAllocationModal({
                       if (chosen) setUsedWeight(String(chosen.berat_ceri_kg));
                     }}
                     disabled={isLoadingHarvests}
-                    className="w-full rounded-xl border border-[#E8E2DC] bg-white px-3 py-2 text-xs font-medium text-[#2A1810] outline-none"
+                    className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-xs font-medium text-coffee-900 outline-none"
                   >
                     <option value="">Pilih sesi panen...</option>
                     {availableHarvests.map((h) => (
@@ -213,7 +213,7 @@ export function BatchPanenAllocationModal({
               {/* Berat yang dialokasikan */}
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
                 <div className="flex-1 space-y-1">
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-[#8A7669]">
+                  <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
                     Berat Ceri yang Diproses di Batch Ini (kg)
                   </label>
                   <div className="relative">
@@ -224,9 +224,9 @@ export function BatchPanenAllocationModal({
                       placeholder="Misal: 100"
                       value={usedWeight}
                       onChange={(e) => setUsedWeight(e.target.value)}
-                      className="rounded-xl border-[#E8E2DC] bg-white pr-10 text-xs"
+                      className="rounded-xl border-border bg-surface pr-10 text-xs"
                     />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#8A7669]">
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-text-muted">
                       kg
                     </span>
                   </div>
@@ -235,7 +235,7 @@ export function BatchPanenAllocationModal({
                 <Button
                   type="submit"
                   disabled={addMappingMutation.isPending || !selectedHarvestId}
-                  className="rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-semibold text-white hover:bg-[#3D251A] shrink-0"
+                  className="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white hover:bg-primary-hover shrink-0 min-h-10"
                 >
                   {addMappingMutation.isPending ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -250,21 +250,21 @@ export function BatchPanenAllocationModal({
 
           {/* Section 2: Daftar Alokasi yang Sudah Masuk ke Batch Ini */}
           <div>
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#8A7669]">
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-text-muted">
               Daftar Alokasi Panen di Batch Ini ({mappings.length})
             </h4>
 
             {isLoadingMappings ? (
               <div className="flex items-center justify-center py-6">
-                <Loader2 className="h-5 w-5 animate-spin text-[#8A7669]" />
-                <span className="ml-2 text-xs text-[#8A7669]">Memuat alokasi...</span>
+                <Loader2 className="h-5 w-5 animate-spin text-text-muted" />
+                <span className="ml-2 text-xs text-text-muted">Memuat alokasi...</span>
               </div>
             ) : mappings.length === 0 ? (
-              <p className="mt-2 text-xs text-[#8A7669] italic">
+              <p className="mt-2 text-xs text-text-muted italic">
                 Belum ada ceri yang dimasukkan ke batch ini. Gunakan formulir di atas untuk mengaitkan panen.
               </p>
             ) : (
-              <div className="mt-3 divide-y divide-[#F4F0EC] border-t border-[#F4F0EC]">
+              <div className="mt-3 divide-y divide-border border-t border-border">
                 {mappings.map((m) => (
                   <div
                     key={m.id_mapping}
@@ -272,14 +272,14 @@ export function BatchPanenAllocationModal({
                   >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono font-medium text-[#2A1810]">
+                        <span className="font-mono font-medium text-coffee-900">
                           {m.id_panen}
                         </span>
-                        <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-800">
+                        <span className="rounded-md bg-success-tint px-2 py-0.5 text-[11px] font-bold text-success-ink">
                           {formatNumber(m.berat_digunakan_kg)} kg
                         </span>
                       </div>
-                      <span className="text-[10px] text-[#8A7669]">
+                      <span className="text-[10px] text-text-muted">
                         ID Mapping: {m.id_mapping}
                       </span>
                     </div>
@@ -290,7 +290,7 @@ export function BatchPanenAllocationModal({
                       size="icon"
                       onClick={() => handleDeleteMapping(m.id_mapping)}
                       disabled={deletingMappingId === m.id_mapping}
-                      className="h-8 w-8 text-red-500 hover:bg-red-50 hover:text-red-700"
+                      className="h-8 w-8 text-danger hover:bg-danger-tint hover:text-danger-ink"
                     >
                       {deletingMappingId === m.id_mapping ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -306,17 +306,17 @@ export function BatchPanenAllocationModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-[#F4F0EC] pt-4 shrink-0">
-          <div className="text-xs text-[#6E5D53]">
+        <div className="flex items-center justify-between border-t border-border pt-4 shrink-0">
+          <div className="text-xs text-text-muted">
             Total Akumulasi Ceri Batch:{" "}
-            <strong className="font-bold text-[#2A1810]">
+            <strong className="font-bold text-coffee-900">
               {formatNumber(batch.total_input_ceri_kg)} kg
             </strong>
           </div>
           <Button
             type="button"
             onClick={handleClose}
-            className="rounded-xl bg-[#FAF8F5] px-4 py-2 text-xs font-semibold text-[#2A1810] hover:bg-[#F4F0EC]"
+            className="rounded-xl bg-cream-50 px-4 py-2 text-xs font-semibold text-coffee-900 hover:bg-primary-tint"
           >
             Tutup
           </Button>

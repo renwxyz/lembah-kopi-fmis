@@ -23,23 +23,23 @@ const statusConfig: Record<
 > = {
   FERMENTASI: {
     label: "Fermentasi",
-    bg: "bg-amber-50",
-    text: "text-amber-800",
+    bg: "bg-warning-tint",
+    text: "text-warning-ink",
   },
   PENGERINGAN: {
     label: "Pengeringan",
-    bg: "bg-orange-50",
-    text: "text-orange-800",
+    bg: "bg-warning-tint",
+    text: "text-warning-ink",
   },
   HULLING_RESTING: {
     label: "Hulling / Resting",
-    bg: "bg-blue-50",
-    text: "text-blue-800",
+    bg: "bg-info-tint",
+    text: "text-info-ink",
   },
   SELESAI: {
     label: "Selesai",
-    bg: "bg-emerald-50",
-    text: "text-emerald-800",
+    bg: "bg-success-tint",
+    text: "text-success-ink",
   },
 };
 
@@ -74,14 +74,14 @@ export function BatchListTable() {
   };
 
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)]">
+    <div className="rounded-2xl bg-surface p-6 border border-border">
       {/* Top Filter Bar */}
-      <div className="flex flex-col gap-3 border-b border-[#F4F0EC] pb-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 border-b border-border pb-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="font-heading text-base font-bold text-[#2A1810]">
+          <h2 className="font-heading text-base font-bold text-coffee-900">
             Daftar Batch Pascaproses Biji Kopi
           </h2>
-          <p className="mt-0.5 text-xs text-[#8A7669]">
+          <p className="mt-0.5 text-xs text-text-muted">
             Pelacakan batch olahan dari ceri basah hingga green bean kering siap distribusi (M3.2).
           </p>
         </div>
@@ -93,8 +93,8 @@ export function BatchListTable() {
             onClick={() => setSelectedStatus("")}
             className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
               selectedStatus === ""
-                ? "bg-[#2A1810] text-white shadow-xs"
-                : "bg-[#FAF8F5] text-[#6E5D53] hover:bg-[#F4F0EC]"
+                ? "bg-primary text-white shadow-xs"
+                : "bg-cream-50 text-text-muted hover:bg-primary-tint"
             }`}
           >
             Semua
@@ -113,8 +113,8 @@ export function BatchListTable() {
               onClick={() => setSelectedStatus(st)}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                 selectedStatus === st
-                  ? "bg-[#2A1810] text-white shadow-xs"
-                  : "bg-[#FAF8F5] text-[#6E5D53] hover:bg-[#F4F0EC]"
+                  ? "bg-primary text-white shadow-xs"
+                  : "bg-cream-50 text-text-muted hover:bg-primary-tint"
               }`}
             >
               {statusConfig[st].label}
@@ -126,38 +126,38 @@ export function BatchListTable() {
       {/* Content */}
       {isLoading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="h-6 w-6 animate-spin text-[#8A7669]" />
-          <span className="ml-2 text-xs text-[#8A7669]">Memuat daftar batch...</span>
+          <Loader2 className="h-6 w-6 animate-spin text-text-muted" />
+          <span className="ml-2 text-xs text-text-muted">Memuat daftar batch...</span>
         </div>
       ) : isError ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <AlertCircle className="h-8 w-8 text-amber-600" />
-          <p className="mt-2 text-xs font-semibold text-[#2A1810]">
+          <AlertCircle className="h-8 w-8 text-warning-ink" />
+          <p className="mt-2 text-xs font-semibold text-coffee-900">
             Gagal memuat data batch pascaproses.
           </p>
           <Button
             type="button"
             onClick={() => refetch()}
-            className="mt-3 rounded-lg bg-[#FAF8F5] px-3 py-1.5 text-xs text-[#2A1810]"
+            className="mt-3 rounded-lg bg-cream-50 px-3 py-1.5 text-xs text-coffee-900"
           >
             Coba Lagi
           </Button>
         </div>
       ) : batches.length === 0 ? (
         <div className="py-16 text-center">
-          <Layers className="mx-auto h-10 w-10 text-[#C4B7AC]" />
-          <h3 className="mt-3 font-heading text-sm font-bold text-[#2A1810]">
+          <Layers className="mx-auto h-10 w-10 text-text-muted" />
+          <h3 className="mt-3 font-heading text-sm font-bold text-coffee-900">
             Tidak Ada Batch Ditemukan
           </h3>
-          <p className="mt-1 text-xs text-[#8A7669] max-w-sm mx-auto">
+          <p className="mt-1 text-xs text-text-muted max-w-sm mx-auto">
             Belum ada batch pengolahan pascaproses kopi. Klik tombol &quot;+ Buka Batch Baru&quot; di atas untuk memulai.
           </p>
         </div>
       ) : (
         <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-[#F4F0EC] text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+              <tr className="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-text-muted">
                 <th className="pb-3 pr-4">ID Batch & Trace</th>
                 <th className="pb-3 px-4">Metode Olah</th>
                 <th className="pb-3 px-4">Mulai Olah</th>
@@ -168,56 +168,56 @@ export function BatchListTable() {
                 <th className="pb-3 pl-4 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#FAF8F5]">
+            <tbody className="divide-y divide-border">
               {batches.map((b) => {
                 const statusMeta = statusConfig[b.status_proses] || {
                   label: b.status_proses,
-                  bg: "bg-slate-50",
-                  text: "text-slate-700",
+                  bg: "bg-cream-50",
+                  text: "text-coffee-900",
                 };
 
                 return (
-                  <tr key={b.id_batch} className="hover:bg-[#FAF8F5]/60 transition-colors">
+                  <tr key={b.id_batch} className="hover:bg-primary-wash transition-colors">
                     <td className="py-3.5 pr-4">
                       <div className="flex items-center gap-2">
-                        <QrCode className="h-4 w-4 text-[#8A7669]" />
+                        <QrCode className="h-4 w-4 text-text-muted" />
                         <div>
-                          <p className="font-mono font-bold text-[#2A1810]">
+                          <p className="font-mono font-bold text-coffee-900">
                             {b.id_batch}
                           </p>
-                          <p className="text-[10px] text-[#8A7669] font-mono">
+                          <p className="text-[10px] text-text-muted font-mono">
                             {b.kode_qr_trace}
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="py-3.5 px-4">
-                      <span className="inline-flex items-center rounded-md bg-[#FAF8F5] px-2.5 py-1 text-xs font-bold text-[#2A1810]">
+                      <span className="inline-flex items-center rounded-md bg-cream-50 px-2.5 py-1 text-xs font-bold text-coffee-900">
                         {b.metode_proses}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-[#6E5D53]">
+                    <td className="py-3.5 px-4 text-text-muted">
                       <div className="flex items-center gap-1.5">
-                        <Calendar className="h-3.5 w-3.5 text-[#8A7669]" />
+                        <Calendar className="h-3.5 w-3.5 text-text-muted" />
                         {formatDate(b.tanggal_mulai_olah)}
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 font-heading text-sm font-bold text-[#2A1810]">
+                    <td className="py-3.5 px-4 font-heading text-sm font-bold text-coffee-900">
                       {formatNumber(b.total_input_ceri_kg)} kg
                     </td>
-                    <td className="py-3.5 px-4 font-heading text-sm text-[#2A1810]">
+                    <td className="py-3.5 px-4 font-heading text-sm text-coffee-900">
                       {b.berat_green_bean_kg !== null && b.berat_green_bean_kg !== undefined
                         ? `${formatNumber(b.berat_green_bean_kg)} kg`
                         : "—"}
                     </td>
                     <td className="py-3.5 px-4">
                       {b.rendemen_persen !== null && b.rendemen_persen !== undefined ? (
-                        <span className="inline-flex items-center gap-1 font-semibold text-emerald-800">
+                        <span className="inline-flex items-center gap-1 font-semibold text-success-ink">
                           <Sparkles className="h-3 w-3" />
                           {b.rendemen_persen.toFixed(1)}%
                         </span>
                       ) : (
-                        <span className="text-[#8A7669]">—</span>
+                        <span className="text-text-muted">—</span>
                       )}
                     </td>
                     <td className="py-3.5 px-4">
@@ -231,7 +231,7 @@ export function BatchListTable() {
                       <div className="flex items-center justify-end gap-1.5">
                         <Link
                           href={`/dashboard/batch/${encodeURIComponent(b.id_batch)}`}
-                          className="flex items-center gap-1 rounded-lg bg-[#FAF8F5] px-3 py-1.5 text-xs font-semibold text-[#2A1810] transition-colors hover:bg-[#F4F0EC]"
+                          className="flex items-center gap-1 rounded-lg bg-cream-50 px-3 py-1.5 text-xs font-semibold text-coffee-900 transition-colors hover:bg-primary-tint"
                         >
                           Kelola & Trace
                           <ChevronRight className="h-3.5 w-3.5" />
@@ -244,7 +244,7 @@ export function BatchListTable() {
                             size="icon"
                             onClick={() => handleDelete(b)}
                             disabled={deletingId === b.id_batch}
-                            className="h-8 w-8 text-red-500 hover:bg-red-50 hover:text-red-700"
+                            className="h-8 w-8 text-danger hover:bg-danger-tint hover:text-danger-ink"
                             title="Hapus Batch Kosong"
                           >
                             {deletingId === b.id_batch ? (

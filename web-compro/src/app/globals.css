@@ -1,30 +1,236 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+/* =========================================================
+   TOKEN DESAIN — sumber: DESIGN.md bagian 3
+   Semua warna komponen harus memakai token di bawah ini.
+========================================================= */
 @theme inline {
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-heading: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-tint: var(--primary-tint);
+  --color-primary-wash: var(--primary-wash);
+  --color-coffee-900: var(--coffee-900);
+  --color-coffee-800: var(--coffee-800);
+  --color-cream-50: var(--cream-50);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-text-muted: var(--text-muted);
+  --color-sage-300: var(--sage-300);
+  --color-whatsapp: var(--whatsapp);
+  --color-success: var(--success);
+  --color-success-tint: var(--success-tint);
+  --color-warning-tint: var(--warning-tint);
+  --color-danger: var(--danger);
+  --color-danger-tint: var(--danger-tint);
+  --color-info-tint: var(--info-tint);
+  --color-success-ink: var(--success-ink);
+  --color-warning-ink: var(--warning-ink);
+  --color-danger-ink: var(--danger-ink);
+  --color-info-ink: var(--info-ink);
+
+  --radius-card: 24px;
+  --radius-media: 16px;
+}
+
+:root {
+  --primary: #51613A;
+  --primary-hover: #3E4B2C;
+  --primary-tint: #EEF1E6;
+  --primary-wash: #F5F7F0;
+  --coffee-900: #2A1810;
+  --coffee-800: #341E14;
+  --cream-50: #FAF8F5;
+  --surface: #FFFFFF;
+  --border: #E7E2DB;
+  --text-muted: #6B5F58;
+  --sage-300: #C5D1A3;
+  --whatsapp: #25D366;
+  --success: #2E7D4F;
+  --success-tint: #E3F3EA;
+  --warning-tint: #FDF1D8;
+  --danger: #B42318;
+  --danger-tint: #FDE7E4;
+  --info-tint: #E4EEFA;
+  /* Teks gelap pada badge tint (DESIGN.md 3.1) */
+  --success-ink: #1F5C37;
+  --warning-ink: #7A4F0A;
+  --danger-ink: #8E1B12;
+  --info-ink: #1E4E8C;
 }
 
 @layer base {
-  :root {
-    --background: #FAF8F5;
-    --foreground: #2A1810;
-    --primary: #2A1810;
-    --primary-foreground: #FFFFFF;
-    --accent: #C28E58;
-    --muted: #6E5D53;
-    --card: #FFFFFF;
-    --border: #E8E2DC;
-  }
-
   html {
     scroll-behavior: smooth;
+    /* ruang untuk navbar sticky 70px saat lompat ke anchor */
+    scroll-padding-top: 86px;
   }
 
   body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--cream-50);
+    color: var(--coffee-900);
     font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  /* Di atas foto / latar gelap cincin fokus memakai warna terang agar tetap terlihat */
+  .on-dark :focus-visible {
+    outline-color: var(--surface);
+  }
+}
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+@utility container-lk {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1200px;
+  padding-inline: 16px;
+  @media (min-width: 640px) {
+    padding-inline: 24px;
+  }
+}
+
+@utility section-y {
+  padding-block: 64px;
+  @media (min-width: 1024px) {
+    padding-block: 96px;
+  }
+}
+
+/* =========================================================
+   TOMBOL (DESIGN.md 4.2) — bentuk pil, target sentuh >= 44px
+========================================================= */
+@layer components {
+  .btn {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 9999px;
+    padding: 0 24px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+  }
+  .btn-sm {
+    min-height: 44px;
+    padding: 0 20px;
+    font-size: 14px;
+  }
+  .btn-primary {
+    background-color: var(--primary);
+    color: var(--surface);
+  }
+  .btn-primary:hover {
+    background-color: var(--primary-hover);
+  }
+  .btn-photo {
+    border: 1px solid color-mix(in srgb, var(--surface) 45%, transparent);
+    background-color: color-mix(in srgb, var(--coffee-900) 40%, transparent);
+    color: var(--surface);
+    backdrop-filter: blur(6px);
+  }
+  .btn-photo:hover {
+    background-color: color-mix(in srgb, var(--surface) 18%, transparent);
+  }
+  .btn-outline {
+    border: 1px solid var(--border);
+    background-color: var(--surface);
+    color: var(--coffee-900);
+  }
+  .btn-outline:hover {
+    background-color: var(--primary-tint);
+  }
+  .btn-dark {
+    background-color: var(--coffee-900);
+    color: var(--surface);
+  }
+  .btn-dark:hover {
+    background-color: var(--coffee-800);
+  }
+  .link-arrow {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: var(--primary);
+  }
+  .link-arrow:hover {
+    color: var(--primary-hover);
+  }
+
+  /* Latar hero cadangan saat foto belum tersedia (DESIGN.md 4.3) */
+  .hero-fallback {
+    background-color: var(--coffee-800);
+    background-image:
+      radial-gradient(60% 70% at 85% 10%, color-mix(in srgb, var(--primary) 38%, transparent), transparent),
+      linear-gradient(135deg, var(--coffee-800), var(--coffee-900));
+  }
+}
+
+/* =========================================================
+   GERAK (DESIGN.md 3.4) — dimatikan bila prefers-reduced-motion
+========================================================= */
+.card-lift {
+  transition: transform 250ms ease, border-color 250ms ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+}
+.card-zoom img {
+  transition: transform 300ms ease;
+}
+.card-lift:hover .card-zoom img,
+.card-zoom:hover img {
+  transform: scale(1.03);
+}
+
+/* Fade dan geser naik ringan, sekali saja. Kelas ini ditambahkan oleh <ScrollReveal />
+   sehingga tanpa JavaScript semua konten tetap terlihat. */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.reveal-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 600ms ease, transform 600ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .card-lift,
+  .card-lift:hover {
+    transform: none;
+    transition: none;
+  }
+  .card-zoom img,
+  .card-lift:hover .card-zoom img,
+  .card-zoom:hover img {
+    transform: none;
+    transition: none;
+  }
+  .reveal-init,
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

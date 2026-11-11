@@ -47,17 +47,17 @@ export function SoilConditionTab({ landId }: SoilConditionTabProps) {
       {/* Tab Header & Action */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="font-heading text-lg font-bold text-[#2A1810]">
+          <h2 className="font-heading text-lg font-bold text-coffee-900">
             Sampling Parameter Tanah (6-in-1 Soil Analyzer)
           </h2>
-          <p className="mt-0.5 text-xs text-[#6E5D53]">
+          <p className="mt-0.5 text-xs text-text-muted">
             Pencatatan pH, kelembapan, suhu, NPK, dan konduktivitas listrik (EC) per petak lahan (M2.1).
           </p>
         </div>
 
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="h-9 gap-1.5 rounded-lg bg-[#2A1810] px-4 text-xs font-semibold text-white hover:bg-[#3D2317] shadow-sm self-start sm:self-auto"
+          className="h-9 gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold text-white hover:bg-primary-hover shadow-sm self-start sm:self-auto"
         >
           <Plus className="h-4 w-4" />
           Catat Sampling Tanah
@@ -66,22 +66,22 @@ export function SoilConditionTab({ landId }: SoilConditionTabProps) {
 
       {/* KPI Cards for Soil Health */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
-        <div className="rounded-xl bg-white p-4.5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)]">
-          <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+        <div className="rounded-xl bg-surface p-4.5 border border-border">
+          <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
             Rerata pH Tanah
           </span>
           <div className="mt-1 flex items-baseline gap-2">
-            <span className="font-heading text-2xl font-bold tracking-tight text-[#2A1810]">
+            <span className="font-heading text-2xl font-bold tracking-tight text-coffee-900">
               {avgPH ? formatNumber(avgPH, 1) : "—"}
             </span>
             {avgPH && (
               <span
                 className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${
                   avgPH >= 5.5 && avgPH <= 6.5
-                    ? "bg-emerald-50 text-emerald-800"
+                    ? "bg-success-tint text-success-ink"
                     : avgPH < 5.5
-                      ? "bg-amber-50 text-amber-800"
-                      : "bg-blue-50 text-blue-800"
+                      ? "bg-warning-tint text-warning-ink"
+                      : "bg-info-tint text-info-ink"
                 }`}
               >
                 {avgPH >= 5.5 && avgPH <= 6.5
@@ -92,86 +92,86 @@ export function SoilConditionTab({ landId }: SoilConditionTabProps) {
               </span>
             )}
           </div>
-          <span className="text-[11px] text-[#6E5D53] block mt-1">
+          <span className="text-[11px] text-text-muted block mt-1">
             Target ideal arabika/robusta: 5.5 – 6.5
           </span>
         </div>
 
-        <div className="rounded-xl bg-white p-4.5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)]">
-          <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+        <div className="rounded-xl bg-surface p-4.5 border border-border">
+          <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
             Kelembapan Tanah
           </span>
           <div className="mt-1 flex items-baseline gap-1.5">
-            <span className="font-heading text-2xl font-bold tracking-tight text-[#2A1810]">
+            <span className="font-heading text-2xl font-bold tracking-tight text-coffee-900">
               {avgMoisture ? formatNumber(avgMoisture, 1) : "—"}
             </span>
-            <span className="text-xs font-semibold text-[#6E5D53]">%</span>
+            <span className="text-xs font-semibold text-text-muted">%</span>
           </div>
-          <span className="text-[11px] text-[#6E5D53] block mt-1">
+          <span className="text-[11px] text-text-muted block mt-1">
             Target kelembapan: 50% – 70%
           </span>
         </div>
 
-        <div className="rounded-xl bg-white p-4.5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)]">
-          <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+        <div className="rounded-xl bg-surface p-4.5 border border-border">
+          <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
             Status NPK Terakhir
           </span>
           <div className="mt-1 flex items-baseline gap-2">
-            <span className="font-mono text-sm font-bold text-[#2A1810]">
+            <span className="font-mono text-sm font-bold text-coffee-900">
               {latestLog && latestLog.n_value != null
                 ? `N:${latestLog.n_value} P:${latestLog.p_value} K:${latestLog.k_value}`
                 : "Belum Diukur"}
             </span>
           </div>
-          <span className="text-[11px] text-[#6E5D53] block mt-1">
+          <span className="text-[11px] text-text-muted block mt-1">
             Satuan kandungan hara: mg/kg
           </span>
         </div>
 
-        <div className="rounded-xl bg-white p-4.5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)]">
-          <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+        <div className="rounded-xl bg-surface p-4.5 border border-border">
+          <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
             Konduktivitas (EC)
           </span>
           <div className="mt-1 flex items-baseline gap-1.5">
-            <span className="font-heading text-2xl font-bold tracking-tight text-[#2A1810]">
+            <span className="font-heading text-2xl font-bold tracking-tight text-coffee-900">
               {latestLog?.ec_value != null ? latestLog.ec_value : "—"}
             </span>
-            <span className="text-xs font-semibold text-[#6E5D53]">µS/cm</span>
+            <span className="text-xs font-semibold text-text-muted">µS/cm</span>
           </div>
-          <span className="text-[11px] text-[#6E5D53] block mt-1">
+          <span className="text-[11px] text-text-muted block mt-1">
             Indikator salinitas & kesuburan ion
           </span>
         </div>
       </div>
 
       {/* Main Table Card */}
-      <div className="overflow-hidden rounded-xl bg-white shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)]">
+      <div className="overflow-hidden rounded-xl bg-surface border border-border">
         {isLoading ? (
           <div className="p-12 text-center">
-            <div className="inline-flex h-8 w-8 animate-spin items-center justify-center rounded-full border-2 border-[#2A1810] border-t-transparent" />
-            <p className="mt-2 text-xs text-[#8A7669]">Memuat data kondisi tanah...</p>
+            <div className="inline-flex h-8 w-8 animate-spin items-center justify-center rounded-full border-2 border-primary border-t-transparent" />
+            <p className="mt-2 text-xs text-text-muted">Memuat data kondisi tanah...</p>
           </div>
         ) : isError ? (
           <div className="p-8 text-center">
-            <p className="text-xs font-semibold text-red-600">Gagal memuat log kondisi tanah.</p>
+            <p className="text-xs font-semibold text-danger">Gagal memuat log kondisi tanah.</p>
             <Button variant="outline" onClick={() => refetch()} className="mt-2 h-8 text-xs">
               Coba Lagi
             </Button>
           </div>
         ) : logs.length === 0 ? (
           <div className="p-10 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#FAF8F5] text-[#8A7669]">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-cream-50 text-text-muted">
               <Activity className="h-6 w-6" />
             </div>
-            <h3 className="mt-3 font-heading text-sm font-bold text-[#2A1810]">
+            <h3 className="mt-3 font-heading text-sm font-bold text-coffee-900">
               Belum Ada Log Pengukuran Tanah
             </h3>
-            <p className="mt-1 text-xs text-[#8A7669] max-w-sm mx-auto">
+            <p className="mt-1 text-xs text-text-muted max-w-sm mx-auto">
               Gunakan alat 6-in-1 Soil Analyzer untuk mengukur pH, kelembapan, dan NPK pada petak kebun ini.
             </p>
             <Button
               onClick={() => setIsModalOpen(true)}
-              className="mt-4 h-9 gap-1.5 rounded-lg bg-[#2A1810] text-xs font-semibold text-white shadow-sm"
+              className="mt-4 h-9 gap-1.5 rounded-lg bg-primary text-xs font-semibold text-white shadow-sm"
             >
               <Plus className="h-3.5 w-3.5" />
               Catat Sampling Pertama
@@ -179,8 +179,8 @@ export function SoilConditionTab({ landId }: SoilConditionTabProps) {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="border-b border-[#F4F0EC] bg-[#FCFBF9] text-[11px] font-semibold text-[#8A7669] uppercase tracking-wider">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-border bg-cream-50 text-xs font-semibold uppercase tracking-wider text-text-muted">
                 <tr>
                   <th className="px-6 py-3.5">Tanggal Sampling</th>
                   <th className="px-6 py-3.5">pH Tanah</th>
@@ -191,13 +191,13 @@ export function SoilConditionTab({ landId }: SoilConditionTabProps) {
                   <th className="px-6 py-3.5">Konteks</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#F4F0EC]">
+              <tbody className="divide-y divide-border">
                 {logs.map((log) => (
-                  <tr key={log.id_log_tanah} className="hover:bg-[#FAF8F5]/80 transition-colors">
+                  <tr key={log.id_log_tanah} className="hover:bg-primary-wash transition-colors">
                     <td className="px-6 py-3.5">
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-3.5 w-3.5 text-[#8A7669]" />
-                        <span className="font-medium text-[#2A1810]">
+                        <Calendar className="h-3.5 w-3.5 text-text-muted" />
+                        <span className="font-medium text-coffee-900">
                           {formatDate(log.tanggal_ukur)}
                         </span>
                       </div>
@@ -208,8 +208,8 @@ export function SoilConditionTab({ landId }: SoilConditionTabProps) {
                         <span
                           className={`font-heading font-bold text-xs px-2 py-0.5 rounded-md ${
                             log.ph_tanah >= 5.5 && log.ph_tanah <= 6.5
-                              ? "bg-emerald-50 text-emerald-800"
-                              : "bg-amber-50 text-amber-800"
+                              ? "bg-success-tint text-success-ink"
+                              : "bg-warning-tint text-warning-ink"
                           }`}
                         >
                           {formatNumber(log.ph_tanah, 1)}
@@ -227,7 +227,7 @@ export function SoilConditionTab({ landId }: SoilConditionTabProps) {
                       {log.suhu_celsius != null ? `${formatNumber(log.suhu_celsius, 1)} °C` : "—"}
                     </td>
 
-                    <td className="px-6 py-3.5 font-mono text-xs text-[#2A1810]">
+                    <td className="px-6 py-3.5 font-mono text-xs text-coffee-900">
                       {log.n_value != null ? `N:${log.n_value} P:${log.p_value} K:${log.k_value}` : "—"}
                     </td>
 
@@ -237,11 +237,11 @@ export function SoilConditionTab({ landId }: SoilConditionTabProps) {
 
                     <td className="px-6 py-3.5">
                       {log.tahap_pemantauan ? (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-[#FAF8F5] px-2 py-0.5 text-[11px] font-semibold text-[#6E5D53]">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-cream-50 px-2 py-0.5 text-[11px] font-semibold text-text-muted">
                           {log.tahap_pemantauan === "SEBELUM" ? "Pre-Pemupukan" : "Post-Pemupukan"}
                         </span>
                       ) : (
-                        <span className="text-[#8A7669] text-[11px]">Sampling Rutin</span>
+                        <span className="text-text-muted text-[11px]">Sampling Rutin</span>
                       )}
                     </td>
                   </tr>
@@ -331,22 +331,22 @@ function CreateSoilDialog({
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
     >
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-[0_25px_60px_-15px_rgba(42,24,16,0.25)]">
-        <div className="flex shrink-0 items-center justify-between border-b border-[#EFECE6] px-6 py-4 bg-white">
+      <div className="relative w-full max-w-lg overflow-hidden rounded-xl bg-surface shadow-xl">
+        <div className="flex shrink-0 items-center justify-between border-b border-border px-6 py-4 bg-surface">
           <div>
-            <h3 className="font-heading text-base font-bold text-[#2A1810]">
+            <h3 className="font-heading text-base font-bold text-coffee-900">
               Catat Hasil Sampling Tanah 6-in-1
             </h3>
-            <p className="text-xs text-[#6E5D53]">
+            <p className="text-xs text-text-muted">
               Masukkan parameter fisik & nutrisi tanah dari probe analyzer.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1 text-[#8A7669] hover:bg-[#F4F0EC]"
+            className="rounded-lg p-1 text-text-muted hover:bg-primary-tint"
           >
             <X className="h-5 w-5" />
           </button>
@@ -354,28 +354,28 @@ function CreateSoilDialog({
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
           {error && (
-            <div className="flex items-start gap-2 rounded-lg bg-red-50 p-3 text-xs text-red-800">
-              <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+            <div className="flex items-start gap-2 rounded-lg bg-danger-tint p-3 text-xs text-danger-ink">
+              <AlertCircle className="h-4 w-4 shrink-0 text-danger mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-[#2A1810] block">
-                Tanggal Pengukuran <span className="text-red-500">*</span>
+              <label className="text-xs font-semibold text-coffee-900 block">
+                Tanggal Pengukuran <span className="text-danger">*</span>
               </label>
               <Input
                 type="date"
                 value={tanggalUkur}
                 onChange={(e) => setTanggalUkur(e.target.value)}
-                className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0"
+                className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0"
                 required
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#2A1810] block">
+              <label className="text-xs font-semibold text-coffee-900 block">
                 Konteks Monitoring
               </label>
               <select
@@ -389,7 +389,7 @@ function CreateSoilDialog({
                     setFertilizerId("");
                   }
                 }}
-                className="mt-1.5 flex h-10 w-full rounded-lg bg-[#FAF8F5] px-3.5 py-2 text-xs font-medium text-[#2A1810] border-0"
+                className="mt-1.5 flex h-10 w-full rounded-lg bg-cream-50 px-3.5 py-2 text-xs font-medium text-coffee-900 border-0"
               >
                 <option value="">Sampling Rutin Berkala</option>
                 <option value="SEBELUM">Sebelum Aplikasi Pupuk (Pre)</option>
@@ -400,14 +400,14 @@ function CreateSoilDialog({
 
           {tahap && (
             <div>
-              <label className="text-xs font-semibold text-[#2A1810] block">
-                Terkait Siklus Pemupukan <span className="text-red-500">*</span>
+              <label className="text-xs font-semibold text-coffee-900 block">
+                Terkait Siklus Pemupukan <span className="text-danger">*</span>
               </label>
               <select
                 value={fertilizerId}
                 onChange={(e) => setFertilizerId(e.target.value)}
                 required
-                className="mt-1.5 flex h-10 w-full rounded-lg bg-[#FAF8F5] px-3.5 py-2 text-xs font-medium text-[#2A1810] border-0"
+                className="mt-1.5 flex h-10 w-full rounded-lg bg-cream-50 px-3.5 py-2 text-xs font-medium text-coffee-900 border-0"
               >
                 <option value="">
                   {fertilizations.length === 0
@@ -425,7 +425,7 @@ function CreateSoilDialog({
 
           <div className="grid grid-cols-3 gap-3 pt-2">
             <div>
-              <label className="text-xs font-semibold text-[#2A1810] block">
+              <label className="text-xs font-semibold text-coffee-900 block">
                 pH Tanah
               </label>
               <Input
@@ -434,12 +434,12 @@ function CreateSoilDialog({
                 value={phTanah}
                 onChange={(e) => setPhTanah(e.target.value)}
                 placeholder="5.5 - 6.5"
-                className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0"
+                className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0"
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#2A1810] block">
+              <label className="text-xs font-semibold text-coffee-900 block">
                 Kelembapan (%)
               </label>
               <Input
@@ -448,12 +448,12 @@ function CreateSoilDialog({
                 value={kelembapan}
                 onChange={(e) => setKelembapan(e.target.value)}
                 placeholder="60.0"
-                className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0"
+                className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0"
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#2A1810] block">
+              <label className="text-xs font-semibold text-coffee-900 block">
                 Suhu (°C)
               </label>
               <Input
@@ -462,77 +462,77 @@ function CreateSoilDialog({
                 value={suhu}
                 onChange={(e) => setSuhu(e.target.value)}
                 placeholder="24.0"
-                className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0"
+                className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0"
               />
             </div>
           </div>
 
-          <div className="rounded-lg bg-[#FAF8F5] p-3.5 space-y-3">
-            <span className="text-xs font-semibold text-[#2A1810] block">
+          <div className="rounded-lg bg-cream-50 p-3.5 space-y-3">
+            <span className="text-xs font-semibold text-coffee-900 block">
               Unsur Hara Tanah (NPK) & Konduktivitas (EC)
             </span>
 
             <div className="grid grid-cols-4 gap-2 text-xs">
               <div>
-                <label className="text-[11px] text-[#8A7669] block">Nitrogen (N)</label>
+                <label className="text-[11px] text-text-muted block">Nitrogen (N)</label>
                 <Input
                   type="number"
                   value={nVal}
                   onChange={(e) => setNVal(e.target.value)}
                   placeholder="mg/kg"
-                  className="mt-1 h-9 rounded-lg bg-white border-0"
+                  className="mt-1 h-9 rounded-lg bg-surface border-0"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] text-[#8A7669] block">Fosfor (P)</label>
+                <label className="text-[11px] text-text-muted block">Fosfor (P)</label>
                 <Input
                   type="number"
                   value={pVal}
                   onChange={(e) => setPVal(e.target.value)}
                   placeholder="mg/kg"
-                  className="mt-1 h-9 rounded-lg bg-white border-0"
+                  className="mt-1 h-9 rounded-lg bg-surface border-0"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] text-[#8A7669] block">Kalium (K)</label>
+                <label className="text-[11px] text-text-muted block">Kalium (K)</label>
                 <Input
                   type="number"
                   value={kVal}
                   onChange={(e) => setKVal(e.target.value)}
                   placeholder="mg/kg"
-                  className="mt-1 h-9 rounded-lg bg-white border-0"
+                  className="mt-1 h-9 rounded-lg bg-surface border-0"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] text-[#8A7669] block">EC (µS/cm)</label>
+                <label className="text-[11px] text-text-muted block">EC (µS/cm)</label>
                 <Input
                   type="number"
                   value={ecVal}
                   onChange={(e) => setEcVal(e.target.value)}
                   placeholder="µS/cm"
-                  className="mt-1 h-9 rounded-lg bg-white border-0"
+                  className="mt-1 h-9 rounded-lg bg-surface border-0"
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#EFECE6]">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-border">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={createMutation.isPending}
-              className="h-9 rounded-lg border-0 bg-stone-100 text-xs"
+              className="h-9 rounded-lg border-0 bg-primary-tint text-xs"
             >
               Batal
             </Button>
             <Button
               type="submit"
               disabled={createMutation.isPending}
-              className="h-9 gap-2 rounded-lg bg-[#2A1810] text-xs font-medium text-white shadow-sm"
+              className="h-9 gap-2 rounded-lg bg-primary text-xs font-medium text-white shadow-sm"
             >
               {createMutation.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               Simpan Sampling

@@ -32,7 +32,7 @@ import type { Lahan } from "../types";
 const LahanDrawingMap = dynamic(() => import("./lahan-drawing-map"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full min-h-[400px] w-full items-center justify-center rounded-xl border border-border bg-[#F9F8F6] text-xs font-medium text-muted-foreground">
+    <div className="flex h-full min-h-[400px] w-full items-center justify-center rounded-xl border border-border bg-cream-50 text-xs font-medium text-muted-foreground">
       Memuat kanvas peta GIS...
     </div>
   ),
@@ -192,24 +192,24 @@ function LahanDialogContent({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Dialog Card */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex h-[92vh] max-h-[840px] w-[96vw] max-w-[1400px] flex-col lg:flex-row overflow-y-auto lg:overflow-hidden rounded-xl bg-white shadow-[0_25px_60px_-15px_rgba(42,24,16,0.25)]"
+        className="relative flex h-[92vh] max-h-[840px] w-[96vw] max-w-[1400px] flex-col lg:flex-row overflow-y-auto lg:overflow-hidden rounded-xl bg-surface shadow-xl"
       >
         {/* Panel Kiri: Form & Metadata (Sidebar ~420px pada desktop) */}
-        <div className="flex flex-col w-full lg:w-[420px] xl:w-[450px] shrink-0 border-r border-[#EFECE6] bg-white lg:h-full">
+        <div className="flex flex-col w-full lg:w-[420px] xl:w-[450px] shrink-0 border-r border-border bg-surface lg:h-full">
           {/* Header Modal */}
-          <div className="flex shrink-0 items-center justify-between border-b border-[#EFECE6] px-6 py-4.5 bg-white">
+          <div className="flex shrink-0 items-center justify-between border-b border-border px-6 py-4.5 bg-surface">
             <div>
-              <h2 id="modal-title" className="font-heading text-base font-bold text-[#2A1810]">
+              <h2 id="modal-title" className="font-heading text-base font-bold text-coffee-900">
                 {isEditing ? "Ubah Data & Batas Lahan" : "Tambah Lahan Baru"}
               </h2>
-              <p className="mt-0.5 text-xs text-[#6E5D53]">
+              <p className="mt-0.5 text-xs text-text-muted">
                 {isEditing
                   ? "Perbarui informasi dan polygon spasial lahan."
                   : "Lengkapi data lahan dan tentukan batas wilayahnya di peta."}
@@ -221,7 +221,7 @@ function LahanDialogContent({
               type="button"
               onClick={onClose}
               aria-label="Tutup dialog"
-              className="lg:hidden rounded-lg p-1.5 text-[#8A7669] hover:bg-[#F4F0EC] hover:text-[#2A1810] transition-colors"
+              className="lg:hidden rounded-lg p-1.5 text-text-muted hover:bg-primary-tint hover:text-coffee-900 transition-colors"
             >
               <X className="h-5 w-5" />
             </button>
@@ -231,20 +231,20 @@ function LahanDialogContent({
           <div className="flex-1 lg:overflow-y-auto p-6 space-y-4">
             {/* Error Banner */}
             {serverError && (
-              <div className="flex items-start gap-2.5 rounded-lg bg-red-50 p-3.5 text-xs text-red-800">
-                <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+              <div className="flex items-start gap-2.5 rounded-lg bg-danger-tint p-3.5 text-xs text-danger-ink">
+                <AlertCircle className="h-4 w-4 shrink-0 text-danger mt-0.5" />
                 <div className="flex-1 font-medium">{serverError}</div>
               </div>
             )}
 
             <div>
-              <label className="text-xs font-semibold text-[#2A1810]">
-                Petani Pemilik <span className="text-red-500">*</span>
+              <label className="text-xs font-semibold text-coffee-900">
+                Petani Pemilik <span className="text-danger">*</span>
               </label>
               <select
                 {...register("id_petani")}
                 disabled={farmersQuery.isLoading || isEditing}
-                className="mt-1.5 flex h-10 w-full rounded-lg bg-[#FAF8F5] px-3.5 py-2 text-sm font-medium text-[#2A1810] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2A1810]/20 disabled:opacity-50"
+                className="mt-1.5 flex h-10 w-full rounded-lg bg-cream-50 px-3.5 py-2 text-sm font-medium text-coffee-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 disabled:opacity-50"
               >
                 <option value="">
                   {farmersQuery.isLoading ? "Memuat data petani..." : "Pilih Petani Pemilik..."}
@@ -256,66 +256,66 @@ function LahanDialogContent({
                 ))}
               </select>
               {errors.id_petani && (
-                <p className="mt-1 text-xs text-red-600">{errors.id_petani.message}</p>
+                <p className="mt-1 text-xs text-danger">{errors.id_petani.message}</p>
               )}
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#2A1810]">
-                Nama Petak Kebun <span className="text-red-500">*</span>
+              <label className="text-xs font-semibold text-coffee-900">
+                Nama Petak Kebun <span className="text-danger">*</span>
               </label>
               <Input
                 {...register("nama_petak")}
                 placeholder="Contoh: Petak Lereng Timur A1"
-                className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0 focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+                className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0 focus-visible:ring-2 focus-visible:ring-primary/20"
               />
               {errors.nama_petak && (
-                <p className="mt-1 text-xs text-red-600">{errors.nama_petak.message}</p>
+                <p className="mt-1 text-xs text-danger">{errors.nama_petak.message}</p>
               )}
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#2A1810]">
-                Dusun / Lokasi <span className="text-red-500">*</span>
+              <label className="text-xs font-semibold text-coffee-900">
+                Dusun / Lokasi <span className="text-danger">*</span>
               </label>
               <Input
                 {...register("dusun")}
                 placeholder="Contoh: Dusun Glodogan"
-                className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0 focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+                className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0 focus-visible:ring-2 focus-visible:ring-primary/20"
               />
               {errors.dusun && (
-                <p className="mt-1 text-xs text-red-600">{errors.dusun.message}</p>
+                <p className="mt-1 text-xs text-danger">{errors.dusun.message}</p>
               )}
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#2A1810]">
+              <label className="text-xs font-semibold text-coffee-900">
                 Elevasi (mdpl)
               </label>
               <Input
                 type="number"
                 {...register("elevasi_mdpl")}
                 placeholder="Contoh: 1250"
-                className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0 focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+                className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0 focus-visible:ring-2 focus-visible:ring-primary/20"
               />
               {errors.elevasi_mdpl && (
-                <p className="mt-1 text-xs text-red-600">{errors.elevasi_mdpl.message}</p>
+                <p className="mt-1 text-xs text-danger">{errors.elevasi_mdpl.message}</p>
               )}
             </div>
 
             {/* Ringkasan Spasial Card */}
-            <div className="rounded-lg bg-[#F7F4F0] p-4 space-y-3">
+            <div className="rounded-lg bg-cream-50 p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-[#2A1810] flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5 text-[#2A1810]" />
+                <span className="text-xs font-semibold text-coffee-900 flex items-center gap-1.5">
+                  <MapPin className="h-3.5 w-3.5 text-coffee-900" />
                   Kalkulasi Spasial Real-Time
                 </span>
                 {points.length >= 3 && !hasSelfIntersection ? (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-900">
-                    <CheckCircle2 className="h-3 w-3 text-emerald-700" /> Valid
+                  <span className="inline-flex items-center gap-1 rounded-md bg-success-tint px-2 py-0.5 text-xs font-semibold text-success-ink">
+                    <CheckCircle2 className="h-3 w-3 text-success-ink" /> Valid
                   </span>
                 ) : (
-                  <span className="rounded-md bg-[#EAE4DC] px-2 py-0.5 text-xs font-semibold text-[#6E5D53]">
+                  <span className="rounded-md bg-primary-tint px-2 py-0.5 text-xs font-semibold text-text-muted">
                     {points.length === 0 ? "Belum Diplot" : `${points.length} Titik`}
                   </span>
                 )}
@@ -323,26 +323,26 @@ function LahanDialogContent({
 
               <div className="grid grid-cols-2 gap-3 pt-0.5 text-xs">
                 <div>
-                  <span className="text-xs text-[#8A7669] block">Estimasi Luas</span>
-                  <span className="font-heading text-base font-bold text-[#2A1810] block">
+                  <span className="text-xs text-text-muted block">Estimasi Luas</span>
+                  <span className="font-heading text-base font-bold text-coffee-900 block">
                     {points.length >= 3 ? `${formatNumber(areaM2, 1)} m²` : "—"}
                   </span>
-                  <span className="text-xs font-semibold text-[#6E5D53] block">
+                  <span className="text-xs font-semibold text-text-muted block">
                     {points.length >= 3 ? `(~${formatNumber(areaHa, 2)} ha)` : ""}
                   </span>
                 </div>
 
                 <div>
-                  <span className="text-xs text-[#8A7669] block">Titik Centroid</span>
-                  <span className="font-mono text-xs font-semibold text-[#2A1810] block truncate">
+                  <span className="text-xs text-text-muted block">Titik Centroid</span>
+                  <span className="font-mono text-xs font-semibold text-coffee-900 block truncate">
                     {centroid ? `${centroid[0]}, ${centroid[1]}` : "—"}
                   </span>
-                  <span className="text-xs text-[#8A7669] block">Otomatis terisi</span>
+                  <span className="text-xs text-text-muted block">Otomatis terisi</span>
                 </div>
               </div>
 
               {hasSelfIntersection && (
-                <p className="text-xs text-red-700 font-semibold">
+                <p className="text-xs text-danger-ink font-semibold">
                   ⚠️ Garis polygon saling bersilangan. Sesuaikan titik sudut agar valid.
                 </p>
               )}
@@ -350,7 +350,7 @@ function LahanDialogContent({
           </div>
 
           {/* Desktop Footer Actions (Pinned at bottom of Left Sidebar) */}
-          <div className="hidden lg:flex shrink-0 items-center justify-between border-t border-[#EFECE6] bg-[#FAFAF8] px-6 py-3.5">
+          <div className="hidden lg:flex shrink-0 items-center justify-between border-t border-border bg-cream-50 px-6 py-3.5">
             <div>
               {isEditing && initialLahan?.polygon_geom && (
                 <Button
@@ -358,7 +358,7 @@ function LahanDialogContent({
                   variant="outline"
                   onClick={handleDeletePolygonOnly}
                   disabled={isSubmitting}
-                  className="h-9 gap-1.5 rounded-lg border-0 bg-red-50 text-xs font-medium text-red-700 hover:bg-red-100 shadow-none px-3"
+                  className="h-9 gap-1.5 rounded-lg border-0 bg-danger-tint text-xs font-medium text-danger-ink hover:bg-danger-tint shadow-none px-3"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   Hapus Polygon
@@ -372,7 +372,7 @@ function LahanDialogContent({
                 variant="outline"
                 onClick={onClose}
                 disabled={isSubmitting}
-                className="h-9 rounded-lg border-0 bg-stone-100 text-xs font-medium text-stone-700 hover:bg-stone-200 shadow-none px-4"
+                className="h-9 rounded-lg border-0 bg-primary-tint text-xs font-medium text-coffee-900 hover:bg-primary-tint shadow-none px-4"
               >
                 Batal
               </Button>
@@ -380,7 +380,7 @@ function LahanDialogContent({
               <Button
                 type="submit"
                 disabled={isSubmitting || (points.length > 0 && points.length < 3) || hasSelfIntersection}
-                className="h-9 gap-2 rounded-lg bg-[#2A1810] text-xs font-medium text-white hover:bg-[#3D2317] shadow-sm px-4"
+                className="h-9 gap-2 rounded-full bg-primary text-xs font-medium text-white hover:bg-primary-hover shadow-sm px-4"
               >
                 {isSubmitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 {isEditing ? "Simpan Perubahan" : "Simpan Lahan"}
@@ -390,7 +390,7 @@ function LahanDialogContent({
         </div>
 
         {/* Panel Kanan: Canvas Peta Interaktif - Full Bleed (0 border-radius) */}
-        <div className="relative flex-1 h-[380px] lg:h-full w-full bg-stone-100 m-0 p-0 overflow-hidden rounded-none [&_.leaflet-container]:!rounded-none">
+        <div className="relative flex-1 h-[380px] lg:h-full w-full bg-primary-tint m-0 p-0 overflow-hidden rounded-none [&_.leaflet-container]:!rounded-none">
           <LahanDrawingMap
             points={points}
             onChangePoints={setPoints}
@@ -403,14 +403,14 @@ function LahanDialogContent({
             type="button"
             onClick={onClose}
             aria-label="Tutup dialog"
-            className="hidden lg:flex absolute top-3.5 right-3.5 z-[1001] items-center justify-center h-8 w-8 rounded-lg bg-white/95 text-[#2A1810] shadow-md backdrop-blur border border-black/[0.06] hover:bg-white hover:text-black transition-all"
+            className="hidden lg:flex absolute top-3.5 right-3.5 z-[1001] items-center justify-center h-8 w-8 rounded-lg bg-surface/95 text-coffee-900 shadow-md backdrop-blur border border-black/[0.06] hover:bg-surface hover:text-black transition-all"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
         {/* Mobile Footer Actions (Sticky at bottom on small screens) */}
-        <div className="lg:hidden shrink-0 flex items-center justify-between border-t border-[#EFECE6] bg-[#FAFAF8] px-5 py-3 sticky bottom-0 z-10">
+        <div className="lg:hidden shrink-0 flex items-center justify-between border-t border-border bg-cream-50 px-5 py-3 sticky bottom-0 z-10">
           <div>
             {isEditing && initialLahan?.polygon_geom && (
               <Button
@@ -418,7 +418,7 @@ function LahanDialogContent({
                 variant="outline"
                 onClick={handleDeletePolygonOnly}
                 disabled={isSubmitting}
-                className="h-9 gap-1.5 rounded-lg border-0 bg-red-50 text-xs font-medium text-red-700 hover:bg-red-100 shadow-none px-3"
+                className="h-9 gap-1.5 rounded-lg border-0 bg-danger-tint text-xs font-medium text-danger-ink hover:bg-danger-tint shadow-none px-3"
               >
                 <Trash2 className="h-3.5 w-3.5" />
                 Hapus
@@ -432,7 +432,7 @@ function LahanDialogContent({
               variant="outline"
               onClick={onClose}
               disabled={isSubmitting}
-              className="h-9 rounded-lg border-0 bg-stone-100 text-xs font-medium text-stone-700 hover:bg-stone-200 shadow-none px-3.5"
+              className="h-9 rounded-lg border-0 bg-primary-tint text-xs font-medium text-coffee-900 hover:bg-primary-tint shadow-none px-3.5"
             >
               Batal
             </Button>
@@ -440,7 +440,7 @@ function LahanDialogContent({
             <Button
               type="submit"
               disabled={isSubmitting || (points.length > 0 && points.length < 3) || hasSelfIntersection}
-              className="h-9 gap-1.5 rounded-lg bg-[#2A1810] text-xs font-medium text-white hover:bg-[#3D2317] shadow-sm px-3.5"
+              className="h-9 gap-1.5 rounded-full bg-primary text-xs font-medium text-white hover:bg-primary-hover shadow-sm px-3.5"
             >
               {isSubmitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               {isEditing ? "Simpan Perubahan" : "Simpan Lahan"}

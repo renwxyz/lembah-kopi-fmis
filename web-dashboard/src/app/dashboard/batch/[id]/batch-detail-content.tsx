@@ -45,8 +45,8 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-[#8A7669]" />
-        <span className="ml-2 text-xs text-[#8A7669]">Memuat data batch pascaproses...</span>
+        <Loader2 className="h-6 w-6 animate-spin text-text-muted" />
+        <span className="ml-2 text-xs text-text-muted">Memuat data batch pascaproses...</span>
       </div>
     );
   }
@@ -54,16 +54,16 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
   if (isError || !batch) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <AlertCircle className="h-10 w-10 text-amber-600" />
-        <h2 className="mt-3 font-heading text-base font-bold text-[#2A1810]">
+        <AlertCircle className="h-10 w-10 text-warning-ink" />
+        <h2 className="mt-3 font-heading text-base font-bold text-coffee-900">
           Batch Tidak Ditemukan
         </h2>
-        <p className="mt-1 text-xs text-[#8A7669]">
+        <p className="mt-1 text-xs text-text-muted">
           Data batch pascaproses dengan ID &quot;{id}&quot; tidak ditemukan di server.
         </p>
         <Link
           href="/dashboard/batch"
-          className="mt-4 rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-semibold text-white"
+          className="mt-4 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white min-h-10"
         >
           Kembali ke Daftar Batch
         </Link>
@@ -118,20 +118,20 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard/batch"
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#6E5D53] shadow-xs transition-colors hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface text-text-muted shadow-xs transition-colors hover:bg-cream-50 hover:text-coffee-900"
           >
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs font-bold text-[#8A7669]">
+              <span className="font-mono text-xs font-bold text-text-muted">
                 {batch.id_batch}
               </span>
-              <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-800">
+              <span className="rounded-full bg-success-tint px-2 py-0.5 text-[10px] font-semibold text-success-ink">
                 {batch.status_proses}
               </span>
             </div>
-            <h1 className="font-heading text-xl font-bold tracking-tight text-[#2A1810]">
+            <h1 className="font-heading text-xl font-bold tracking-tight text-coffee-900">
               Batch Olah: {batch.metode_proses}
             </h1>
           </div>
@@ -141,7 +141,7 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
           <Button
             type="button"
             onClick={() => setIsAllocationModalOpen(true)}
-            className="flex items-center gap-2 rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-[#3D251A]"
+            className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-primary-hover min-h-10"
           >
             <Wheat className="h-4 w-4" />
             Kelola Alokasi Ceri
@@ -150,51 +150,51 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
       </div>
 
       {/* Batch Hero Card */}
-      <div className="rounded-2xl bg-white p-6 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)]">
+      <div className="rounded-2xl bg-surface p-6 border border-border">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-5 text-xs">
           <div className="space-y-1">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
               Metode Pascaproses
             </span>
-            <p className="font-heading text-base font-bold text-[#2A1810]">
+            <p className="font-heading text-base font-bold text-coffee-900">
               {batch.metode_proses}
             </p>
           </div>
 
           <div className="space-y-1">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
               Mulai Olah
             </span>
-            <p className="flex items-center gap-1 font-medium text-[#2A1810]">
-              <Calendar className="h-3.5 w-3.5 text-[#8A7669]" />
+            <p className="flex items-center gap-1 font-medium text-coffee-900">
+              <Calendar className="h-3.5 w-3.5 text-text-muted" />
               {formatDate(batch.tanggal_mulai_olah)}
             </p>
           </div>
 
           <div className="space-y-1">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
               Total Input Ceri
             </span>
-            <p className="font-heading text-base font-bold text-[#2A1810]">
-              {formatNumber(batch.total_input_ceri_kg)} <span className="text-xs font-normal text-[#8A7669]">kg</span>
+            <p className="font-heading text-base font-bold text-coffee-900">
+              {formatNumber(batch.total_input_ceri_kg)} <span className="text-xs font-normal text-text-muted">kg</span>
             </p>
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
                 Output Green Bean
               </span>
               <button
                 type="button"
                 onClick={openYieldModal}
-                className="text-[#8A7669] hover:text-[#2A1810]"
+                className="text-text-muted hover:text-coffee-900"
                 title="Input Timbangan Akhir Biji Kering"
               >
                 <Pencil className="h-3.5 w-3.5" />
               </button>
             </div>
-            <p className="font-heading text-base font-bold text-[#2A1810]">
+            <p className="font-heading text-base font-bold text-coffee-900">
               {batch.berat_green_bean_kg !== null && batch.berat_green_bean_kg !== undefined
                 ? `${formatNumber(batch.berat_green_bean_kg)} kg`
                 : "Belum Ditimbang"}
@@ -202,10 +202,10 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
           </div>
 
           <div className="space-y-1 col-span-2 sm:col-span-1">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
               Rendemen Hasil Olah
             </span>
-            <p className="font-heading text-base font-bold text-emerald-800">
+            <p className="font-heading text-base font-bold text-success-ink">
               {batch.rendemen_persen !== null && batch.rendemen_persen !== undefined
                 ? `${batch.rendemen_persen.toFixed(1)}%`
                 : "—"}
@@ -215,14 +215,14 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex overflow-x-auto gap-2 border-b border-[#F4F0EC] pb-2 no-scrollbar">
+      <div className="flex overflow-x-auto gap-2 border-b border-border pb-2 no-scrollbar">
         <button
           type="button"
           onClick={() => setActiveTab("stages")}
           className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-xs font-semibold transition-all shrink-0 ${
             activeTab === "stages"
-              ? "bg-[#2A1810] text-white shadow-xs"
-              : "bg-white text-[#6E5D53] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+              ? "bg-primary text-white shadow-xs"
+              : "bg-surface text-text-muted hover:bg-cream-50 hover:text-coffee-900"
           }`}
         >
           <Clock className="h-4 w-4" />
@@ -234,8 +234,8 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
           onClick={() => setActiveTab("traceability")}
           className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-xs font-semibold transition-all shrink-0 ${
             activeTab === "traceability"
-              ? "bg-[#2A1810] text-white shadow-xs"
-              : "bg-white text-[#6E5D53] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+              ? "bg-primary text-white shadow-xs"
+              : "bg-surface text-text-muted hover:bg-cream-50 hover:text-coffee-900"
           }`}
         >
           <QrCode className="h-4 w-4" />
@@ -256,19 +256,19 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
 
       {/* Modal: Edit Green Bean Output & Rendemen */}
       {isEditYieldModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[#F4F0EC] pb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-coffee-900/40 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-sm rounded-2xl bg-surface p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-border pb-4">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-[#8A7669]" />
-                <h3 className="font-heading text-sm font-bold text-[#2A1810]">
+                <Sparkles className="h-5 w-5 text-text-muted" />
+                <h3 className="font-heading text-sm font-bold text-coffee-900">
                   Input Hasil Green Bean Kering
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsEditYieldModalOpen(false)}
-                className="rounded-lg p-1 text-[#8A7669] hover:bg-[#FAF8F5] hover:text-[#2A1810]"
+                className="rounded-lg p-1 text-text-muted hover:bg-cream-50 hover:text-coffee-900"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -276,13 +276,13 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
 
             <form onSubmit={handleSaveYield} className="mt-4 space-y-4">
               {yieldError && (
-                <div className="rounded-xl bg-red-50 p-2.5 text-xs text-red-700">
+                <div className="rounded-xl bg-danger-tint p-2.5 text-xs text-danger-ink">
                   {yieldError}
                 </div>
               )}
 
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8A7669]">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
                   Berat Green Bean Akhir (kg)
                 </label>
                 <div className="relative">
@@ -294,30 +294,30 @@ export function BatchDetailContent({ id }: BatchDetailContentProps) {
                     value={greenBeanInput}
                     onChange={(e) => setGreenBeanInput(e.target.value)}
                     required
-                    className="rounded-xl border-[#E8E2DC] pr-10 text-xs"
+                    className="rounded-xl border-border pr-10 text-xs"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#8A7669]">
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-text-muted">
                     kg
                   </span>
                 </div>
-                <p className="text-[10px] text-[#8A7669]">
+                <p className="text-[10px] text-text-muted">
                   Sistem akan otomatis menghitung rendemen persen (% yield) berdasarkan rasio terhadap total ceri panen ({batch.total_input_ceri_kg} kg).
                 </p>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#F4F0EC]">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-border">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setIsEditYieldModalOpen(false)}
-                  className="rounded-xl border-[#E8E2DC] px-4 py-2 text-xs font-semibold text-[#6E5D53]"
+                  className="rounded-xl border-border px-4 py-2 text-xs font-semibold text-text-muted"
                 >
                   Batal
                 </Button>
                 <Button
                   type="submit"
                   disabled={updateMutation.isPending}
-                  className="rounded-xl bg-[#2A1810] px-4 py-2 text-xs font-semibold text-white hover:bg-[#3D251A]"
+                  className="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white hover:bg-primary-hover min-h-10"
                 >
                   {updateMutation.isPending ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

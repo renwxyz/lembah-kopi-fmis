@@ -54,10 +54,10 @@ export function FertilizationTab({ landId }: FertilizationTabProps) {
       {/* Tab Header & Action */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="font-heading text-lg font-bold text-[#2A1810]">
+          <h2 className="font-heading text-lg font-bold text-coffee-900">
             Log Riwayat Pemupukan (M2.2)
           </h2>
-          <p className="mt-0.5 text-xs text-[#6E5D53]">
+          <p className="mt-0.5 text-xs text-text-muted">
             Pencatatan siklus pemupukan berkala (NPK, pupuk kandang, kompos organik) per petak lahan.
           </p>
         </div>
@@ -67,7 +67,7 @@ export function FertilizationTab({ landId }: FertilizationTabProps) {
             setEditingItem(null);
             setIsModalOpen(true);
           }}
-          className="h-9 gap-1.5 rounded-lg bg-[#2A1810] px-4 text-xs font-semibold text-white hover:bg-[#3D2317] shadow-sm self-start sm:self-auto"
+          className="h-9 gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold text-white hover:bg-primary-hover shadow-sm self-start sm:self-auto"
         >
           <Plus className="h-4 w-4" />
           Catat Aplikasi Pupuk
@@ -76,80 +76,80 @@ export function FertilizationTab({ landId }: FertilizationTabProps) {
 
       {/* KPI Cards for Fertilization */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl bg-white p-5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)] flex items-center justify-between">
+        <div className="rounded-xl bg-surface p-5 border border-border flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+            <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
               Total Dosis Pupuk
             </span>
             <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="font-heading text-2xl font-bold tracking-tight text-[#2A1810]">
+              <span className="font-heading text-2xl font-bold tracking-tight text-coffee-900">
                 {formatNumber(totalDosis, 1)}
               </span>
-              <span className="text-xs font-semibold text-[#6E5D53]">kg</span>
+              <span className="text-xs font-semibold text-text-muted">kg</span>
             </div>
-            <span className="text-xs text-[#6E5D53]">Akumulasi seluruh aplikasi tercatat</span>
+            <span className="text-xs text-text-muted">Akumulasi seluruh aplikasi tercatat</span>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-800">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-success-tint text-success-ink">
             <Scale className="h-5 w-5" />
           </div>
         </div>
 
-        <div className="rounded-xl bg-white p-5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)] flex items-center justify-between">
+        <div className="rounded-xl bg-surface p-5 border border-border flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+            <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
               Aplikasi Terakhir
             </span>
-            <span className="mt-1 font-heading text-lg font-bold tracking-tight text-[#2A1810] block">
+            <span className="mt-1 font-heading text-lg font-bold tracking-tight text-coffee-900 block">
               {latestItem ? formatDate(latestItem.tanggal_aplikasi) : "—"}
             </span>
-            <span className="text-xs text-[#6E5D53]">
+            <span className="text-xs text-text-muted">
               {latestItem ? `${latestItem.jenis_pupuk} (${latestItem.dosis_kg} kg)` : "Belum ada aplikasi"}
             </span>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-900">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-warning-tint text-warning-ink">
             <Droplets className="h-5 w-5" />
           </div>
         </div>
 
-        <div className="rounded-xl bg-white p-5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)] flex items-center justify-between">
+        <div className="rounded-xl bg-surface p-5 border border-border flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+            <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
               Frekuensi Aplikasi
             </span>
-            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#2A1810] block">
+            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-coffee-900 block">
               {list.length}
             </span>
-            <span className="text-xs text-[#6E5D53]">Kali pemupukan terjadwal</span>
+            <span className="text-xs text-text-muted">Kali pemupukan terjadwal</span>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FAF8F5] text-[#2A1810]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cream-50 text-coffee-900">
             <Calendar className="h-5 w-5" />
           </div>
         </div>
       </div>
 
       {/* Main Table Card */}
-      <div className="overflow-hidden rounded-xl bg-white shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)]">
+      <div className="overflow-hidden rounded-xl bg-surface border border-border">
         {isLoading ? (
           <div className="p-12 text-center">
-            <div className="inline-flex h-8 w-8 animate-spin items-center justify-center rounded-full border-2 border-[#2A1810] border-t-transparent" />
-            <p className="mt-2 text-xs text-[#8A7669]">Memuat riwayat pemupukan...</p>
+            <div className="inline-flex h-8 w-8 animate-spin items-center justify-center rounded-full border-2 border-primary border-t-transparent" />
+            <p className="mt-2 text-xs text-text-muted">Memuat riwayat pemupukan...</p>
           </div>
         ) : isError ? (
           <div className="p-8 text-center">
-            <p className="text-xs font-semibold text-red-600">Gagal memuat log pemupukan.</p>
+            <p className="text-xs font-semibold text-danger">Gagal memuat log pemupukan.</p>
             <Button variant="outline" onClick={() => refetch()} className="mt-2 h-8 text-xs">
               Coba Lagi
             </Button>
           </div>
         ) : list.length === 0 ? (
           <div className="p-10 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#FAF8F5] text-[#8A7669]">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-cream-50 text-text-muted">
               <Droplets className="h-6 w-6" />
             </div>
-            <h3 className="mt-3 font-heading text-sm font-bold text-[#2A1810]">
+            <h3 className="mt-3 font-heading text-sm font-bold text-coffee-900">
               Belum Ada Catatan Pemupukan
             </h3>
-            <p className="mt-1 text-xs text-[#8A7669] max-w-sm mx-auto">
+            <p className="mt-1 text-xs text-text-muted max-w-sm mx-auto">
               Catat setiap jadwal aplikasi pupuk berkala untuk memantau efek perbaikan kesuburan tanah.
             </p>
             <Button
@@ -157,7 +157,7 @@ export function FertilizationTab({ landId }: FertilizationTabProps) {
                 setEditingItem(null);
                 setIsModalOpen(true);
               }}
-              className="mt-4 h-9 gap-1.5 rounded-lg bg-[#2A1810] text-xs font-semibold text-white shadow-sm"
+              className="mt-4 h-9 gap-1.5 rounded-lg bg-primary text-xs font-semibold text-white shadow-sm"
             >
               <Plus className="h-3.5 w-3.5" />
               Catat Aplikasi Pertama
@@ -165,8 +165,8 @@ export function FertilizationTab({ landId }: FertilizationTabProps) {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="border-b border-[#F4F0EC] bg-[#FCFBF9] text-[11px] font-semibold text-[#8A7669] uppercase tracking-wider">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-border bg-cream-50 text-xs font-semibold uppercase tracking-wider text-text-muted">
                 <tr>
                   <th className="px-6 py-3.5">Tanggal Aplikasi</th>
                   <th className="px-6 py-3.5">Jenis Pupuk</th>
@@ -175,35 +175,35 @@ export function FertilizationTab({ landId }: FertilizationTabProps) {
                   <th className="px-6 py-3.5 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#F4F0EC]">
+              <tbody className="divide-y divide-border">
                 {list.map((item) => (
-                  <tr key={item.id_pemupukan} className="hover:bg-[#FAF8F5]/80 transition-colors">
+                  <tr key={item.id_pemupukan} className="hover:bg-primary-wash transition-colors">
                     <td className="px-6 py-3.5">
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-3.5 w-3.5 text-[#8A7669]" />
-                        <span className="font-medium text-[#2A1810]">
+                        <Calendar className="h-3.5 w-3.5 text-text-muted" />
+                        <span className="font-medium text-coffee-900">
                           {formatDate(item.tanggal_aplikasi)}
                         </span>
                       </div>
                     </td>
 
                     <td className="px-6 py-3.5">
-                      <span className="font-semibold text-sm text-[#2A1810] block">
+                      <span className="font-semibold text-sm text-coffee-900 block">
                         {item.jenis_pupuk}
                       </span>
                     </td>
 
                     <td className="px-6 py-3.5">
                       <div className="flex items-baseline gap-1">
-                        <span className="font-heading font-bold text-sm text-[#2A1810]">
+                        <span className="font-heading font-bold text-sm text-coffee-900">
                           {formatNumber(item.dosis_kg, 1)}
                         </span>
-                        <span className="text-[#8A7669] text-xs">kg</span>
+                        <span className="text-text-muted text-xs">kg</span>
                       </div>
                     </td>
 
                     <td className="px-6 py-3.5">
-                      <span className="font-mono text-xs text-[#6E5D53] bg-[#FAF8F5] px-2 py-0.5 rounded-md">
+                      <span className="font-mono text-xs text-text-muted bg-cream-50 px-2 py-0.5 rounded-md">
                         {item.id_pemupukan}
                       </span>
                     </td>
@@ -216,7 +216,7 @@ export function FertilizationTab({ landId }: FertilizationTabProps) {
                             setEditingItem(item);
                             setIsModalOpen(true);
                           }}
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[#6E5D53] hover:bg-[#F4F0EC] hover:text-[#2A1810]"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-muted hover:bg-primary-tint hover:text-coffee-900"
                           title="Ubah catatan"
                         >
                           <Pencil className="h-3.5 w-3.5" />
@@ -224,7 +224,7 @@ export function FertilizationTab({ landId }: FertilizationTabProps) {
                         <button
                           type="button"
                           onClick={() => setDeletingItem(item)}
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-danger hover:bg-danger-tint hover:text-danger-ink"
                           title="Hapus catatan"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -259,12 +259,12 @@ export function FertilizationTab({ landId }: FertilizationTabProps) {
           aria-modal="true"
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDeletingItem(null)} />
-          <div className="relative w-full max-w-sm rounded-xl bg-white p-5 shadow-2xl">
-            <h4 className="font-heading text-sm font-bold text-[#2A1810]">
+          <div className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm" onClick={() => setDeletingItem(null)} />
+          <div className="relative w-full max-w-sm rounded-xl bg-surface p-5 shadow-2xl">
+            <h4 className="font-heading text-sm font-bold text-coffee-900">
               Hapus Catatan Pemupukan?
             </h4>
-            <p className="mt-1 text-xs text-[#6E5D53]">
+            <p className="mt-1 text-xs text-text-muted">
               Catatan pemupukan &ldquo;{deletingItem.jenis_pupuk}&rdquo; ({deletingItem.dosis_kg} kg) akan dihapus.
             </p>
             <div className="mt-4 flex items-center justify-end gap-2">
@@ -272,7 +272,7 @@ export function FertilizationTab({ landId }: FertilizationTabProps) {
                 type="button"
                 variant="outline"
                 onClick={() => setDeletingItem(null)}
-                className="h-8 text-xs border-0 bg-stone-100"
+                className="h-8 text-xs border-0 bg-primary-tint"
               >
                 Batal
               </Button>
@@ -280,7 +280,7 @@ export function FertilizationTab({ landId }: FertilizationTabProps) {
                 type="button"
                 onClick={() => handleDelete(deletingItem.id_pemupukan)}
                 disabled={deleteMutation.isPending}
-                className="h-8 text-xs bg-red-600 text-white hover:bg-red-700"
+                className="h-8 text-xs bg-danger text-white hover:bg-danger"
               >
                 {deleteMutation.isPending && <Loader2 className="h-3 w-3 animate-spin mr-1.5" />}
                 Hapus
@@ -365,55 +365,55 @@ function CreateEditFertilizationDialog({
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
     >
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-white shadow-[0_25px_60px_-15px_rgba(42,24,16,0.25)]">
-        <div className="flex shrink-0 items-center justify-between border-b border-[#EFECE6] px-6 py-4 bg-white">
-          <h3 className="font-heading text-base font-bold text-[#2A1810]">
+      <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-surface shadow-xl">
+        <div className="flex shrink-0 items-center justify-between border-b border-border px-6 py-4 bg-surface">
+          <h3 className="font-heading text-base font-bold text-coffee-900">
             {isEditing ? "Ubah Catatan Pemupukan" : "Catat Aplikasi Pemupukan Baru"}
           </h3>
-          <button type="button" onClick={onClose} className="rounded-lg p-1 text-[#8A7669] hover:bg-[#F4F0EC]">
+          <button type="button" onClick={onClose} className="rounded-lg p-1 text-text-muted hover:bg-primary-tint">
             <X className="h-4 w-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="flex items-start gap-2 rounded-lg bg-red-50 p-3 text-xs text-red-800">
-              <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+            <div className="flex items-start gap-2 rounded-lg bg-danger-tint p-3 text-xs text-danger-ink">
+              <AlertCircle className="h-4 w-4 shrink-0 text-danger mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Tanggal Aplikasi <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Tanggal Aplikasi <span className="text-danger">*</span>
             </label>
             <Input
               type="date"
               value={tanggal}
               onChange={(e) => setTanggal(e.target.value)}
-              className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0"
+              className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0"
               required
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Jenis Pupuk <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Jenis Pupuk <span className="text-danger">*</span>
             </label>
             <Input
               value={jenisPupuk}
               onChange={(e) => setJenisPupuk(e.target.value)}
               placeholder="Contoh: NPK 16-16-16, Pupuk Kandang Kambing, Kompos Organik"
-              className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0"
+              className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0"
               required
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Total Dosis Aplikasi (kg) <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Total Dosis Aplikasi (kg) <span className="text-danger">*</span>
             </label>
             <Input
               type="number"
@@ -421,28 +421,28 @@ function CreateEditFertilizationDialog({
               value={dosis}
               onChange={(e) => setDosis(e.target.value)}
               placeholder="Contoh: 50"
-              className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0"
+              className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0"
               required
             />
-            <p className="mt-1 text-[11px] text-[#8A7669]">
+            <p className="mt-1 text-[11px] text-text-muted">
               Total berat pupuk yang ditaburkan/diaplikasikan ke petak kebun.
             </p>
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#EFECE6]">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-border">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={isPending}
-              className="h-9 rounded-lg border-0 bg-stone-100 text-xs"
+              className="h-9 rounded-lg border-0 bg-primary-tint text-xs"
             >
               Batal
             </Button>
             <Button
               type="submit"
               disabled={isPending}
-              className="h-9 gap-2 rounded-lg bg-[#2A1810] text-xs font-medium text-white shadow-sm"
+              className="h-9 gap-2 rounded-lg bg-primary text-xs font-medium text-white shadow-sm"
             >
               {isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               {isEditing ? "Simpan Perubahan" : "Simpan Aplikasi Pupuk"}

@@ -42,15 +42,15 @@ const SEVERITY_CONFIG: Record<
 > = {
   RINGAN: {
     label: "Ringan",
-    badgeClass: "bg-emerald-50 text-emerald-800",
+    badgeClass: "bg-success-tint text-success-ink",
   },
   SEDANG: {
     label: "Sedang",
-    badgeClass: "bg-amber-50 text-amber-900",
+    badgeClass: "bg-warning-tint text-warning-ink",
   },
   BERAT: {
     label: "Berat / Kritis",
-    badgeClass: "bg-red-50 text-red-800",
+    badgeClass: "bg-danger-tint text-danger-ink",
   },
 };
 
@@ -60,15 +60,15 @@ const STATUS_CONFIG: Record<
 > = {
   TERDETEKSI: {
     label: "Baru Terdeteksi",
-    badgeClass: "bg-red-100/80 text-red-900 font-semibold",
+    badgeClass: "bg-danger-tint/80 text-danger-ink font-semibold",
   },
   DALAM_PENANGANAN: {
     label: "Dalam Penanganan",
-    badgeClass: "bg-blue-50 text-blue-800 font-semibold",
+    badgeClass: "bg-info-tint text-info-ink font-semibold",
   },
   TERKENDALI: {
     label: "Terkendali / Sembuh",
-    badgeClass: "bg-emerald-100 text-emerald-900 font-semibold",
+    badgeClass: "bg-success-tint text-success-ink font-semibold",
   },
 };
 
@@ -99,17 +99,17 @@ export function PestDiseaseTab({ landId }: PestDiseaseTabProps) {
       {/* Header & Button */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="font-heading text-lg font-bold text-[#2A1810]">
+          <h2 className="font-heading text-lg font-bold text-coffee-900">
             Catatan Hama & Penyakit Tanaman Kopi (M2.3)
           </h2>
-          <p className="mt-0.5 text-xs text-[#6E5D53]">
+          <p className="mt-0.5 text-xs text-text-muted">
             Pelaporan insiden (PBKo, Karat Daun), tingkat serangan, dan pemantauan tindakan pengendalian.
           </p>
         </div>
 
         <Button
           onClick={() => setIsCreateOpen(true)}
-          className="h-9 gap-1.5 rounded-lg bg-[#2A1810] px-4 text-xs font-semibold text-white hover:bg-[#3D2317] shadow-sm self-start sm:self-auto"
+          className="h-9 gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold text-white hover:bg-primary-hover shadow-sm self-start sm:self-auto"
         >
           <Plus className="h-4 w-4" />
           Lapor Insiden Hama/Penyakit
@@ -118,103 +118,103 @@ export function PestDiseaseTab({ landId }: PestDiseaseTabProps) {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl bg-white p-5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)] flex items-center justify-between">
+        <div className="rounded-xl bg-surface p-5 border border-border flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+            <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
               Insiden Aktif
             </span>
-            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#2A1810] block">
+            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-coffee-900 block">
               {activeIncidents.length}
             </span>
-            <span className="text-xs text-[#6E5D53]">
+            <span className="text-xs text-text-muted">
               {activeIncidents.length > 0 ? "Memerlukan penanganan tim kebun" : "Kebun dalam kondisi aman"}
             </span>
           </div>
           <div
             className={`flex h-11 w-11 items-center justify-center rounded-xl ${
-              activeIncidents.length > 0 ? "bg-amber-50 text-amber-900" : "bg-emerald-50 text-emerald-800"
+              activeIncidents.length > 0 ? "bg-warning-tint text-warning-ink" : "bg-success-tint text-success-ink"
             }`}
           >
             <ShieldAlert className="h-5 w-5" />
           </div>
         </div>
 
-        <div className="rounded-xl bg-white p-5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)] flex items-center justify-between">
+        <div className="rounded-xl bg-surface p-5 border border-border flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+            <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
               Serangan Berat
             </span>
-            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-red-600 block">
+            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-danger block">
               {severeCount}
             </span>
-            <span className="text-xs text-[#6E5D53]">Kategori bahaya prioritas</span>
+            <span className="text-xs text-text-muted">Kategori bahaya prioritas</span>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-red-800">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-danger-tint text-danger-ink">
             <Bug className="h-5 w-5" />
           </div>
         </div>
 
-        <div className="rounded-xl bg-white p-5 shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)] flex items-center justify-between">
+        <div className="rounded-xl bg-surface p-5 border border-border flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold uppercase text-[#8A7669] tracking-wider block">
+            <span className="text-[11px] font-semibold uppercase text-text-muted tracking-wider block">
               Terkendali / Sembuh
             </span>
-            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-emerald-700 block">
+            <span className="mt-1 font-heading text-2xl font-bold tracking-tight text-success-ink block">
               {controlledCount}
             </span>
-            <span className="text-xs text-[#6E5D53]">Berhasil dipulihkan</span>
+            <span className="text-xs text-text-muted">Berhasil dipulihkan</span>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-800">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-success-tint text-success-ink">
             <ShieldCheck className="h-5 w-5" />
           </div>
         </div>
       </div>
 
       {/* Main List */}
-      <div className="overflow-hidden rounded-xl bg-white shadow-[0_4px_20px_-4px_rgba(42,24,16,0.06)]">
+      <div className="overflow-hidden rounded-xl bg-surface border border-border">
         {isLoading ? (
           <div className="p-12 text-center">
-            <div className="inline-flex h-8 w-8 animate-spin items-center justify-center rounded-full border-2 border-[#2A1810] border-t-transparent" />
-            <p className="mt-2 text-xs text-[#8A7669]">Memuat catatan hama & penyakit...</p>
+            <div className="inline-flex h-8 w-8 animate-spin items-center justify-center rounded-full border-2 border-primary border-t-transparent" />
+            <p className="mt-2 text-xs text-text-muted">Memuat catatan hama & penyakit...</p>
           </div>
         ) : isError ? (
           <div className="p-8 text-center">
-            <p className="text-xs font-semibold text-red-600">Gagal memuat catatan hama/penyakit.</p>
+            <p className="text-xs font-semibold text-danger">Gagal memuat catatan hama/penyakit.</p>
             <Button variant="outline" onClick={() => refetch()} className="mt-2 h-8 text-xs">
               Coba Lagi
             </Button>
           </div>
         ) : list.length === 0 ? (
           <div className="p-10 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-success-tint text-success-ink">
               <CheckCircle2 className="h-6 w-6" />
             </div>
-            <h3 className="mt-3 font-heading text-sm font-bold text-[#2A1810]">
+            <h3 className="mt-3 font-heading text-sm font-bold text-coffee-900">
               Tidak Ada Insiden Hama / Penyakit
             </h3>
-            <p className="mt-1 text-xs text-[#8A7669] max-w-sm mx-auto">
+            <p className="mt-1 text-xs text-text-muted max-w-sm mx-auto">
               Petak kebun ini saat ini bersih dari serangan hama atau penyakit kopi aktif.
             </p>
             <Button
               onClick={() => setIsCreateOpen(true)}
-              className="mt-4 h-9 gap-1.5 rounded-lg bg-[#2A1810] text-xs font-semibold text-white shadow-sm"
+              className="mt-4 h-9 gap-1.5 rounded-lg bg-primary text-xs font-semibold text-white shadow-sm"
             >
               <Plus className="h-3.5 w-3.5" />
               Lapor Insiden Baru
             </Button>
           </div>
         ) : (
-          <div className="divide-y divide-[#F4F0EC]">
+          <div className="divide-y divide-border">
             {list.map((incident) => {
               const sev = SEVERITY_CONFIG[incident.tingkat_serangan];
               const st = STATUS_CONFIG[incident.status_penanganan];
 
               return (
-                <div key={incident.id_insiden} className="p-5 hover:bg-[#FAF8F5]/80 transition-colors">
+                <div key={incident.id_insiden} className="p-5 hover:bg-cream-50/80 transition-colors">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                     <div className="space-y-1.5">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-semibold text-[#8A7669] bg-[#FAF8F5] px-2 py-0.5 rounded-md">
+                        <span className="font-mono text-xs font-semibold text-text-muted bg-cream-50 px-2 py-0.5 rounded-md">
                           {incident.id_insiden}
                         </span>
                         <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${sev.badgeClass}`}>
@@ -225,11 +225,11 @@ export function PestDiseaseTab({ landId }: PestDiseaseTabProps) {
                         </span>
                       </div>
 
-                      <h4 className="font-heading font-bold text-base text-[#2A1810]">
+                      <h4 className="font-heading font-bold text-base text-coffee-900">
                         {incident.jenis_hama_penyakit}
                       </h4>
 
-                      <div className="flex items-center gap-2 text-xs text-[#8A7669]">
+                      <div className="flex items-center gap-2 text-xs text-text-muted">
                         <Calendar className="h-3.5 w-3.5" />
                         <span>Ditemukan: {formatDate(incident.tanggal_ditemukan)}</span>
                       </div>
@@ -239,7 +239,7 @@ export function PestDiseaseTab({ landId }: PestDiseaseTabProps) {
                       <Button
                         size="sm"
                         onClick={() => setTreatingItem(incident)}
-                        className="h-8 gap-1.5 rounded-lg bg-[#2A1810] text-xs font-medium text-white shadow-none"
+                        className="h-8 gap-1.5 rounded-lg bg-primary text-xs font-medium text-white shadow-none"
                       >
                         <MessageSquare className="h-3.5 w-3.5" />
                         Catat Penanganan
@@ -248,7 +248,7 @@ export function PestDiseaseTab({ landId }: PestDiseaseTabProps) {
                       <button
                         type="button"
                         onClick={() => setDeletingId(incident.id_insiden)}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700"
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-danger hover:bg-danger-tint hover:text-danger-ink"
                         title="Hapus insiden"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -258,8 +258,8 @@ export function PestDiseaseTab({ landId }: PestDiseaseTabProps) {
 
                   {/* Latest Treatment Note */}
                   {incident.penanganan_terakhir && (
-                    <div className="mt-3 rounded-lg bg-[#F4F0EC]/70 p-3 text-xs text-[#4A3E37]">
-                      <span className="font-semibold text-[#2A1810] block mb-0.5">
+                    <div className="mt-3 rounded-lg bg-primary-tint/70 p-3 text-xs text-coffee-900">
+                      <span className="font-semibold text-coffee-900 block mb-0.5">
                         Tindakan Terakhir ({formatDate(incident.penanganan_terakhir.tanggal_penanganan)}):
                       </span>
                       <p>{incident.penanganan_terakhir.tindakan_penanganan || "Tidak ada catatan detail."}</p>
@@ -298,12 +298,12 @@ export function PestDiseaseTab({ landId }: PestDiseaseTabProps) {
           aria-modal="true"
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDeletingId(null)} />
-          <div className="relative w-full max-w-sm rounded-xl bg-white p-5 shadow-2xl">
-            <h4 className="font-heading text-sm font-bold text-[#2A1810]">
+          <div className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm" onClick={() => setDeletingId(null)} />
+          <div className="relative w-full max-w-sm rounded-xl bg-surface p-5 shadow-2xl">
+            <h4 className="font-heading text-sm font-bold text-coffee-900">
               Hapus Catatan Insiden?
             </h4>
-            <p className="mt-1 text-xs text-[#6E5D53]">
+            <p className="mt-1 text-xs text-text-muted">
               Catatan insiden hama/penyakit ini beserta seluruh histori penanganannya akan dihapus.
             </p>
             <div className="mt-4 flex items-center justify-end gap-2">
@@ -311,7 +311,7 @@ export function PestDiseaseTab({ landId }: PestDiseaseTabProps) {
                 type="button"
                 variant="outline"
                 onClick={() => setDeletingId(null)}
-                className="h-8 text-xs border-0 bg-stone-100"
+                className="h-8 text-xs border-0 bg-primary-tint"
               >
                 Batal
               </Button>
@@ -319,7 +319,7 @@ export function PestDiseaseTab({ landId }: PestDiseaseTabProps) {
                 type="button"
                 onClick={() => handleDelete(deletingId)}
                 disabled={deleteMutation.isPending}
-                className="h-8 text-xs bg-red-600 text-white hover:bg-red-700"
+                className="h-8 text-xs bg-danger text-white hover:bg-danger"
               >
                 {deleteMutation.isPending && <Loader2 className="h-3 w-3 animate-spin mr-1.5" />}
                 Hapus
@@ -382,60 +382,60 @@ function CreateIncidentDialog({
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
     >
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-white shadow-[0_25px_60px_-15px_rgba(42,24,16,0.25)]">
-        <div className="flex shrink-0 items-center justify-between border-b border-[#EFECE6] px-6 py-4 bg-white">
-          <h3 className="font-heading text-base font-bold text-[#2A1810]">
+      <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-surface shadow-xl">
+        <div className="flex shrink-0 items-center justify-between border-b border-border px-6 py-4 bg-surface">
+          <h3 className="font-heading text-base font-bold text-coffee-900">
             Lapor Insiden Hama / Penyakit Tanaman
           </h3>
-          <button type="button" onClick={onClose} className="rounded-lg p-1 text-[#8A7669] hover:bg-[#F4F0EC]">
+          <button type="button" onClick={onClose} className="rounded-lg p-1 text-text-muted hover:bg-primary-tint">
             <X className="h-4 w-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="flex items-start gap-2 rounded-lg bg-red-50 p-3 text-xs text-red-800">
-              <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+            <div className="flex items-start gap-2 rounded-lg bg-danger-tint p-3 text-xs text-danger-ink">
+              <AlertCircle className="h-4 w-4 shrink-0 text-danger mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Tanggal Ditemukan Gejala <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Tanggal Ditemukan Gejala <span className="text-danger">*</span>
             </label>
             <Input
               type="date"
               value={tanggal}
               onChange={(e) => setTanggal(e.target.value)}
-              className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0"
+              className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0"
               required
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Jenis Hama atau Penyakit <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Jenis Hama atau Penyakit <span className="text-danger">*</span>
             </label>
             <Input
               value={jenisHama}
               onChange={(e) => setJenisHama(e.target.value)}
               placeholder="Contoh: Penggerek Buah Kopi (PBKo), Karat Daun, Jamur Upas"
-              className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0"
+              className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0"
               required
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Tingkat Serangan <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Tingkat Serangan <span className="text-danger">*</span>
             </label>
             <select
               value={severity}
               onChange={(e) => setSeverity(e.target.value as TingkatSerangan)}
-              className="mt-1.5 flex h-10 w-full rounded-lg bg-[#FAF8F5] px-3.5 py-2 text-xs font-medium text-[#2A1810] border-0"
+              className="mt-1.5 flex h-10 w-full rounded-lg bg-cream-50 px-3.5 py-2 text-xs font-medium text-coffee-900 border-0"
             >
               <option value="RINGAN">Ringan (Gejala awal &lt; 10% tanaman)</option>
               <option value="SEDANG">Sedang (Tersebar di beberapa titik 10–30%)</option>
@@ -444,7 +444,7 @@ function CreateIncidentDialog({
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
+            <label className="text-xs font-semibold text-coffee-900 block">
               Tindakan Penanganan Awal (Opsional)
             </label>
             <textarea
@@ -452,24 +452,24 @@ function CreateIncidentDialog({
               onChange={(e) => setTindakan(e.target.value)}
               rows={3}
               placeholder="Contoh: Penyemprotan pestisida nabati neem oil dan pemangkasan ranting terdampak."
-              className="mt-1.5 w-full rounded-lg bg-[#FAF8F5] p-3 text-xs text-[#2A1810] border-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+              className="mt-1.5 w-full rounded-lg bg-cream-50 p-3 text-xs text-coffee-900 border-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#EFECE6]">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-border">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={createMutation.isPending}
-              className="h-9 rounded-lg border-0 bg-stone-100 text-xs"
+              className="h-9 rounded-lg border-0 bg-primary-tint text-xs"
             >
               Batal
             </Button>
             <Button
               type="submit"
               disabled={createMutation.isPending}
-              className="h-9 gap-2 rounded-lg bg-[#2A1810] text-xs font-medium text-white shadow-sm"
+              className="h-9 gap-2 rounded-lg bg-primary text-xs font-medium text-white shadow-sm"
             >
               {createMutation.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               Laporkan Insiden
@@ -537,66 +537,66 @@ function AddTreatmentDialog({
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
     >
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-coffee-900/60 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-white shadow-[0_25px_60px_-15px_rgba(42,24,16,0.25)]">
-        <div className="flex shrink-0 items-center justify-between border-b border-[#EFECE6] px-6 py-4 bg-white">
+      <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-surface shadow-xl">
+        <div className="flex shrink-0 items-center justify-between border-b border-border px-6 py-4 bg-surface">
           <div>
-            <h3 className="font-heading text-base font-bold text-[#2A1810]">
+            <h3 className="font-heading text-base font-bold text-coffee-900">
               Catat Tindakan Penanganan
             </h3>
-            <p className="text-xs text-[#6E5D53]">
-              Insiden: <span className="font-semibold text-[#2A1810]">{incident.jenis_hama_penyakit}</span>
+            <p className="text-xs text-text-muted">
+              Insiden: <span className="font-semibold text-coffee-900">{incident.jenis_hama_penyakit}</span>
             </p>
           </div>
-          <button type="button" onClick={onClose} className="rounded-lg p-1 text-[#8A7669] hover:bg-[#F4F0EC]">
+          <button type="button" onClick={onClose} className="rounded-lg p-1 text-text-muted hover:bg-primary-tint">
             <X className="h-4 w-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="flex items-start gap-2 rounded-lg bg-red-50 p-3 text-xs text-red-800">
-              <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+            <div className="flex items-start gap-2 rounded-lg bg-danger-tint p-3 text-xs text-danger-ink">
+              <AlertCircle className="h-4 w-4 shrink-0 text-danger mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Tanggal Tindakan Penanganan <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Tanggal Tindakan Penanganan <span className="text-danger">*</span>
             </label>
             <Input
               type="date"
               value={tanggal}
               onChange={(e) => setTanggal(e.target.value)}
-              className="mt-1.5 h-10 rounded-lg bg-[#FAF8F5] border-0"
+              className="mt-1.5 h-10 rounded-lg bg-cream-50 border-0"
               required
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Tindakan Penanganan yang Dilakukan <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Tindakan Penanganan yang Dilakukan <span className="text-danger">*</span>
             </label>
             <textarea
               value={tindakan}
               onChange={(e) => setTindakan(e.target.value)}
               rows={3}
               placeholder="Contoh: Pemangkasan sanitasi ranting, aplikasi Beauveria bassiana pada buah terserang."
-              className="mt-1.5 w-full rounded-lg bg-[#FAF8F5] p-3 text-xs text-[#2A1810] border-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2A1810]/20"
+              className="mt-1.5 w-full rounded-lg bg-cream-50 p-3 text-xs text-coffee-900 border-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
               required
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-[#2A1810] block">
-              Pembaruan Status Penanganan <span className="text-red-500">*</span>
+            <label className="text-xs font-semibold text-coffee-900 block">
+              Pembaruan Status Penanganan <span className="text-danger">*</span>
             </label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as StatusPenanganan)}
-              className="mt-1.5 flex h-10 w-full rounded-lg bg-[#FAF8F5] px-3.5 py-2 text-xs font-medium text-[#2A1810] border-0"
+              className="mt-1.5 flex h-10 w-full rounded-lg bg-cream-50 px-3.5 py-2 text-xs font-medium text-coffee-900 border-0"
             >
               <option value="DALAM_PENANGANAN">Dalam Penanganan (Sedang Berjalan)</option>
               <option value="TERKENDALI">Terkendali / Sembuh (Serangan Berhenti)</option>
@@ -604,20 +604,20 @@ function AddTreatmentDialog({
             </select>
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#EFECE6]">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-border">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={addTreatmentMutation.isPending}
-              className="h-9 rounded-lg border-0 bg-stone-100 text-xs"
+              className="h-9 rounded-lg border-0 bg-primary-tint text-xs"
             >
               Batal
             </Button>
             <Button
               type="submit"
               disabled={addTreatmentMutation.isPending}
-              className="h-9 gap-2 rounded-lg bg-[#2A1810] text-xs font-medium text-white shadow-sm"
+              className="h-9 gap-2 rounded-lg bg-primary text-xs font-medium text-white shadow-sm"
             >
               {addTreatmentMutation.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               Simpan Penanganan

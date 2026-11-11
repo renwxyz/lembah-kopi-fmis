@@ -72,11 +72,11 @@ export function ImageUploadField({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-semibold text-[#2A1810]">
-          {label} {required && <span className="text-red-500">*</span>}
+        <label className="text-xs font-semibold text-coffee-900">
+          {label} {required && <span className="text-danger">*</span>}
         </label>
         {currentKey && (
-          <span className="text-[10px] text-[#8A7669] font-mono truncate max-w-[150px]">
+          <span className="text-[10px] text-text-muted font-mono truncate max-w-[150px]">
             {currentKey}
           </span>
         )}
@@ -84,7 +84,7 @@ export function ImageUploadField({
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
         {previewUrl ? (
-          <div className="relative group w-32 h-32 rounded-xl overflow-hidden border border-[#E8E2DC] bg-[#FAF8F5] shrink-0">
+          <div className="relative group w-32 h-32 rounded-xl overflow-hidden border border-border bg-cream-50 shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={previewUrl}
@@ -95,7 +95,7 @@ export function ImageUploadField({
               <button
                 type="button"
                 onClick={handleClear}
-                className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full shadow hover:bg-red-700 transition"
+                className="absolute top-1 right-1 bg-danger text-white p-1 rounded-full shadow hover:bg-danger transition"
                 title="Hapus foto"
               >
                 <X className="w-3.5 h-3.5" />
@@ -103,8 +103,8 @@ export function ImageUploadField({
             )}
           </div>
         ) : (
-          <div className="w-32 h-32 rounded-xl border-2 border-dashed border-[#D6CEC7] bg-[#FAF8F5] flex flex-col items-center justify-center text-[#8A7669] shrink-0">
-            <ImageIcon className="w-8 h-8 stroke-[1.5] mb-1 text-[#9E8E82]" />
+          <div className="w-32 h-32 rounded-xl border-2 border-dashed border-border bg-cream-50 flex flex-col items-center justify-center text-text-muted shrink-0">
+            <ImageIcon className="w-8 h-8 stroke-[1.5] mb-1 text-text-muted" />
             <span className="text-[10px]">Belum ada foto</span>
           </div>
         )}
@@ -123,27 +123,27 @@ export function ImageUploadField({
             type="button"
             disabled={uploadMutation.isPending}
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#D6CEC7] bg-white text-xs font-semibold text-[#2A1810] hover:bg-[#F4F0EC] transition shadow-xs disabled:opacity-50"
+            className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 rounded-xl border border-border bg-surface text-xs font-semibold text-coffee-900 hover:bg-primary-tint transition shadow-xs disabled:opacity-50"
           >
             {uploadMutation.isPending ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin text-[#2A1810]" />
+                <Loader2 className="w-4 h-4 animate-spin text-coffee-900" />
                 <span>Mengompres & Mengunggah...</span>
               </>
             ) : (
               <>
-                <Camera className="w-4 h-4 text-[#6E5D53]" />
+                <Camera className="w-4 h-4 text-text-muted" />
                 <span>Pilih Foto atau Buka Kamera</span>
               </>
             )}
           </button>
 
-          <p className="text-[11px] text-[#8A7669]">
+          <p className="text-[11px] text-text-muted">
             Maks. 10 MB (JPG/PNG). Foto otomatis dikompres ke format WebP berkualitas tinggi di server.
           </p>
 
           {errorMsg && (
-            <p className="text-[11px] font-medium text-red-600">{errorMsg}</p>
+            <p className="text-[11px] font-medium text-danger">{errorMsg}</p>
           )}
         </div>
       </div>

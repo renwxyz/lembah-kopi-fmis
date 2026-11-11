@@ -1,6 +1,8 @@
 import { Suspense, use } from "react";
+import Image from "next/image";
+import logoGlodogan from "@/assets/logo-glodogan.png";
 import Link from "next/link";
-import { LoaderCircle, Sprout, ArrowLeft } from "lucide-react";
+import { LoaderCircle, ArrowLeft } from "lucide-react";
 import { TracePublicContent } from "./trace-public-content";
 
 export const instant = false;
@@ -16,24 +18,22 @@ function TracePublicLoader({ params }: PageProps) {
 
 export default function TracePublicPage({ params }: PageProps) {
   return (
-    <main className="min-h-screen bg-[#FAF8F5] p-4 sm:p-8">
+    <main className="min-h-screen bg-cream-50 p-4 sm:p-8">
       {/* Brand Header */}
-      <div className="mx-auto max-w-4xl mb-6 flex items-center justify-between border-b border-[#E8E2DC] pb-4">
+      <div className="mx-auto max-w-4xl mb-6 flex items-center justify-between border-b border-border pb-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#2A1810] text-white">
-            <Sprout className="h-5 w-5" />
-          </div>
+          <Image src={logoGlodogan} alt="Logo Kelompok Tani Kopi Glodogan" width={40} height={40} unoptimized className="h-10 w-10" />
           <div>
-            <h1 className="font-heading text-base font-bold text-[#2A1810]">
+            <h1 className="font-heading text-base font-bold text-coffee-900">
               Lembah Kopi Glodogan
             </h1>
-            <p className="text-[10px] text-[#6E5D53]">Farm-to-Cup Digital Traceability</p>
+            <p className="text-[10px] text-text-muted">Farm-to-Cup Digital Traceability</p>
           </div>
         </div>
 
         <Link
           href="/dashboard/traceability"
-          className="flex items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-xs font-semibold text-[#2A1810] shadow-xs hover:bg-[#FAF8F5]"
+          className="flex min-h-10 items-center gap-1.5 rounded-full border border-border bg-surface px-4 text-sm font-semibold text-coffee-900 hover:bg-primary-tint"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           Kembali ke Dashboard
@@ -43,8 +43,8 @@ export default function TracePublicPage({ params }: PageProps) {
       <Suspense
         fallback={
           <div className="flex h-64 flex-col items-center justify-center gap-3">
-            <LoaderCircle className="h-8 w-8 animate-spin text-[#2A1810]" />
-            <p className="text-xs text-[#8A7669]">Memuat penelusuran origin...</p>
+            <LoaderCircle className="h-8 w-8 animate-spin text-coffee-900" />
+            <p className="text-xs text-text-muted">Memuat penelusuran origin...</p>
           </div>
         }
       >

@@ -35,7 +35,7 @@ export default function DashboardPage() {
         inert={isSummaryHidden}
         className={`
           relative z-10
-          -mx-4 sm:-mx-8 lg:-mx-10
+          -mx-4 sm:-mx-6 lg:-mx-8
           mt-0
           transition-opacity duration-300 ease-in-out
           ${
@@ -54,8 +54,8 @@ export default function DashboardPage() {
             h-16
             bg-gradient-to-b
             from-transparent
-            via-[#F9F8F6]/40
-            to-[#F9F8F6]
+            via-cream-50/40
+            to-cream-50
             transition-opacity duration-300
             ${isSummaryHidden ? "opacity-0" : "opacity-100"}
           `}
@@ -72,7 +72,7 @@ export default function DashboardPage() {
             }
           `}
         >
-          <div className="min-h-0 overflow-hidden bg-[#F9F8F6] px-4 pb-8 sm:px-8 lg:px-10">
+          <div className="min-h-0 overflow-hidden bg-cream-50 px-4 pb-8 sm:px-6 lg:px-8">
             <div className="space-y-8 pt-4">
               {/* JUDUL DAN TOMBOL AKSI */}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -116,9 +116,9 @@ export default function DashboardPage() {
 
               {/* ERROR STATE BANNER */}
               {overviewQuery.isError && (
-                <div className="flex items-center justify-between gap-4 rounded-2xl bg-red-50 p-4 text-xs font-medium text-red-800">
+                <div className="flex items-center justify-between gap-4 rounded-2xl bg-danger-tint p-4 text-xs font-medium text-danger-ink">
                   <div className="flex items-center gap-2.5">
-                    <AlertTriangle className="h-4 w-4 shrink-0 text-red-600" />
+                    <AlertTriangle className="h-4 w-4 shrink-0 text-danger" />
                     <span>
                       Gagal mengambil data ringkasan operasional dari server.
                     </span>

@@ -15,10 +15,10 @@ export default function PetaniPage() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="font-heading text-xl font-bold tracking-tight text-[#2A1810]">
+        <h1 className="font-heading text-xl font-bold tracking-tight text-coffee-900">
           Manajemen Anggota Petani
         </h1>
-        <p className="mt-1 text-xs text-[#6E5D53]">
+        <p className="mt-1 text-xs text-text-muted">
           Pendataan dan pengelolaan profil anggota kelompok tani Desa Glodogan (Sub-Modul PRD M1.1).
         </p>
       </div>

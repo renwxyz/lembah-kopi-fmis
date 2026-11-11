@@ -84,7 +84,7 @@ export function SettingsForm() {
   if (isLoading) {
     return (
       <div className="flex h-48 items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-[#6E5D53]" />
+        <Loader2 className="h-6 w-6 animate-spin text-text-muted" />
       </div>
     );
   }
@@ -92,18 +92,18 @@ export function SettingsForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* SECTION 1: HERO & BANNER */}
-      <div className="rounded-2xl border border-[#E8E2DC] bg-white p-6 shadow-xs">
-        <h2 className="text-base font-bold text-[#2A1810]">
+      <div className="rounded-2xl border border-border bg-surface p-6 shadow-xs">
+        <h2 className="text-base font-bold text-coffee-900">
           1. Hero & Banner Beranda
         </h2>
-        <p className="text-xs text-[#8A7669] mb-6">
+        <p className="text-xs text-text-muted mb-6">
           Tampilan pembuka yang langsung dilihat pengunjung ketika membuka web profil.
         </p>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-[#2A1810] mb-1">
-              Judul Utama (Hero Title) <span className="text-red-500">*</span>
+            <label className="block text-xs font-semibold text-coffee-900 mb-1">
+              Judul Utama (Hero Title) <span className="text-danger">*</span>
             </label>
             <input
               type="text"
@@ -114,12 +114,12 @@ export function SettingsForm() {
               onChange={(e) =>
                 setFormData({ ...formData, hero_judul: e.target.value })
               }
-              className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+              className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+            <label className="block text-xs font-semibold text-coffee-900 mb-1">
               Slogan Singkat (Tagline)
             </label>
             <input
@@ -130,7 +130,7 @@ export function SettingsForm() {
               onChange={(e) =>
                 setFormData({ ...formData, hero_slogan: e.target.value })
               }
-              className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+              className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
             />
           </div>
 
@@ -158,17 +158,17 @@ export function SettingsForm() {
       </div>
 
       {/* SECTION 2: TENTANG & 3 NILAI UTAMA */}
-      <div className="rounded-2xl border border-[#E8E2DC] bg-white p-6 shadow-xs">
-        <h2 className="text-base font-bold text-[#2A1810]">
+      <div className="rounded-2xl border border-border bg-surface p-6 shadow-xs">
+        <h2 className="text-base font-bold text-coffee-900">
           2. Cerita Narasi & 3 Nilai Komunitas
         </h2>
-        <p className="text-xs text-[#8A7669] mb-6">
+        <p className="text-xs text-text-muted mb-6">
           Perkenalkan sejarah kelompok tani dan 3 pilar utama komitmen petani di Desa Glodogan.
         </p>
 
         <div className="space-y-6">
           <div>
-            <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+            <label className="block text-xs font-semibold text-coffee-900 mb-1">
               Cerita & Profil Singkat Kelompok Tani (2-3 Paragraf)
             </label>
             <textarea
@@ -179,12 +179,12 @@ export function SettingsForm() {
               onChange={(e) =>
                 setFormData({ ...formData, about_cerita: e.target.value })
               }
-              className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+              className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
             />
           </div>
 
           <div className="space-y-3">
-            <label className="block text-xs font-semibold text-[#2A1810]">
+            <label className="block text-xs font-semibold text-coffee-900">
               3 Poin Nilai / Keunggulan Komunitas
             </label>
 
@@ -192,9 +192,9 @@ export function SettingsForm() {
               {formData.about_nilai.map((val, idx) => (
                 <div
                   key={idx}
-                  className="rounded-xl border border-[#E8E2DC] bg-[#FAF8F5] p-3.5 space-y-2"
+                  className="rounded-xl border border-border bg-cream-50 p-3.5 space-y-2"
                 >
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#9E8E82]">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
                     Nilai #{idx + 1}
                   </span>
                   <input
@@ -207,7 +207,7 @@ export function SettingsForm() {
                       next[idx] = { ...next[idx], judul: e.target.value };
                       setFormData({ ...formData, about_nilai: next });
                     }}
-                    className="w-full rounded-lg border border-[#D6CEC7] bg-white px-2.5 py-1.5 text-xs font-semibold text-[#2A1810] focus:outline-hidden"
+                    className="w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs font-semibold text-coffee-900 focus:outline-hidden"
                   />
                   <textarea
                     rows={3}
@@ -219,7 +219,7 @@ export function SettingsForm() {
                       next[idx] = { ...next[idx], deskripsi: e.target.value };
                       setFormData({ ...formData, about_nilai: next });
                     }}
-                    className="w-full rounded-lg border border-[#D6CEC7] bg-white px-2.5 py-1.5 text-xs text-[#2A1810] focus:outline-hidden"
+                    className="w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs text-coffee-900 focus:outline-hidden"
                   />
                 </div>
               ))}
@@ -229,17 +229,17 @@ export function SettingsForm() {
       </div>
 
       {/* SECTION 3: KONTAK & MEDIA SOSIAL */}
-      <div className="rounded-2xl border border-[#E8E2DC] bg-white p-6 shadow-xs">
-        <h2 className="text-base font-bold text-[#2A1810]">
+      <div className="rounded-2xl border border-border bg-surface p-6 shadow-xs">
+        <h2 className="text-base font-bold text-coffee-900">
           3. Kontak Sekretariat & Media Sosial
         </h2>
-        <p className="text-xs text-[#8A7669] mb-6">
+        <p className="text-xs text-text-muted mb-6">
           Informasi narahubung resmi dan tautan sosial media di footer profil publik.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+            <label className="block text-xs font-semibold text-coffee-900 mb-1">
               Nomor WhatsApp Narahubung Resmi
             </label>
             <input
@@ -249,31 +249,31 @@ export function SettingsForm() {
               onChange={(e) =>
                 setFormData({ ...formData, nomor_whatsapp: e.target.value })
               }
-              className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+              className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
             />
-            <span className="text-[10px] text-[#8A7669]">
+            <span className="text-[10px] text-text-muted">
               Format otomatis disesuaikan ke format internasional (62xxx).
             </span>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+            <label className="block text-xs font-semibold text-coffee-900 mb-1">
               Alamat Sekretariat / Kebun
             </label>
             <input
               type="text"
               maxLength={500}
-              placeholder="Contoh: Desa Glodogan, Kec. Klaten Selatan, Jawa Tengah"
+              placeholder="Contoh: Dusun, Desa, Kecamatan, Kabupaten, Provinsi"
               value={formData.alamat}
               onChange={(e) =>
                 setFormData({ ...formData, alamat: e.target.value })
               }
-              className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+              className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+            <label className="block text-xs font-semibold text-coffee-900 mb-1">
               Tautan Instagram
             </label>
             <input
@@ -283,12 +283,12 @@ export function SettingsForm() {
               onChange={(e) =>
                 setFormData({ ...formData, instagram_url: e.target.value })
               }
-              className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+              className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+            <label className="block text-xs font-semibold text-coffee-900 mb-1">
               Tautan Saluran YouTube
             </label>
             <input
@@ -298,12 +298,12 @@ export function SettingsForm() {
               onChange={(e) =>
                 setFormData({ ...formData, youtube_url: e.target.value })
               }
-              className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+              className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+            <label className="block text-xs font-semibold text-coffee-900 mb-1">
               Tautan Facebook
             </label>
             <input
@@ -313,12 +313,12 @@ export function SettingsForm() {
               onChange={(e) =>
                 setFormData({ ...formData, facebook_url: e.target.value })
               }
-              className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+              className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#2A1810] mb-1">
+            <label className="block text-xs font-semibold text-coffee-900 mb-1">
               Tautan TikTok
             </label>
             <input
@@ -328,7 +328,7 @@ export function SettingsForm() {
               onChange={(e) =>
                 setFormData({ ...formData, tiktok_url: e.target.value })
               }
-              className="w-full rounded-xl border border-[#D6CEC7] bg-[#FAF8F5] px-3.5 py-2 text-sm text-[#2A1810] focus:border-[#2A1810] focus:bg-white focus:outline-hidden"
+              className="w-full rounded-xl border border-border bg-cream-50 px-3.5 py-2 text-sm text-coffee-900 focus:border-primary focus:bg-surface focus:outline-hidden"
             />
           </div>
         </div>
@@ -336,14 +336,14 @@ export function SettingsForm() {
 
       {/* FEEDBACK & SUBMIT BUTTON */}
       {errorNotice && (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs font-medium text-red-700">
+        <div className="rounded-xl border border-danger/25 bg-danger-tint p-3.5 text-xs font-medium text-danger-ink">
           {errorNotice}
         </div>
       )}
 
       {successNotice && (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs font-medium text-emerald-800">
-          <Check className="h-4 w-4 text-emerald-600" />
+        <div className="flex items-center gap-2 rounded-xl border border-success/25 bg-success-tint p-3.5 text-xs font-medium text-success-ink">
+          <Check className="h-4 w-4 text-success" />
           <span>Pengaturan situs web berhasil diperbarui dan disimpan!</span>
         </div>
       )}
@@ -352,7 +352,7 @@ export function SettingsForm() {
         <button
           type="submit"
           disabled={updateMutation.isPending}
-          className="flex items-center gap-2 rounded-xl bg-[#2A1810] px-6 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#3D2317] disabled:opacity-50 transition"
+          className="flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-primary-hover disabled:opacity-50 transition min-h-10"
         >
           {updateMutation.isPending ? (
             <Loader2 className="h-4 w-4 animate-spin text-white" />

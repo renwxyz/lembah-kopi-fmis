@@ -1,10 +1,5 @@
-import {
-  MapPin,
-  MessageCircle,
-  Sprout,
-  Video,
-  Share2,
-} from "lucide-react";
+import Image from "next/image";
+import { MapPin, MessageCircle, Share2, Video } from "lucide-react";
 import type { SiteSettings } from "@/types";
 import { formatWhatsAppUrl, formatPhoneDisplay } from "@/lib/utils";
 
@@ -12,127 +7,163 @@ interface FooterProps {
   settings: SiteSettings;
 }
 
+const NAV_LINKS = [
+  { href: "#about", label: "Tentang Kami" },
+  { href: "#katalog", label: "Katalog Kopi" },
+  { href: "#media", label: "Video & Media" },
+  { href: "#agenda", label: "Agenda" },
+  { href: "#galeri", label: "Galeri Foto" },
+];
+
 export function Footer({ settings }: FooterProps) {
   const currentYear = new Date().getFullYear();
+  // Alamat hanya dari CMS; kosong = baris alamat disembunyikan.
+  const alamat = settings.alamat?.trim();
+  const waUrl = formatWhatsAppUrl(
+    settings.nomor_whatsapp,
+    `Halo Pengurus ${settings.hero_judul || "Lembah Kopi"}, saya ingin bertanya seputar kelompok tani dan produk kopi.`
+  );
+
+  const socials = [
+    { url: settings.instagram_url, label: "Instagram", Icon: Share2 },
+    { url: settings.youtube_url, label: "YouTube", Icon: Video },
+    { url: settings.facebook_url, label: "Facebook", Icon: Share2 },
+    { url: settings.tiktok_url, label: "TikTok", Icon: Video },
+  ].filter((s) => s.url);
 
   return (
-    <footer id="kontak" className="bg-[#2A1810] text-[#E8E2DC] pt-16 pb-12">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-white/10">
-          {/* Kolom 1: Brand */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#2A1810]">
-                <Sprout className="h-5 w-5" />
-              </div>
-              <span className="font-heading text-lg font-bold text-white">
-                {settings.hero_judul || "Lembah Kopi"}
-              </span>
-            </div>
-            <p className="text-xs text-[#C6BCB3] leading-relaxed max-w-sm">
+    <footer id="kontak" className="border-t border-border bg-cream-50">
+      <div className="container-lk pb-8 pt-16">
+        <div className="grid grid-cols-1 gap-10 pb-12 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Kolom 1: logo dan profil */}
+          <div>
+            <Image
+              src="/logo-glodogan.png"
+              alt="Logo Kelompok Tani Kopi Glodogan"
+              width={104}
+              height={104}
+              className="h-[104px] w-[104px]"
+            />
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-muted">
               Kelompok Tani Desa Glodogan yang berfokus pada pelestarian kebun kopi lokal, perbaikan mutu pascapanen, dan kesejahteraan anggota tani.
             </p>
           </div>
 
-          {/* Kolom 2: Kontak Sekretariat */}
-          <div className="space-y-3">
-            <h4 className="font-heading text-sm font-bold text-white uppercase tracking-wider">
-              Sekretariat & Kebun
+          {/* Kolom 2: navigasi */}
+          <nav aria-label="Navigasi footer">
+            <h4 className="font-heading text-base font-bold text-coffee-900">
+              Navigasi
             </h4>
-            <div className="flex items-start gap-2.5 text-xs text-[#C6BCB3]">
-              <MapPin className="h-4 w-4 shrink-0 mt-0.5 text-[#C28E58]" />
-              <span>
-                {settings.alamat ||
-                  "Desa Glodogan, Klaten Selatan, Jawa Tengah, Indonesia."}
-              </span>
+            <ul className="mt-4 space-y-1">
+              {NAV_LINKS.map((l) => (
+                <li key={l.href}>
+                  <a
+                    href={l.href}
+                    className="inline-flex min-h-10 items-center text-[15px] text-text-muted transition-colors hover:text-primary"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Kolom 3: kontak sekretariat */}
+          <div>
+            <h4 className="font-heading text-base font-bold text-coffee-900">
+              Sekretariat &amp; Kebun
+            </h4>
+            <div className="mt-4 space-y-3 text-[15px] text-text-muted">
+              {alamat && (
+                <p className="flex items-start gap-2.5">
+                  <MapPin
+                    className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  <span>{alamat}</span>
+                </p>
+              )}
+              {waUrl && (
+                <p className="flex items-center gap-2.5">
+                  <MessageCircle
+                    className="h-4 w-4 shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  <a
+                    href={waUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition-colors hover:text-primary"
+                  >
+                    {formatPhoneDisplay(settings.nomor_whatsapp)} (WhatsApp Resmi)
+                  </a>
+                </p>
+              )}
             </div>
-            {settings.nomor_whatsapp && formatWhatsAppUrl(settings.nomor_whatsapp) && (
-              <div className="flex items-center gap-2.5 text-xs text-[#C6BCB3]">
-                <MessageCircle className="h-4 w-4 shrink-0 text-emerald-400" />
-                <a
-                  href={formatWhatsAppUrl(settings.nomor_whatsapp)!}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-white transition"
-                >
-                  {formatPhoneDisplay(settings.nomor_whatsapp)} (WhatsApp Resmi)
-                </a>
-              </div>
-            )}
           </div>
 
-          {/* Kolom 3: Sosial Media */}
-          <div className="space-y-3">
-            <h4 className="font-heading text-sm font-bold text-white uppercase tracking-wider">
+          {/* Kolom 4: sosial dan ajakan WhatsApp (tombol hanya bila nomor tersedia) */}
+          <div>
+            <h4 className="font-heading text-base font-bold text-coffee-900">
               Ikuti Kami
             </h4>
-            <p className="text-xs text-[#C6BCB3]">
+            <p className="mt-4 text-[15px] text-text-muted">
               Dapatkan pembaruan langsung proses petik dan panen kopi kami melalui kanal media sosial:
             </p>
-            <div className="flex items-center gap-3 pt-1">
-              {settings.instagram_url && (
-                <a
-                  href={settings.instagram_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-1.5 rounded-xl bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/20 transition"
-                  title="Instagram"
-                >
-                  <Share2 className="h-3.5 w-3.5 text-pink-400" />
-                  <span>Instagram</span>
-                </a>
-              )}
-              {settings.youtube_url && (
-                <a
-                  href={settings.youtube_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-1.5 rounded-xl bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/20 transition"
-                  title="YouTube"
-                >
-                  <Video className="h-3.5 w-3.5 text-red-400" />
-                  <span>YouTube</span>
-                </a>
-              )}
-              {settings.facebook_url && (
-                <a
-                  href={settings.facebook_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-1.5 rounded-xl bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/20 transition"
-                  title="Facebook"
-                >
-                  <Share2 className="h-3.5 w-3.5 text-blue-400" />
-                  <span>Facebook</span>
-                </a>
-              )}
-              {settings.tiktok_url && (
-                <a
-                  href={settings.tiktok_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-1.5 rounded-xl bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/20 transition"
-                  title="TikTok"
-                >
-                  <Video className="h-3.5 w-3.5 text-emerald-400" />
-                  <span>TikTok</span>
-                </a>
-              )}
-            </div>
+            {socials.length > 0 && (
+              <ul className="mt-4 flex flex-wrap items-center gap-3">
+                {socials.map(({ url, label, Icon }) => (
+                  <li key={label}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={label}
+                      title={label}
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-surface text-coffee-900 transition-colors hover:bg-primary-tint hover:text-primary"
+                    >
+                      <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {waUrl && (
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-primary btn-sm mt-5 whitespace-normal! py-2 text-center leading-snug"
+              >
+                <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                Hubungi Pengurus via WhatsApp
+              </a>
+            )}
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#A69B91]">
+        {/* Hak cipta */}
+        <div className="flex flex-col items-center justify-between gap-2 border-t border-border pt-6 text-[13px] text-text-muted sm:flex-row">
           <p>
             © {currentYear} Kelompok Tani Lembah Kopi Glodogan. All rights reserved.
           </p>
-          <p className="mt-2 sm:mt-0">
-            Dikelola secara mandiri dengan sistem profil terintegrasi.
-          </p>
+          <p>Dikelola secara mandiri dengan sistem profil terintegrasi.</p>
+          {/* TODO teks: kredit wajib lisensi CC BY-SA 4.0 selama foto hero sementara dipakai */}
+          {!settings.hero_foto_url && (
+            <p>
+              Foto hero sementara:{" "}
+              <a
+                href="https://commons.wikimedia.org/wiki/File:Perkebunan_Kopi_Jangkat_Merangin.jpg"
+                target="_blank"
+                rel="noreferrer"
+                className="underline hover:text-primary"
+              >
+                Roby diery, CC BY-SA 4.0
+              </a>
+            </p>
+          )}
         </div>
       </div>
     </footer>
   );
 }
-

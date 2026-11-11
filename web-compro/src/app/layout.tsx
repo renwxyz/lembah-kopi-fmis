@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "Kelompok Tani Lembah Kopi | Desa Glodogan",
   description:
     "Profil publik Kelompok Tani Lembah Kopi di Desa Glodogan. Showcase varietas biji kopi pilihan, dokumentasi video, dan pemesanan via WhatsApp.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
   keywords: [
     "kopi glodogan",
     "lembah kopi",
